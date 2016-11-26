@@ -180,8 +180,7 @@ def build_shop_data(shop_data):
 					  "Mend" : "1000",
 					  "Vulnerary" : "300", 
 					  "Door Key" : "50"}
-		
-		
+				
 	return shop_data
 
 
@@ -214,11 +213,8 @@ def build_unit_inventory(inventory_data, unit_num,
 			add_letter += "l"
 			unit_num = ""
 	
-	formatted_inv_start += add_letter
-	
-	
+	formatted_inv_start += add_letter	
 	formatted_inv = formatted_inv_start + unit_num + "="
-	
 	
 	# For loops the list of items
 	for item_name in inventory_data:
@@ -258,8 +254,7 @@ def build_units_data(units_name, units_data, isReinforcement = False):
 		unit_level = unit_data[1]
 		unit_quantity = unit_data[2]
 		unit_inventory = unit_data[3]
-		
-		
+				
 		# Checks if the inputted class is viable.
 		viable_classes = ("Archer", "Berserker", "Brigand", "Cavalier", 
 						  "Druid", "Fighter", "Knight", "Mage", "Mercenary", 
@@ -282,8 +277,7 @@ def build_units_data(units_name, units_data, isReinforcement = False):
 			int(unit_quantity)		
 		except ValueError:
 			raise ValueError("The inputted unit quantity was not an integer")
-		
-		
+			
 		name_line_start = "|name"
 		class_line_start = "|class"
 		level_line_start = "|lv"
@@ -304,9 +298,7 @@ def build_units_data(units_name, units_data, isReinforcement = False):
 			class_line_start += add_letter
 			level_line_start += add_letter
 			quantity_line_start += add_letter
-			
-			
-		
+					
 		if isLastReinforcement:		
 			unit_num = ""	
 			inventory_line = build_unit_inventory(unit_inventory, 
@@ -396,6 +388,46 @@ def build_enemy_data(enemy_name,
 
 
 
+def build_boss_data_section(boss_name, detailed_boss_data):
+	
+	boss_data_section = "===Boss Data=== \n" + \
+						"{{Main|" + boss_name + "}}" + \
+						detailed_boss_data
+	
+	return boss_data_section
+
+
+
+def build_chapter_navigator(prechapter, chapter_title, nextchapter,
+							prealternate = None, nextalternate = None):
+	
+	chapter_navigator_section = ""
+	
+	if prealternate != None:
+		prealternate_line = "|prealternate = " + prealternate
+	else:
+		prealternate_line = ""
+		
+	if nextalternate != None:
+		nextalternate_line = "|nextalternate = " + nextalternate
+	else:
+		nextalternate_line = ""
+		
+												
+	for line in ("{{ChapterNav",
+				 "|prechapter = " + prechapter,
+				  prealternate_line,   
+				 "|chapter = " + chapter_title, 
+				 "|nextchapter = " + nextchapter, 
+				 nextalternate_line,
+				 "}}"):
+		
+		chapter_navigator_section += line + "\n"
+		
+	return chapter_navigator_section
+
+
+
 def build_chapter_page(chapter_title, 
 					   image_num,
 					   game,
@@ -415,12 +447,17 @@ def build_chapter_page(chapter_title,
 					   enemy_data,
 					   boss_data,
 					   reinforcement_data,
+					   boss_name,
+					   detailed_boss_data,
+					   prechapter,
+					   nextchapter,
+					   prealternate,
+					   nextalternate,
 					   isStub = True):
 	"""
 	A function designed to build a chapter page for fireemblemwiki.org.
 	"""					   
-	
-	
+		
 	if not isStub:
 		stub_mark = ""
 		
@@ -448,14 +485,49 @@ def build_chapter_page(chapter_title,
 	item_data = build_item_data(item_data)
 	shop_data = build_shop_data(shop_data)
 	
-	enemy_data = build_enemy_data(enemy_name, enemy_data, boss_data, 
+	enemy_data = build_enemy_data(enemy_name, 
+								  enemy_data, boss_data, 
 								  reinforcement_data)
+								  
+	boss_data_section = build_boss_data_section(boss_name, detailed_boss_data)
+	
+	chapter_navigator = build_chapter_navigator(prechapter, 
+											    chapter_title,
+											    nextchapter,
+											    prealternate,
+											    nextalternate)
+	
+	last_section = ""
+	
+	for line in ("==Strategy==", 
+				 "{{sectstub}}",
+				 "",
+				 "==Trivia==",
+				 "",
+				 "==Gallery==",
+				 "{{sectstub}}",
+				 "",
+				 chapter_navigator,
+				 "{{Nav7}}",
+				 "[[Category:Chapters of Fire Emblem: Blazing Sword]]"):
+				 
+		last_section += line + "\n"
 	
 	chapter_page = ""
 	
-	for data in (stub_mark, chapter_infobox, chapter_desciption, chapter_plot, 
-				 chapter_data, character_data, item_data, shop_data, enemy_data):
-		chapter_page += data + "\n"
+	for section in (stub_mark, 
+					chapter_infobox, 
+					chapter_desciption, 
+					chapter_plot, 
+				    chapter_data, 
+				    character_data,
+				    item_data, 
+				    shop_data, 
+				    enemy_data,
+				    boss_data_section,
+				    last_section):
+						
+		chapter_page += section + "\n"
 											 
 	return chapter_page
 	
@@ -520,24 +592,6 @@ enemy_name = "Black Fang"
 
 boss_data = ["Uhai", "Nomadic Trooper", "7", 
 			["Steel Sword", "Longbow", "Short Bow", "Orion's Bolt (drop)"]]
-			
-# Archer L6 w/Iron Bow
-# 2 Cavalier L5 w/Iron Sword
-# 2 Cavalier L5 w/Iron Lance, one with Mine
-# Cavalier L6 w/Iron Sword
-# Cavalier L6 w/Steel Sword, Light Rune
-# 2 Cavalier L6 w/Iron Lance, Iron Sword (equipped different weapons)
-# Monk L5 w/Lightning
-# Myrmidon L12 w/Slim Sword
-# Nomad L6 w/Iron Bow
-# Nomad L6 w/Short Bow
-# Nomad L6 w/Steel Bow
-# Nomad L7 w/Iron Bow, Torch DROPPED
-# Nomad L8 w/Longbow DROPPED
-# Pirate L6 w/Iron Axe
-# Pirate L7 w/Steel Axe, Torch
-# Shaman L6 w/Nosferatu
-# Thief L5 w/Iron Sword, Torch Staff DROPPED	
 	
 enemy_data = \
 [["Archer", "6", "1", ["Iron Bow"]],
@@ -559,12 +613,101 @@ enemy_data = \
 ["Shaman", "6", "1", ["Nosferatu (drop)"]],
 ["Thief", "5", "1", ["Iron Sword", "Torch Staff (drop)"]]]
 
-#~ Turn 2 to 4 from north east corner and north west corner: +2 Pirate L6 w/Iron
-#~ Axe (one from each corner)
-
 reinforcement_data = \
 [["Pirate", "6", "6", ["Iron Axe"]]]
 
+boss_name = "Uhai"
+
+detailed_boss_data = """
+{{Tab
+|tab1=Chapter 18E/19H, Normal/Eliwood Hard
+|tab2=Chapter 19, Hector Hard
+|tab3=Final Chapter, Normal/Eliwood Hard
+|tab4=Final Chapter, Hector Hard
+|content1={{BossStats GBA
+|portrait=[[File:Portrait uhai fe07.png]]
+|class=Nomadic Trooper
+|affin=
+|lv=7
+|HP=33
+|str=15
+|skill=13
+|spd=12
+|luck=4
+|def=12
+|res=13
+|move=8
+|con=10
+|aid=15
+|inventory=<small>'''Eliwood's tale:'''</small><br>[[File:Is gba steel sword.png]] [[Steel Sword]]<br>[[File:Is gba longbow.png]] [[Longbow]]<br>[[File:Is gba short bow.png]] [[Short Bow]]<br>[[File:Is gba orion's bolt.png]] {{drop|Orion's Bolt}}<br><small>'''Hector's tale:'''</small><br>[[File:Is gba killing edge.png]] [[Killing Edge]]<br>[[File:Is gba longbow.png]] [[Longbow]]<br>[[File:Is gba short bow.png]] [[Short Bow]]<br>[[File:Is gba orion's bolt.png]] {{drop|Orion's Bolt}}
+|sw=B
+|bo=A
+}}
+|content2={{BossStats GBA
+|portrait=[[File:Portrait uhai fe07.png]]
+|class=Nomadic Trooper
+|affin=
+|lv=7
+|HP=36
+|str=16
+|skill=15
+|spd=14
+|luck=4
+|def=13
+|res=14
+|move=8
+|con=10
+|aid=15
+|inventory=[[File:Is gba killing edge.png]] [[Killing Edge]]<br>[[File:Is gba longbow.png]] [[Longbow]]<br>[[File:Is gba short bow.png]] [[Short Bow]]<br>[[File:Is gba orion's bolt.png]] {{drop|Orion's Bolt}}
+|sw=B
+|bo=A
+}}
+|content3={{BossStats GBA
+|portrait=[[File:Portrait uhai fe07.png]]
+|class=Nomadic Trooper
+|affin=
+|lv=20
+|HP=55
+|str=22
+|skill=26
+|spd=25
+|luck=0
+|def=18
+|res=18
+|move=8
+|con=11
+|aid=14
+|inventory=[[File:Is gba rienfleche.png]] {{drop|Rienfleche}}
+|sw=A
+|bo=S
+}}
+|content4={{BossStats GBA
+|portrait=[[File:Portrait uhai fe07.png]]
+|class=Nomadic Trooper
+|affin=
+|lv=20
+|HP=58
+|str=23
+|skill=28
+|spd=27
+|luck=0
+|def=19
+|res=19
+|move=8
+|con=11
+|aid=14
+|inventory=[[File:Is gba rienfleche.png]] {{drop|Rienfleche}}
+|sw=A
+|bo=S
+}}
+}}
+"""
+
+prechapter = "Pirate Ship"
+nextchapter = "Dragon's Gate"
+
+prealternate = None
+nextalternate = "Imprisoner of Magic"
 
 chapter_page = build_chapter_page(chapter_title, 
 								  image_num,
@@ -582,9 +725,14 @@ chapter_page = build_chapter_page(chapter_title,
 								  enemy_name,
 								  enemy_data,
 								  boss_data,
-								  reinforcement_data)
+								  reinforcement_data,
+								  boss_name,
+								  detailed_boss_data,
+								  prechapter,
+								  nextchapter,
+								  prealternate,
+								  nextalternate)
 
 print(chapter_page)
 
-#print(build_character_data(return_characters, new_units_data))
 
