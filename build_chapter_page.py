@@ -3,66 +3,10 @@
 Written by Albert"Anferensis"Ong
 
 A program designed to build a chapter page for fireemblemwiki.org
+
+Todo:
+-fill in trivia, gallery, and plot
 """
-
-
-
-def build_chapter_infobox(title, image_num, game, location, new_units, bosses):
-	
-	chapter_infobox = "{{Chapter Infobox \n"
-	
-	title_line = "|title=" + title
-	image_line = "|image=[[File:Cm fe07 " + image_num +".png|200px]]"
-	location_line = "|location=[[" + location + "]]"
-	
-	new_units_line = "|new units="	
-	
-	for unit_num, unit_name in enumerate(new_units, 1):
-		formatted_unit_name = "[[" + unit_name + "]]"
-		
-		if unit_num != len(new_units):
-			formatted_unit_name += ", "
-			
-		new_units_line += formatted_unit_name
-	
-		
-	bosses_line = "|boss="	
-	
-	for boss_num, boss_name in enumerate(bosses, 1):
-		formatted_boss_name = "[[" + boss_name + "]]"
-		
-		if boss_num != len(bosses):
-			formatted_boss_name += ", "
-			
-		bosses_line += formatted_boss_name
-	
-	
-	for line in (title_line, image_line, location_line, 
-				 new_units_line, bosses_line):
-					 
-		chapter_infobox += line + "\n"
-	
-	chapter_infobox += "}}"
-	
-	return chapter_infobox
-
-
-
-def build_chapter_data(victory_condition, defeat_condition, ally, other, enemy):
-	
-	victory_line = "|victory=" + victory_condition
-	defeat_line = "|defeat=" + defeat_condition
-	ally_line = "|ally=" + ally
-	other_line = "|other=" + other
-	enemy_line = "|enemy=" + enemy
-	
-	chapter_data = ""
-	
-	for line in ("==Chapter data==", "{{ChapData", victory_line, defeat_line, 
-				 ally_line, other_line, enemy_line, "}}"):
-		chapter_data += line + "\n"
-	
-	return chapter_data	
 
 
 	
@@ -151,40 +95,6 @@ def build_item_data(item_data):
 
 
 
-def build_shop_data(shop_data):
-	
-	if shop_data == None:
-		shop_data = ""
-		
-	else:
-		shop_data = "===Shop Data===" + \
-					"{{ChapShop GBA \n }}"
-					
-		price_list = {"Slim Sword" : "480", 
-					  "Iron Sword" : "460",
-					  "Steel Sword" : "600",
-					  "Iron Axe" : "270", 
-					  "Steel Axe" : "360", 
-					  "Hand Axe" : "300",
-					  "Slim Lance" : "450", 
-					  "Iron Lance" : "360", 
-					  "Steel Lance" : "480", 
-					  "Javelin" : "400", 
-					  "Iron Bow" : "540", 
-					  "Steel Bow" : "720", 
-					  "Fire" : "560", 
-					  "Thunder" : "700", 
-					  "Lightning" : "630", 
-					  "Flux" : "900", 
-					  "Heal" : "600", 
-					  "Mend" : "1000",
-					  "Vulnerary" : "300", 
-					  "Door Key" : "50"}
-				
-	return shop_data
-
-
-
 def build_unit_inventory(inventory_data, unit_num, 
 						 isReinforcement = False,
 						 isLastReinforcement = False):
@@ -245,6 +155,9 @@ def build_unit_inventory(inventory_data, unit_num,
 
 def build_units_data(units_name, units_data, isReinforcement = False):
 	
+	units_total = 0
+	reinforcements_total = 0
+	
 	formatted_units_data = ""
 	
 	for unit_num, unit_data in enumerate(units_data, start = 1):
@@ -256,14 +169,19 @@ def build_units_data(units_name, units_data, isReinforcement = False):
 		unit_inventory = unit_data[3]
 				
 		# Checks if the inputted class is viable.
-		viable_classes = ("Archer", "Berserker", "Brigand", "Cavalier", 
-						  "Druid", "Fighter", "Knight", "Mage", "Mercenary", 
+		viable_classes = ("Archer", "Berserker", "Bishop", 
+						  "Brigand", "Cavalier", "Corsair",
+						  "Druid", "Fighter", "General", "Hero",
+						  "Knight", "Mage", "Magic Seal",
+						  "Mercenary", 
 						  "Monk", "Myrmidon", "Nomad", "Nomadic Trooper", 
 						  "Paladin", "Pegasus Knight",
-						  "Pirate", "Soldier", 
-						  "Shaman", "Thief", "Troubadour")			
+						  "Pirate", "Sage", "Soldier", 
+						  "Shaman", "Sniper", "Swordmaster", "Thief", "Troubadour",
+						  "Warrior", "Wyvern Rider")			
 						  			  
 		if unit_class not in viable_classes:
+			print(unit_class)
 			raise ValueError("The inputted class was not viable")
 			
 		# Checks if the inputted unit level is an integer.	
@@ -324,6 +242,15 @@ def build_units_data(units_name, units_data, isReinforcement = False):
 			formatted_unit_data += line + "\n"
 		
 		formatted_units_data += formatted_unit_data + "\n"
+		
+		if isReinforcement:
+			reinforcements_total += int(unit_quantity)
+		else:
+			units_total += int(unit_quantity)
+	
+	units_total += 1
+	#print("units total is: ", units_total)
+	#print("reinforcements total is: ", reinforcements_total)
 	
 		
 	return formatted_units_data
@@ -436,11 +363,12 @@ def build_chapter_page(chapter_title,
 					   chapter_desciption, 
 					   victory_condition,
 					   defeat_condition,
-					   ally,
+					   ally, 
 					   other,
 					   enemy,
 					   return_characters,
 					   new_units_data,
+					   beginning_log,
 					   item_data,
 					   shop_data,
 					   enemy_name,
@@ -464,26 +392,131 @@ def build_chapter_page(chapter_title,
 	else:
 		stub_mark = "{{Stub}}"
 	
-	chapter_infobox = build_chapter_infobox(chapter_title, 
-											image_num, 
-											game, 
-											location,
-											new_units, 
-											bosses)
+	
+	# Building chapter info box.
+		
+	chapter_infobox = "{{Chapter Infobox \n"
+	
+	title_line = "|title=" + chapter_title
+	image_line = "|image=[[File:Cm fe07 " + image_num +".png|200px]]"
+	location_line = "|location=[[" + location + "]]"
+	
+	new_units_line = "|new units="	
+	
+	if new_units != None:
+		for unit_num, unit_name in enumerate(new_units, 1):
+			formatted_unit_name = "[[" + unit_name + "]]"
+			
+			if unit_num != len(new_units):
+				formatted_unit_name += ", "
+				
+			new_units_line += formatted_unit_name
+			
+	else:
+		new_units_line += "none"
+	
+		
+	bosses_line = "|boss="	
+	
+	for boss_num, boss_name in enumerate(bosses, 1):
+		formatted_boss_name = "[[" + boss_name + "]]"
+		
+		if boss_num != len(bosses):
+			formatted_boss_name += ", "
+			
+		bosses_line += formatted_boss_name
+	
+	
+	for line in (title_line, image_line, location_line, 
+				 new_units_line, bosses_line):
+					 
+		chapter_infobox += line + "\n"
+	
+	chapter_infobox += "}}"
+	
+	#==============================================
+	
+	# Building chapter data
+	
+	chapter_data = ""
 											 
-	chapter_data = build_chapter_data(victory_condition, 
-									  defeat_condition, 
-									  ally, other, enemy)
-									  
-	character_data = build_character_data(return_characters, 
-										  new_units_data)
+	victory_line = "|victory=" + victory_condition
+	defeat_line = "|defeat=" + defeat_condition
+	ally_line = "|ally=" + ally
+	other_line = "|other=" + other
+	enemy_line = "|enemy=" + enemy
+	map_line = "|map=[[File:Cm fe07 " + image_num + ".png]]"
+	
+	for line in ("==Chapter data==", "{{ChapDataMap", victory_line, defeat_line, 
+				 ally_line, other_line, enemy_line, map_line,"}}"):
+		chapter_data += line + "\n"
+		
+	#==================================================
+	
+	# Building character data
+	
+	character_data = "===Character Data=== \n" + \
+					 "{{ChapChars \n" + \
+					 "|game#=07 \n"
+					 
+	if new_units_data != None:
+		
+		number_of_new_units = str(len(new_units_data))
+		
+		formatted_new_units = "|newunits = " + number_of_new_units + "\n"
+		
+		for unit_num, new_unit in enumerate(new_units_data, 1):
+			
+			unit_name = new_unit[0]
+			unit_data = new_unit[1]
+			
+			unit_portrait = "[[File:portrait " + unit_name.lower() + " fe07.png]]" 
+			unit_class = unit_data[0]
+			unit_HP = unit_data[1]
+			unit_level = unit_data[2]
+			unit_recruitment = unit_data[3]
+			
+			new_unit_data = "| newunit" + str(unit_num) +" = {{NewUnit \n"
+							
+			name_line = 	   	"| name = " + unit_name
+			portrait_line =     "| portrait = " + unit_portrait
+			class_line =  	   	"| class = " + unit_class
+			HP_line = 		   	"| HP = " + unit_HP
+			level_line = 	   	"| lv = " + unit_level
+			recruitment_line = 	"| recruitment method = " + unit_recruitment
+			
+			for line in (name_line, portrait_line, class_line, HP_line, 
+						 level_line, recruitment_line):
+				
+				new_unit_data += line + "\n"
+				
+			new_unit_data += "}}" + "\n"
+				
+			formatted_new_units += new_unit_data
+			
+		character_data += formatted_new_units
+			
+					 
+	for num, char_name in enumerate(return_characters, 1):
+		char_num = str(num)
+		char_name = char_name.lower()
+		
+		char_line = "|return" + char_num + "=" + char_name
+		character_data += char_line + "\n"
+	
+	character_data += "}} \n"
+	
+	#=========================================================
 	
 	chapter_plot = "==Plot== \n" + \
-				   "{{main|" + chapter_name + "/Script}} \n" + \
-				   "{{sectstub}} \n"
+				   "{{main|" + chapter_title + "/Script}} \n" + \
+				   "{{sectstub}} \n" + \
+				   " \n" + \
+				   beginning_log
 	
 	item_data = build_item_data(item_data)
-	shop_data = build_shop_data(shop_data)
+	
+	shop_data = ""
 	
 	enemy_data = build_enemy_data(enemy_name, 
 								  enemy_data, boss_data, 
@@ -507,6 +540,11 @@ def build_chapter_page(chapter_title,
 				 "==Gallery==",
 				 "{{sectstub}}",
 				 "",
+				 "==Etymology and other languages==",
+				 "{{Names",
+				 "|eng-name=" + chapter_title,
+				 "|eng-meaning=",
+				 "}}",
 				 chapter_navigator,
 				 "{{Nav7}}",
 				 "[[Category:Chapters of Fire Emblem: Blazing Sword]]"):
@@ -535,48 +573,61 @@ def build_chapter_page(chapter_title,
 	
 #=======================================================================
 
-chapter_name = "The Dread Isle"
-
-chapter_title = "The Dread Isle"
-image_num = "18"
+chapter_title = "Four-Fanged Offense (Lloyd)"
+image_num = "23A"
 game = "FE7"
-location = "Dread Isle"
-new_units = ["Dart", "Fiora"]
-bosses = ["Uhai"]
+location = "Bern"
+new_units = ["Wallace"]
+bosses = ["Lloyd"]
 
 chapter_desciption = \
-"""'''The Dread Isle''' is chapter 18 of [[Eliwood|Eliwood's]] tale and chapter
-19 of [[Hector|Hector's]] tale in {{FE7}}.
+"""'''Four-Fanged Offense''' is chapter 23 of [[Eliwood]]'s tale and chapter
+24 of [[Hector]]'s tale in {{FE7}}. To play [[Lloyd]]'s version of this chapter, 
+the combined levels of all lords must be 49 or lower. 
 """
 
-victory_condition = "Defeat [[Uhai]]"
+victory_condition = "Defeat [[Lloyd]]"
 defeat_condition = "[[Eliwood]], [[Hector]], or [[Lyn]] dies"
-ally = "11{{hover|+2|Dart and Fiora}}"
-other = "{{hover|1|Fiora}}"
-enemy = "21{{hover|+6|reinforcements}}"
+ally = "12{{hover|+1|Wallace}}"
+other = "{{hover|1|Wallace}}"
+enemy = "17{{hover|+13|reinforcements}}"
 
 return_characters = \
 ["Eliwood", "Lowen", "Marcus", "Rebecca", "Dorcas", 
 "Bartre", "Hector", "Oswin", "Matthew", "Serra",
 "Guy", "Erk", "Priscilla", "Lyn", "Kent", 
 "Sain", "Wil", "Florina", "Raven", "Lucius",  
-"Canas"] 
-					 
+"Canas", "Dart", "Fiora", "Legault", "Ninian", "Isadora", "Rath",
+"Heath", "Hawkeye"] 
+
+# new units data is organized:
+#  ["unit name", ["class", "HP", "level", "recruit method"]]
+
 new_units_data = \
-[["Dart", ["Pirate", "34", "8", "Automatically at the start"]], 
-["Fiora", ["Pegasus Knight", "21", "7", "Talk with [[Florina]]"]]]
+[["Wallace", ["General", "34", "1", "Talk with [[Lyn]], [[Kent]], [[Sain]], \
+[[Wil]], or [[Florina]]"]]]
+
+beginning_log = """ 
+===Beginning Log===
+Heeding the archsage Athos's advice, 
+{{hover|Eliwood|Eliwood's tale}}/{{hover|Hector|Hector's tale}} sets out for Bern. 
+[[Bern]]: the greatest military force on the continent. The [[Lycian League]]
+has always enjoyed close relations with the kingdom of Bern. 
+Recently, however, King [[Desmond]] has begun to flaunt his military strength. 
+Lycian nobles can no longer move freely within Bern's borders. 
+{{hover|Eliwood|Eliwood's tale}}/{{hover|Hector|Hector's tale}} 
+and his group enter the country in the guise of simple travelers.
+"""
 
 item_data = \
-[["Mine", "Steal from [[cavalier]] (not in hard mode)"],
-["Light Rune", "Steal from [[cavalier]] (not in hard mode)"],
-["Torch", "Steal from [[pirate]]"],
-["Torch", "Dropped by [[nomad]] (not in hard mode)"],
-["Longbow", "Dropped by [[nomad]]"],
-["Torch Staff", "Dropped by [[thief]]"],
-["Nosferatu", "Dropped by [[shaman]]"],
-["Torch", "Dropped by [[nomad]] (hard mode only)"],
-["Lightning", "Dropped by [[shaman]] (hard mode only)"],
-["Orion's Bolt", "Dropped by boss"]]
+[["Orion's Bolt", "Dropped by [[sniper]] (not in hard mode)"], 
+["Shine", "Dropped by [[monk]] (only in hard mode)"], 
+["Silence", "Visit northern [[village]]"], 
+["Earth Seal", "Visti southern [[village]]"], 
+["Red Gem", "Steal from [[myrmidon]]"], 
+["Red Gem", "Steal from [[mercenary]] (only in hard mode)"]]
+
+# ["", ""], 
 
 shop_data = None
 
@@ -588,126 +639,58 @@ enemy_name = "Black Fang"
 # Boss data is formatted:
 # 	["name", "class", "level", inventory]
 
-# ["", "", "", [""]],
+# ["", "", "", [""]], 
 
-boss_data = ["Uhai", "Nomadic Trooper", "7", 
-			["Steel Sword", "Longbow", "Short Bow", "Orion's Bolt (drop)"]]
-	
+boss_data = \
+["Lloyd", "Swordmaster", "12", ["Silver Sword"]]
+
 enemy_data = \
-[["Archer", "6", "1", ["Iron Bow"]],
-["Cavalier", "5", "2", ["Iron Sword"]],
-["Cavalier", "5", "1", ["Iron Lance"]],
-["Cavalier", "5", "1", ["Iron Lance", "Mine"]],
-["Cavalier", "6", "1", ["Iron Sword"]],
-["Cavalier", "6", "1", ["Steel Sword", "Light Rune"]],
-["Cavalier", "6", "2", ["Iron Lance", "Iron Sword"]],
-["Monk", "5", "1", ["Lightning"]],
-["Myrmidon", "12", "1", ["Slim Sword"]],
-["Nomad", "6", "1", ["Iron Bow"]],
-["Nomad", "6", "1", ["Short Bow"]],
-["Nomad", "6", "1", ["Steel Bow"]],
-["Nomad", "7", "1", ["Iron Bow", "Torch (drop)"]],
-["Nomad", "8", "1", ["Longbow (drop)"]],
-["Pirate", "6", "1", ["Iron Axe"]],
-["Pirate", "7", "1", ["Steel Axe", "Torch"]],
-["Shaman", "6", "1", ["Nosferatu (drop)"]],
-["Thief", "5", "1", ["Iron Sword", "Torch Staff (drop)"]]]
+[["Archer", "9", "1", ["Iron Bow"]],
+["Monk", "10", "2", ["Lightning"]],
+["Monk", "15", "1", ["Shine"]],
+["Mercenary", "10", "2", ["Steel Sword"]],
+["Mercenary", "15", "1", ["Steel Sword"]],
+["Myrmidon", "9", "1", ["Iron Sword"]],
+["Myrmidon", "10", "1", ["Iron Sword"]],
+["Myrmidon", "10", "1", ["Armorslayer", "Red Gem"]],
+["Myrmidon", "10", "2", ["Lancereaver"]],
+["Sniper", "7", "1", ["Silver Bow", "Orion's Bolt (drop)"]],
+["Wyvern Rider", "9", "3", ["Steel Lance"]],
+]
 
 reinforcement_data = \
-[["Pirate", "6", "6", ["Iron Axe"]]]
+[["Myrmidon", "10", "6", ["Iron Sword"]], 
+["Myrmidon", "15", "1", ["Steel Sword"]], 
+["Monk", "10", "5", ["Lightning"]], 
+["Brigand", "10", "1", ["Steel Axe"]]]
 
-boss_name = "Uhai"
+boss_name = "Linus"
 
 detailed_boss_data = """
-{{Tab
-|tab1=Chapter 18E/19H, Normal/Eliwood Hard
-|tab2=Chapter 19, Hector Hard
-|tab3=Final Chapter, Normal/Eliwood Hard
-|tab4=Final Chapter, Hector Hard
-|content1={{BossStats GBA
-|portrait=[[File:Portrait uhai fe07.png]]
-|class=Nomadic Trooper
-|affin=
-|lv=7
-|HP=33
-|str=15
-|skill=13
-|spd=12
-|luck=4
-|def=12
-|res=13
-|move=8
-|con=10
-|aid=15
-|inventory=<small>'''Eliwood's tale:'''</small><br>[[File:Is gba steel sword.png]] [[Steel Sword]]<br>[[File:Is gba longbow.png]] [[Longbow]]<br>[[File:Is gba short bow.png]] [[Short Bow]]<br>[[File:Is gba orion's bolt.png]] {{drop|Orion's Bolt}}<br><small>'''Hector's tale:'''</small><br>[[File:Is gba killing edge.png]] [[Killing Edge]]<br>[[File:Is gba longbow.png]] [[Longbow]]<br>[[File:Is gba short bow.png]] [[Short Bow]]<br>[[File:Is gba orion's bolt.png]] {{drop|Orion's Bolt}}
-|sw=B
-|bo=A
-}}
-|content2={{BossStats GBA
-|portrait=[[File:Portrait uhai fe07.png]]
-|class=Nomadic Trooper
-|affin=
-|lv=7
-|HP=36
-|str=16
-|skill=15
-|spd=14
-|luck=4
-|def=13
-|res=14
-|move=8
-|con=10
-|aid=15
-|inventory=[[File:Is gba killing edge.png]] [[Killing Edge]]<br>[[File:Is gba longbow.png]] [[Longbow]]<br>[[File:Is gba short bow.png]] [[Short Bow]]<br>[[File:Is gba orion's bolt.png]] {{drop|Orion's Bolt}}
-|sw=B
-|bo=A
-}}
-|content3={{BossStats GBA
-|portrait=[[File:Portrait uhai fe07.png]]
-|class=Nomadic Trooper
-|affin=
-|lv=20
-|HP=55
-|str=22
-|skill=26
-|spd=25
-|luck=0
-|def=18
-|res=18
-|move=8
-|con=11
-|aid=14
-|inventory=[[File:Is gba rienfleche.png]] {{drop|Rienfleche}}
+{{BossStats GBA
+|portrait=[[File:portrait lloyd fe07.png]]
+|class=Swordmaster
+|affin=anima
+|lv=12
+|HP=41
+|str=18
+|skill=19
+|spd=19
+|luck=16
+|def=8
+|res=15
+|move=6
+|aid=8
+|con=9
 |sw=A
-|bo=S
-}}
-|content4={{BossStats GBA
-|portrait=[[File:Portrait uhai fe07.png]]
-|class=Nomadic Trooper
-|affin=
-|lv=20
-|HP=58
-|str=23
-|skill=28
-|spd=27
-|luck=0
-|def=19
-|res=19
-|move=8
-|con=11
-|aid=14
-|inventory=[[File:Is gba rienfleche.png]] {{drop|Rienfleche}}
-|sw=A
-|bo=S
-}}
+|inventory=[[File:is gba silver sword.png]] [[Silver Sword]]{{hover|*|Eliwood Normal Mode}}<br>[[File:is gba light brand.png]] [[Light Brand]]{{hover|*|Hector Normal Mode}}
 }}
 """
 
-prechapter = "Pirate Ship"
-nextchapter = "Dragon's Gate"
-
-prealternate = None
-nextalternate = "Imprisoner of Magic"
+prechapter = "Living Legend"
+nextchapter = "Unfulfilled Heart"
+prealternate = "Genesis"
+nextalternate = "Crazed Beast"
 
 chapter_page = build_chapter_page(chapter_title, 
 								  image_num,
@@ -720,6 +703,7 @@ chapter_page = build_chapter_page(chapter_title,
 								  ally,other,enemy,
 								  return_characters,
 								  new_units_data,
+								  beginning_log,
 								  item_data,
 								  shop_data,
 								  enemy_name,
