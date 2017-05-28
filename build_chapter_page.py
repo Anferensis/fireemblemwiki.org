@@ -10,10 +10,72 @@ Note: This program has only been tested for Fire Emblem 5, 6, 7, and 8.
 It may not function properly for other titles. 
 """
 
-# A list of items and their prices in the gba titles. 
+# A list of items and their prices in various Fire Emblem titles.
 # This is used for building shop data.
+# Note: these lists are not comprehensive
 
-# Note: the price list is not comprehensive
+
+price_list_fe03 = {"Iron Sword" : "420", 
+				   "Steel Sword" : "760",
+				    
+				   "Iron Lance" : "380", 
+				   "Steel Lance" : "560", 
+				   "Javelin" : "600",
+				    
+				   "Iron Bow" : "330", }
+
+
+# The price list for Fire Emblem: Thracia 776
+			  
+price_list_fe05 = {"Iron Sword" : "2,200", 
+				   "Slim Sword" : "2,600", 
+				   "Steel Sword" : "2,900", 
+				   "Iron Blade" : "2,000", 
+				   "Silver Sword" : "4,200",
+				   "Killing Edge" : "3,800", 
+
+				   "Iron Lance" : "1,100", 
+				   "Steel Lance" : "3,200",
+				   "Slim Lance" : "2,000",
+				   "Silver Lance" : "4,000",
+				   "Killer Lance" : "3,000", 
+				   
+				   "Iron Axe" : "2,200", 
+				   "Steel Axe" : "1,700",
+				   "Silver Axe" : "4,200", 
+				   "Hand Axe" : "1,000", 
+				   "Hammer" : "1,200", 
+				   "Killer Axe" : "2,000", 
+				   
+				   "Iron Bow" : "2,200", 
+				   "Steel Bow" : "3,200",
+				   "Silver Bow" : "4,000",
+				   "Killer Bow" : "3,200", 
+				   				   
+				   "Fire" : "2,250", 
+				   "Thunder" : "3,200",
+				   "Wind" : "2,200", 
+				   "Elfire" : "3,200", 
+				   "Lightning" : "3,200", 
+				   
+				   "Heal" : "2,200",
+				   "Mend" : "2,300", 
+				   
+				   "Vulnerary" : "600",
+				   "Antitoxin" : "1,500",
+				   "Torch" : "500",   
+				   "Door Key" : "500", 
+				   "Stamina Drink" : "5,000",
+				   "Knight Proof" : "8,000", 
+				   
+				   "Life Ring" : "8,000", 
+				   "Speed Ring" : "8,000", 
+				   "Skill Ring" : "8,000", 
+				   "Energy Ring" : "8,000", 
+				   "Shield Ring" : "8,000", }
+
+
+# Price list for the gba titles. 
 
 price_list_gba = {"Slim Sword" : "480", 
 			  "Iron Sword" : "460",
@@ -26,6 +88,7 @@ price_list_gba = {"Slim Sword" : "480",
 			  "Armorslayer" : "1,260",
 			  "Longsword" : "1,260",
 			  "Killing Edge" : "1,300",
+			  "Light Brand" : "1,250",
 			  
 			  "Slim Lance" : "450", 
 			  "Iron Lance" : "360", 
@@ -38,7 +101,7 @@ price_list_gba = {"Slim Sword" : "480",
 			  "Killer Lance" : "1,200",
 			  
 			  "Iron Axe" : "270", 
-			  "Steel Axe" : "360",
+			  "Steel Axe" : "270",
 			  "Silver Axe" : "1,000", 
 			  "Hand Axe" : "300",
 			  "Swordreaver" : "2,100",
@@ -54,20 +117,26 @@ price_list_gba = {"Slim Sword" : "480",
 			  "Short Bow" : "1,760",
 			  "Longbow" : "2,000",
 			  
-			  "Fire" : "560", 
-			  "Thunder" : "700",
-			  "Elfire" : "1,200", 
-			  "Lightning" : "630", 
+			  "Fire" : "420", 
+			  "Thunder" : "500",
+			  "Elfire" : "800", 
+			  "Aircalibur" : "1,100", 
+			  "Bolting" : "3,000", 
+			  
+			  "Lightning" : "540", 
 			  "Shine" : "900", 
-			  "Divine" : "2,000", 
-			  "Flux" : "900", 
-			  "Nosferatu" : "3,200", 
+			  "Divine" : "1,250",
+			  "Purge" : "3,500", 
+			   
+			  "Flux" : "780", 
+			  "Nosferatu" : "3,000", 
+			  "Eclipse" : "4,000", 
 			  
 			  "Heal" : "600", 
 			  "Mend" : "1,000",
 			  "Recover" : "2,250",
 			  "Physic" : "3,750",
-			  "Torch" : "1,000",
+			  "Torch Staff" : "1,000",
 			  "Unlock": "1,500",
 			  "Barrier" : "2,250",
 			  "Restore" : "2,000",
@@ -78,49 +147,31 @@ price_list_gba = {"Slim Sword" : "480",
 			  "Door Key" : "50",
 			  "Elixir": "3,000", 
 			  "Chest Key": "1,500",
-			  "Lockpick" : "1,200", 
+			  "Lockpick" : "2,400", 
+			  "Torch" : "500", 
 			  
-			  "Hero Crest" : "10,000", 
 			  "Knight Crest" : "10,000", 
+			  "Hero Crest" : "10,000", 
 			  "Elysian Whip" : "10,000", 
 			  "Orion's Bolt" : "10,000", 
 			  "Guiding Ring" : "10,000", 
 			  "Ocean Seal" : "50,000",
 			  "Fell Contract" : "50,000",
 			  "Earth Seal" : "20,000",
+			  
+			  
+			  "Angelic Robe" : "8,000", 
+			  "Energy Ring" : "8,000",
+			  "Secret Book" : "8,000", 
+			  "Speedwings" : "8,000", 
+			  "Goddess Icon" : "8,000", 
+			  "Dragonshield" : "8,000", 
+			  "Talisman" : "8,000", 
+			  "Body Ring" : "8,000", 
+			  "Boots" : "8,000", 
 			  }
 
-# The price list for Fire Emblem: Thracia 776
-			  
-price_list_fe05 = {"Iron Sword" : "2,200", 
-				   "Slim Sword" : "2,600", 
-				   "Steel Sword" : "2,900", 
-				   "Iron Blade" : "2,000", 
-				   "Silver Sword" : "4,200",
 
-				   "Iron Lance" : "1,100", 
-				   "Steel Lance" : "3,200",
-				   "Slim Lance" : "2,000",
-				   
-				   "Iron Axe" : "2,200", 
-				   "Steel Axe" : "1,700", 
-				   "Hand Axe" : "1,000", 
-				   "Hammer" : "1,200", 
-				   
-				   "Iron Bow" : "2,200", 
-				   "Steel Bow" : "3,200",
-				   				   
-				   "Fire" : "2,250", 
-				   "Thunder" : "3,200",
-				   "Wind" : "2,200", 
-				   
-				   "Heal" : "2,200",
-				   
-				   "Vulnerary" : "600",
-				   "Antidote" : "1,500",
-				   "Torch" : "500",   
-				   "Door Key" : "500", 
-				   "Stamina Drink" : "5,000",}
 
 
 
@@ -148,13 +199,17 @@ def format_shop_items(platform, game, shop_items):
 		if game in ("fe06", "fe07", "fe08"):
 			item_price = price_list_gba[item_name]
 			
-		elif game in ("fe05"):
+		elif game  == "fe05":
 			item_price = price_list_fe05[item_name]
+			
+		elif game == "fe03":
+			item_price = price_list_fe03[item_name]
 		
 		special_cases = {"Fire" : "Fire (tome)", 
 						 "Thunder" : "Thunder (tome)", 
 						 "Luna" : "Luna (tome)", 
 						 "Wind" : "Wind (tome)",
+						 "Eclipse" : "Eclipse (tome)",  
 						 
 						 "Berserk" : "Berserk (staff)",
 						 "Sleep" : "Sleep (staff)", 
@@ -239,15 +294,20 @@ def build_unit_inventory(platform,
 							 "Thunder" : "Thunder (tome)", 
 							 "Luna" : "Luna (tome)", 
 							 "Wind" : "Wind (tome)",
+							 "Eclipse" : "Eclipse (tome)",
 							 "Ballista" : "Ballista (weapon)",
 							 
 							 "Berserk" : "Berserk (staff)",
 							 "Sleep" : "Sleep (staff)", 
 							 "Warp" : "Warp (staff)",
+							 "Rescue" : "Rescue (staff)",
 							 "Silence" : "Silence (staff)", 
 							 "Stone" : "Stone (tome)", 
 							 "Forseti" : "Forseti (tome)",
-							 "Torch" : "Torch (item)"}
+							 "Torch" : "Torch (item)",
+							 "Poison" : "Poison (tome)", 
+							 
+							 "Adept Manual" : "Skill items"}
 							 
 			if item_name in special_cases:
 				
@@ -279,21 +339,16 @@ def build_units_data(platform,
 	
 	for unit_num, unit_data in enumerate(units_data, 1):
 		
-		unit_num = str(unit_num)
+		if unit_num == len(units_data):
+			unit_num = "b"
+		else:
+			unit_num = str(unit_num)
 		
 		unit_name = unit_data[0]
 		unit_class = unit_data[1]
 		unit_level = unit_data[2]
 		unit_quantity = unit_data[3]
 		unit_inventory = unit_data[4]
-		
-		# Checks if the inputted unit level is an integer.	
-		try: 
-			int(unit_level)			
-		except ValueError:
-			print(unit_data)
-			raise ValueError("The inputted unit level was not an integer")
-		
 											  
 		name_line_start = "|name"
 		class_line_start = "|class"
@@ -306,7 +361,7 @@ def build_units_data(platform,
 			
 			add_letter = "r"
 			
-			if int(unit_num) == len(units_data):
+			if unit_num == "b":
 				isLastReinforcement = True
 				add_letter = "rl"
 
@@ -333,6 +388,9 @@ def build_units_data(platform,
 		class_line =    class_line_start + unit_num + "=" + unit_class
 		level_line =    level_line_start + unit_num + "=" + unit_level
 		quantity_line = quantity_line_start + unit_num + "=" + unit_quantity
+		
+		if unit_num == "b":
+			quantity_line = None
 											  
 		formatted_unit_data = ""	
 		
@@ -341,11 +399,11 @@ def build_units_data(platform,
 					 level_line, 
 					 quantity_line, 
 					 inventory_line):
-					 
-			formatted_unit_data += line + "\n"
+			
+			if line != None:		 
+				formatted_unit_data += line + "\n"
 		
 		formatted_units_data += formatted_unit_data + "\n"	
-	
 	
 	return formatted_units_data
 
@@ -369,6 +427,7 @@ def build_chapter_page(platform,
 					   ally, 
 					   other,
 					   enemy,
+					   map_text, 
 					   return_characters,
 					   new_units_data,
 					   character_data_note,
@@ -384,15 +443,10 @@ def build_chapter_page(platform,
 					   npc_data_note,
 					   boss_name,
 					   detailed_boss_data,
-					   prechapter,
-					   nextchapter,
-					   prealternate,
-					   nextalternate,
+					   chapter_navigator_section, 
 					   strategy,
 					   trivia,
-					   isOfficialName,
-					   japanese_name,
-					   japanese_meaning,
+					   chapter_etymology,
 					   gallery_text,
 					   isStub = True):
 	"""
@@ -404,7 +458,7 @@ def build_chapter_page(platform,
 		stub_mark = ""
 		
 	else:
-		stub_mark = "{{Stub}}"
+		stub_mark = "{{stub}}"
 	
 	#==========================================================
 	
@@ -427,9 +481,11 @@ def build_chapter_page(platform,
 	
 	location_line = "|location=" + formatted_location
 	
-	new_units_line = "|new units="	
+	new_units_line = "|new units="
 	
-	if new_units != None:
+	
+	if type(new_units) == list:
+		
 		for unit_num, unit_name in enumerate(new_units, 1):
 			formatted_unit_name = "[[" + unit_name + "]]"
 			
@@ -437,9 +493,17 @@ def build_chapter_page(platform,
 				formatted_unit_name += ", "
 				
 			new_units_line += formatted_unit_name
-			
-	else:
+		
+	elif type(new_units) == str:
+		new_units_line += new_units
+		
+	elif new_units == None:
 		new_units_line += "none"
+	
+
+			
+	#~ else:
+		#~ new_units_line += "none"
 	
 		
 	bosses_line = "|boss="	
@@ -517,10 +581,16 @@ def build_chapter_page(platform,
 	ally_line = "|ally=" + ally
 	other_line = "|other=" + other
 	enemy_line = "|enemy=" + enemy
-	map_line = "|map=[[File:Cm " + game + " " + image_num + ".png]]"
+	map_line = "|map=" + map_text
 	
-	for line in ("==Chapter Data==", "{{ChapDataMap", victory_line, defeat_line, 
-				 ally_line, other_line, enemy_line, map_line,"}}"):
+	for line in ("==Chapter Data==", 
+				 "{{ChapDataMap", 
+				 victory_line, 
+				 defeat_line, 
+				 ally_line, other_line, 
+				 enemy_line, map_line,
+				 "}}"):
+					 
 		chapter_data += line + "\n"
 		
 	#==================================================
@@ -559,14 +629,28 @@ def build_chapter_page(platform,
 			level_line = 	   	"|lv=" + unit_level
 			recruitment_line = 	"|recruitment method=" + unit_recruitment
 			
+			
+			name_exceptions = {"Ced" : "Ced (character)"}
+			
+			if unit_name in name_exceptions:
+				name_article = name_exceptions[unit_name]
+				name_article_line = "|namearticle=" + name_article
+				
+			else:
+				name_article_line = None
+			
+			
 			for line in (name_line, 
+						 name_article_line, 
 						 portrait_line, 
 						 class_line, 
 						 HP_line, 
 						 level_line, 
 						 recruitment_line):
 				
-				new_unit_data += line + "\n"
+				if line != None:
+					new_unit_data += line + "\n"
+			
 				
 			new_unit_data += "}}" + "\n"
 				
@@ -583,7 +667,10 @@ def build_chapter_page(platform,
 		character_data += char_line + "\n"
 		
 		special_exceptions = {"alva" : "Alva (Thracia 776)", 
-							  "robert" : "Robert (Thracia 776)",}
+							  "robert" : "Robert (Thracia 776)",
+							  "ced" : "Ced (character)", 
+							  "marth 02" : "Marth", 
+							  "lance" : "Lance (character)"}
 							  
 		if char_name in special_exceptions:
 			
@@ -604,38 +691,82 @@ def build_chapter_page(platform,
 	
 	# Building item data
 	
-	formatted_item_data = ""
+	if item_data == None:
+		item_data_section = None
 	
-	for item_num, item in enumerate(item_data, start = 1):
 		
-		if item_num == len(item_data):
-			item_num = "last"
-		else:
-			item_num = str(item_num)
-			
-		item_name = item[0]
-		obtain_method = item[1]
-		
-		item_line = "|item" + item_num + "=" + item_name
-		obtain_line = "|obtain" + item_num + "=" + obtain_method
-		
-		for line in (item_line, obtain_line):
-			formatted_item_data += line + "\n"
-	
-	if item_data_note == None:
-		add_note = ""
 	else:
-		add_note = item_data_note
-					    
-	item_data_section = ""
-	
-	for section in ("===Item Data=== ", 
-					"{{ChapItems ",
-					"|platform=" + platform, 
-					formatted_item_data + "}}", 
-					add_note):
+		formatted_item_data = ""
 		
-		item_data_section += section + "\n"
+		for item_num, item in enumerate(item_data, start = 1):
+			
+			if item_num == len(item_data):
+				item_num = "last"
+			else:
+				item_num = str(item_num)
+				
+			item_name = item[0]
+			obtain_method = item[1]
+			
+			item_line = "|item" + item_num + "=" + item_name
+			obtain_line = "|obtain" + item_num + "=" + obtain_method
+			
+			
+			item_link_exceptions = \
+				{"Berserk" : "Berserk (staff)",
+				 "Sleep" : "Sleep (staff)", 
+				 "Warp" : "Warp (staff)",
+				 "Rescue" : "Rescue (staff)",
+				 "Silence" : "Silence (staff)", 
+				 
+				 "Noba Scroll" : "Crusader Scrolls", 
+				 "Wind" : "Wind (tome)", 
+				 "Torch" : "Torch (item)", 
+				 "Eclipse" : "Eclipse (tome)",
+				 
+				 "Binding Blade" : "Binding Blade (weapon)"}
+				 
+			if item_name in item_link_exceptions:
+				item_link = item_link_exceptions[item_name]
+				item_article_line = "|item" + item_num + "article=" + item_link
+				 
+			else:
+				item_article_line = None
+			
+				
+			item_image_exceptions = {"Magic Up" : "m up"}
+			
+			if item_name in item_image_exceptions:
+				item_image = item_image_exceptions[item_name]
+				item_image_line = "|item" + item_num + "image=" + item_image
+				 
+			else:
+				item_image_line = None
+				
+			
+			for line in (item_line, 
+						 item_article_line, 
+						 item_image_line, 
+						 obtain_line):
+														 
+				if line != None:
+					formatted_item_data += line + "\n"
+		
+		
+		if item_data_note == None:
+			add_note = ""
+		else:
+			add_note = item_data_note
+							
+		item_data_section = ""
+		
+		for section in ("===Item Data=== ", 
+						"{{ChapItems ",
+						"|platform=" + platform, 
+						formatted_item_data + "}}", 
+						add_note):
+			
+			item_data_section += section + "\n"
 	
 	
 	#=============================================================
@@ -672,13 +803,13 @@ def build_chapter_page(platform,
 			
 	else:
 	
-		header_line = "|header = " + shop_data_header
+		header_line = "|header=" + shop_data_header
 		
 		for line in ("{{Tab",
 					 header_line,
-					 "|width = 700px",
-					 "|height = ",
-					 "|constyle = text-align:center"):
+					 "|width=700px",
+					 "|height=",
+					 "|constyle=text-align:center"):
 						 
 			shop_data_section += line + "\n"
 			
@@ -689,8 +820,8 @@ def build_chapter_page(platform,
 			
 			shop_tab = ""
 			
-			for line in ("|tab" + shop_num + " = " + shop_name + "\n", 
-						 "|content" + shop_num + " = {{clear}}"):
+			for line in ("|tab" + shop_num + "=" + shop_name + "\n", 
+						 "|content" + shop_num + "={{clear}}"):
 							 
 				shop_tab += line
 		
@@ -712,7 +843,6 @@ def build_chapter_page(platform,
 			shop_data_section += shop_tab + "\n"
 				
 		shop_data_section += "}}"
-	
 	
 	
 	#==============================================================
@@ -837,39 +967,21 @@ def build_chapter_page(platform,
 	# Building boss data
 	
 	
-	boss_data_section = "===Boss Data=== \n" + \
-						"{{Main|" + boss_name + "}}" + \
-						detailed_boss_data
-	
-	#==============================================================
-	
-	# Building chapter navigator
-	
-	chapter_navigator_section = ""
-	
-	if prealternate != None:
-		prealternate_line = "|prealternate = " + prealternate
+	if boss_name != None:
+		boss_redirect_line = "{{Main|" + boss_name + "}}"
+		
 	else:
-		prealternate_line = ""
-		
-	if nextalternate != None:
-		nextalternate_line = "|nextalternate = " + nextalternate
-	else:
-		nextalternate_line = ""
-		
-												
-	for line in ("{{ChapterNav",
-				 "|prechapter = " + prechapter,
-				  prealternate_line,   
-				 "|chapter = " + chapter_title, 
-				 "|nextchapter = " + nextchapter, 
-				 nextalternate_line,
-				 "}}"):
-		
-		if line == "":
-			pass
-		else:
-			chapter_navigator_section += line + "\n"
+		boss_redirect_line = None
+	
+	
+	boss_data_section = ""
+						
+	for line in ("===Boss Data===", 
+				 boss_redirect_line, 
+				 detailed_boss_data):
+					 
+		if line != None:
+			boss_data_section += line + "\n"
 											    
 	#==============================================================
 	
@@ -908,35 +1020,8 @@ def build_chapter_page(platform,
 	# Building etymology section
 	
 	etymology_section = "==Etymology and other languages== \n" + \
-						"{{Names \n"
-	
-	english_name_line = "|eng-name="
-	english_mean_line = "|eng-mean=--"
-	
-	if not isOfficialName:
-		english_name_line = "|eng-fan-name="
-		english_mean_line = "|eng-fan-mean=--"
+						chapter_etymology
 		
-	english_name_line += chapter_title
-	
-	jap_name_line = "|jap-name="
-	jap_mean_line = "|jap-mean="
-	
-	if japanese_name != None:
-		jap_name_line += japanese_name
-		
-	if japanese_meaning != None:
-		jap_mean_line += japanese_meaning
-	
-	
-	for line in (english_name_line, 
-				 english_mean_line, 
-				 jap_name_line, 
-				 jap_mean_line, 
-				 "}}"):
-					 
-		etymology_section += line + "\n"
-
 	#==============================================================
 	
 	# Building gallery section
@@ -1014,13 +1099,15 @@ def build_chapter_page(platform,
 				    npc_data_section,
 				    boss_data_section,
 				    strategy_section, 
+				    trivia_section, 
 				    etymology_section, 
 				    gallery_section,
 					chapter_navigator_section,
 					chapter_nav,
 					chapter_category):
-						
-		chapter_page += section + "\n"
+		
+		if section != None:				
+			chapter_page += section + "\n"
 											 
 	return chapter_page
 	
@@ -1040,77 +1127,80 @@ platform = "gba"
 
 
 # Insert basic chapter info
+# Note: New units will accept a list, a string, or "None"
 
-chapter_title = "Test Chapter Page"
-image_num = "1"
-game = "fe07"
-location = "Sacae"
-new_units = ["Eliwood", "Hector"]
-bosses = ["Batta"]
+chapter_title = "Beyond the Darkness"
+image_num = "F"
+game = "fe06"
+location = "[[Dragon Sanctuary]]"
+new_units = None
+bosses = ["Idenn"]
 weather = None
-
 
 # Insert beginning quote and the quote's speaker 
 #	(this is primarily for aesthetics)
 
 # if "None" is inputted for either, a quote will not appear
 
-quote = "Beginning quote"
-quote_speaker = "[[quote speaker]]"
+quote = "I must lead this world… No matter how many days or nights pass, I must. I must…"
+quote_speaker = "[[Idenn]] to [[Roy]]"
 
 
 # Insert chapter description. 
 
 chapter_desciption = \
-"""'''Test Chapter Page''' is a page designed to demonstate what this program can do. <br>
-Insert chapter description here. """
+"""'''Beyond the Darkness''' (Japanese: {{hover|暗闇の向こう|Kurayami no mukō}}, ''Beyond the Darkness'') is the final chapter of {{FE6}}. """
 
 
 # Insert chapter plot
 # if "None is inputted", this section will be marked as a stub
 
-chapter_plot = """Insert chapter plot
-"""
-
+chapter_plot = None
 
 # Insert beginning log
 # if there is no beginning log, input "None"
 
 beginning_log = \
-"""
-Insert beginning log here
-"""
-
+None
 
 # Insert chapter infobox data
 
-victory_condition = "Seize the gate"
-defeat_condition = "[[Lyn]] dies"
-ally = "1{{hover|+2|Eliwood and Hector}}"
-other = "2"
-enemy = "3{{hover|+3|reinforcements}}"
+victory_condition = "Defeat [[Idenn]]"
+defeat_condition = "[[Roy]] dies"
+ally = "{{hover|10|every unit that survived chapter 24; maximum 10}}"
+other = "0"
+enemy = "3{{hover|+reinforcements|number may vary}}"
+
+map_text = "[[File:Cm fe06 F.png]]"
 
 
 # Insert returning characters and new units data
 
 return_characters = \
-["Lyn"]  
+["Roy", "Marcus", "Alen", "Lance", "Wolt", "Bors", "Merlinus", 
+"Elen", "Deke", "Wade", "Lot", "Shanna", "Chad", "Lugh", "Clarine", 
+"Rutoga", "Saul", "Dorothy", "Sue", "Zelots", "Trec", "Noah", "Astore",
+"Lilina", "Gwendolyn", "Bath", "Ogier", "Fir", "Sin", 
+"Gonzalez", "Klein", "Thea", "Lalum", "Ekhidna", "Elphin", "Bartre", 
+"Geese", "Raigh", "Cath", "Milady", "Perceval", "Sophia", "Cecilia", 
+"Igrene", "Garret", "Fae", "Zeiss", "Hugh", "Douglas", "Niime", 
+"Juno", "Dayan", "Jodel", "Karel"]
 
+  
 # New units data is organized:
 #  ["unit name", ["class", "HP", "level", "recruit method"]]
 
 # ["", ["", "", "", ""]], 
 
-new_units_data = \
-[["Eliwood", ["Lord", "50", "20", "Automatically at the start"]], 
-["Hector", ["Lord", "50", "20", "Automaticaly at the start"]], ]
+# If there are no new units, input "None"
 
+new_units_data = \
+None
 
 # Insert note under character data 
 # 	if no note is needed, insert "None"
 
-character_data_note = "<small>*Note: Insert character data note</small>"
-
+character_data_note = None
 
 # Insert item data
 
@@ -1120,15 +1210,14 @@ character_data_note = "<small>*Note: Insert character data note</small>"
 # ["", ""], 
 
 item_data = \
-[["Iron Axe", "Dropped by [[brigand]]"],
-["Vulnerary", "Steal from [[soldier]]"], 
-["Mani Katti", "Automatically at end of chapter"], ]
+[["Elixir", "Steal from [[manakete]]"], 
+["Elixir", "Steal from [[manakete]]"], ]
+
 
 # Insert note after under item data 
 # 	if no note is needed, insert "None"
 
-item_data_note = "<small>*Note: Insert item data note</small>"
-
+item_data_note = """<small>*Note: All reinforcements will carry [[elixir]]s.</small>"""
 
 shop_data_header = "Shop Data"
 
@@ -1141,32 +1230,25 @@ shop_data_header = "Shop Data"
 # ["", ["", "", ""]], 
 
 shops_info = \
-[["Armory", ["Iron Sword", "Iron Lance", "Iron Axe"]], 
-["Vendor", ["Fire", "Thunder", "Heal"]], ]
-
+None
 
 # Unit data is formatted:
 # 	[name, class, level, quantity, inventory]
 
-
 # ["", "", "", "", [""]], 
 
 enemy_data = \
-[["Enemy", "Mercenary", "1", "1", ["Iron Sword"]], 
-["Enemy", "Soldier", "1", "1", ["Iron Lance", "Vulnerary"]], 
-["Enemy", "Brigand", "1", "1", ["Iron Axe (drop)"]], 
-["Batta", "Brigand", "2", "1", ["Iron Axe"]], ]
+[["War Dragon", "Manakete", "18", "1", ["Firestone", "Elixir"]], 
+["War Dragon", "Manakete", "19", "1", ["Firestone", "Elixir"]], 
+["[[Idenn]]", "Demon Dragon", "20", "1", ["Dark Breath"]], ]
 
 reinforcement_data = \
-[["Reinforcement", "Myrmidon", "1", "1", ["Iron Sword"]], 
-["Reinforcement", "Knight", "1", "1", ["Iron Lance"]], 
-["Reinforcement", "Fighter", "1", "1", ["Iron Axe"]], ]
+[["War Dragon", "Manakete", "varies", "varies", ["Firestone", "Elixir"]], ]
 
 # Insert note under enemy data 
 # 	if no note is needed, insert "None"
 
-enemy_data_note =  "<small>*Note: Insert enemy data note</small>"
-
+enemy_data_note = "<small>*Note: Starting from turn 2 or 3, [[manakete]]s will appear randomly and indefinitely from the four statues on the map. </small>"
 
 # A variable that will print the units total
 # if true, the unit and reinforcements total will print before the chapter page. 
@@ -1183,78 +1265,104 @@ print_units_total = False
 # ["", "", "", "", [""]], 
 
 npc_data = \
-[["Villager", "Civilian", "1", "1", []], 
-["Other", "Mage", "1", "1", ["Fire"]], ]
-
+None
 
 # Insert note under enemy data 
 # 	if no note is needed, insert "None"
 
-npc_data_note = "<small>*Note: Insert NPC data note</small>"
+npc_data_note = None
 
 
-boss_name = "Batta"
+boss_name = "Idenn"
 
 # Insert boss data
 
 detailed_boss_data = """
-{{BossStats GBA
-|portrait=[[File:Portrait batta fe07.png]]
-|class=Brigand
-|lv=
-|HP=
-|str=
-|mag=
-|skill=
-|spd=
-|luck=
-|def=
-|build=
-|move=
-|aid=
-|inventory=[[File:Is snes03 iron axe.png]] [[Iron Axe]]
+{{Tab
+|tab1=Normal Mode
+|tab2=Hard Mode
+|content1={{BossStats GBA
+|portrait= [[File:Portrait idenn 03 fe06.png|Idenn]]
+|class=Mage Dragon
+|classname=Demon Dragon
+|lv=20
+|HP=78
+|mag=29
+|skill=23
+|spd=16
+|luck=18
+|def=30
+|res=21
+|move=2
+|con=25
+|inventory=[[File:Is gba dark breath.png]] [[Dark Breath]]}}
+|content2={{BossStats GBA
+|portrait=[[File:Portrait idenn 03 fe06.png|Idenn]]
+|class=Mage Dragon
+|classname=Demon Dragon
+|lv=20
+|HP=80
+|mag=29
+|skill=23
+|spd=16
+|luck=18
+|def=30
+|res=21
+|move=2
+|con=25
+|inventory=[[File:Is gba dark breath.png]] [[Dark Breath]]
+}}
+}}
+<center><small>Note: Hard Mode stats can vary in one or two points.</small></center>
+"""
+
+
+strategy = None
+trivia = None
+
+chapter_etymology = """{{Names 
+|eng-fan-name=Beyond the Darkness
+|eng-fan-mean=--
+|jap-name={{hover|暗闇の向こう|Kurayami no mukō}}
+|jap-mean=Beyond the Darkness
 }}
 """
 
-# Insert prechapter and nextchapter.
-
-prechapter = "Previous chapter name"
-nextchapter = "Next chapter name"
-
-# Insert prealternate or next alternate if they exist,
-# 	otherwise input "None".
-
-prealternate = "Pre-alternate name"
-nextalternate = "Next-alternate name"
-
-# Insert trivia and strategy sections
-#	If "None" is inputted in either section, that section will be listed as a stub. 
-
-strategy = """Insert strategy here
 """
-trivia = """Insert trivia here
+{{Names 
+|eng-fan-name=
+|eng-fan-mean=
+|jap-name=
+|jap-mean=
+}}
 """
 
-# Insert whether or not the chapter title is an official name
-# 	(this is mostly for fan-translated game)
-
-isOfficialName = True
-
-# Insert japanese name and meaning
-# 	if unavailable, insert "None"
-
-japanese_name = "Japanese name"
-japanese_meaning = "Japanese meaning"
-
-
-# Insert gallery text
-# 	if "None" is inputted, this section will be marked a stub. 
-
-gallery_text = """<gallery>
-Cm fe07 1.png|The chapter map
-</gallery>
+"""
+{{Names 
+|eng-name=
+|eng-mean=
+|jap-name=
+|jap-mean=
+|span-name=
+|span-mean=
+|fren-name=
+|fren-mean=
+|ger-name=
+|ger-mean=
+}} 
 """
 
+#~ # Insert gallery text
+#~ # 	if "None" is inputted, this section will be marked a stub. 
+
+gallery_text = None
+
+chapter_navigator_section = \
+"""{{ChapterNav
+|prechapter=Legends and Lies
+|name=Beyond the Darkness
+}}
+"""
 
 # Takes every varaiable and constructs a chapter page.
 
@@ -1276,6 +1384,7 @@ chapter_page = build_chapter_page(platform,
 								  ally,
 								  other,
 								  enemy,
+								  map_text, 
 								  return_characters,
 								  new_units_data,
 								  character_data_note,
@@ -1291,15 +1400,10 @@ chapter_page = build_chapter_page(platform,
 								  npc_data_note,
 								  boss_name,
 								  detailed_boss_data,
-								  prechapter,
-								  nextchapter,
-								  prealternate,
-								  nextalternate,
+								  chapter_navigator_section, 
 								  strategy,
 								  trivia, 
-								  isOfficialName,
-								  japanese_name, 
-								  japanese_meaning, 
+								  chapter_etymology,
 								  gallery_text, 
 								  isStub)
 
