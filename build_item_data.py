@@ -2,7 +2,7 @@
 """
 Written by Albert"Anferensis"Ong
 
-
+A program that builds item data for fireemblemwiki.org
 """
 
 def build_item_data(platform, item_data):
@@ -56,10 +56,6 @@ item_data = \
 ["Iron Axe", "Obtain method 3"], ]
 
 print(build_item_data(platform, item_data))
-
-
-
-
 
 					    
 
