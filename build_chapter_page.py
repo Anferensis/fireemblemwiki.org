@@ -290,37 +290,53 @@ def build_unit_inventory(platform,
 			
 		else:
 			
-			special_cases = {"Fire" : "Fire (tome)", 
-							 "Thunder" : "Thunder (tome)", 
-							 "Luna" : "Luna (tome)", 
-							 "Wind" : "Wind (tome)",
-							 "Eclipse" : "Eclipse (tome)",
-							 "Ballista" : "Ballista (weapon)",
+			disimbaguation_cases = \
+				{"Fire" : "Fire (tome)", 
+				 "Thunder" : "Thunder (tome)", 
+				 "Luna" : "Luna (tome)", 
+				 "Wind" : "Wind (tome)",
+				 "Eclipse" : "Eclipse (tome)",
+				 "Ballista" : "Ballista (weapon)",
+				 
+				 "Berserk" : "Berserk (staff)",
+				 "Sleep" : "Sleep (staff)", 
+				 "Warp" : "Warp (staff)",
+				 "Rescue" : "Rescue (staff)",
+				 "Silence" : "Silence (staff)", 
+				 "Stone" : "Stone (tome)", 
+				 "Forseti" : "Forseti (tome)",
+				 "Torch" : "Torch (item)",
+				 "Poison" : "Poison (tome)", 
+				 
+				 "Adept Manual" : "Skill items"}
+				 
+			special_cases = \
+				{"Beak (raven)" : "Beak", 
+				 "Beak (hawk)" : "Beak", 
+				 "Claw (cat)" : "Claw", 
+				 "Claw (tiger)" : "Claw", }
 							 
-							 "Berserk" : "Berserk (staff)",
-							 "Sleep" : "Sleep (staff)", 
-							 "Warp" : "Warp (staff)",
-							 "Rescue" : "Rescue (staff)",
-							 "Silence" : "Silence (staff)", 
-							 "Stone" : "Stone (tome)", 
-							 "Forseti" : "Forseti (tome)",
-							 "Torch" : "Torch (item)",
-							 "Poison" : "Poison (tome)", 
-							 
-							 "Adept Manual" : "Skill items"}
-							 
-			if item_name in special_cases:
+			if item_name in disimbaguation_cases:
 				
-				link = special_cases[item_name]			
+				link = disimbaguation_cases[item_name]			
 				item_link = hyperlink(link, item_name)
+			
+			elif item_name in special_cases:
+				link = special_cases[item_name]
+				item_link = hyperlink(link)
 				
 			else:
 				item_link = hyperlink(item_name)
 		
+		if item_name == "Beak":
+			item_image = "[[File:Is " + platform + " " + lowered_item_name + " (raven).png]]"
+		else:
+			item_image = "[[File:Is " + platform + " " + lowered_item_name + ".png]]"
+		
+		
 		# Creates the formatted item data, which includes a link directed 
 		# towards the item sprite and a hyperlink to the item itself
-		formatted_item = "[[File:Is " + platform + " " + lowered_item_name + ".png]]" + \
-						 item_link
+		formatted_item = item_image + item_link
 		
 		# Adds the formatted item data to the formatted inventory										
 		formatted_inv += formatted_item
@@ -357,6 +373,8 @@ def build_units_data(platform,
 		
 		isLastReinforcement = False
 		
+		add_letter = ""
+		
 		if isReinforcement:
 			
 			add_letter = "r"
@@ -369,7 +387,8 @@ def build_units_data(platform,
 			class_line_start += add_letter
 			level_line_start += add_letter
 			quantity_line_start += add_letter
-							
+			
+						
 					
 		if isLastReinforcement:		
 			unit_num = ""	
@@ -389,6 +408,14 @@ def build_units_data(platform,
 		level_line =    level_line_start + unit_num + "=" + unit_level
 		quantity_line = quantity_line_start + unit_num + "=" + unit_quantity
 		
+		
+		
+		if unit_class == "Raven":
+			class_article_line = "|class" + add_letter + unit_num + "article=" + "Raven (laguz)"
+		
+		else:
+			class_article_line = None	
+		
 		if unit_num == "b":
 			quantity_line = None
 											  
@@ -396,6 +423,7 @@ def build_units_data(platform,
 		
 		for line in (name_line, 
 					 class_line, 
+					 class_article_line,
 					 level_line, 
 					 quantity_line, 
 					 inventory_line):
@@ -409,7 +437,8 @@ def build_units_data(platform,
 
 
 
-def build_chapter_page(platform, 
+def build_chapter_page(hatnote, 
+					   platform, 
 					   chapter_title, 
 					   image_num,
 					   game,
@@ -422,12 +451,7 @@ def build_chapter_page(platform,
 					   chapter_desciption, 
 					   chapter_plot,
 					   beginning_log,
-					   victory_condition,
-					   defeat_condition,
-					   ally, 
-					   other,
-					   enemy,
-					   map_text, 
+					   chapter_data_infobox,  
 					   return_characters,
 					   new_units_data,
 					   character_data_note,
@@ -500,11 +524,6 @@ def build_chapter_page(platform,
 	elif new_units == None:
 		new_units_line += "none"
 	
-
-			
-	#~ else:
-		#~ new_units_line += "none"
-	
 		
 	bosses_line = "|boss="	
 	
@@ -521,7 +540,7 @@ def build_chapter_page(platform,
 		weather_line = "|weather="
 		
 	else:
-		weather_line = "|weather=[[" + weather + "]]"
+		weather_line = "|weather=" + weather 
 	
 	
 	for line in (title_line, 
@@ -574,24 +593,7 @@ def build_chapter_page(platform,
 	
 	# Building chapter data
 	
-	chapter_data = ""
-											 
-	victory_line = "|victory=" + victory_condition
-	defeat_line = "|defeat=" + defeat_condition
-	ally_line = "|ally=" + ally
-	other_line = "|other=" + other
-	enemy_line = "|enemy=" + enemy
-	map_line = "|map=" + map_text
-	
-	for line in ("==Chapter Data==", 
-				 "{{ChapDataMap", 
-				 victory_line, 
-				 defeat_line, 
-				 ally_line, other_line, 
-				 enemy_line, map_line,
-				 "}}"):
-					 
-		chapter_data += line + "\n"
+	chapter_data = "==Chapter Data== \n" + chapter_data_infobox
 		
 	#==================================================
 	
@@ -614,7 +616,11 @@ def build_chapter_page(platform,
 			unit_name = new_unit[0]
 			unit_data = new_unit[1]
 			
-			unit_portrait = "[[File:portrait " + unit_name.lower() + " " + game + ".png]]" 
+			if game != "fe09":
+				unit_portrait = "[[File:portrait " + unit_name.lower() + " " + game + ".png]]" 
+			else:
+				unit_portrait = "[[File:Small portrait " + unit_name.lower() + " " + game + ".png]]" 
+				
 			unit_class = unit_data[0]
 			unit_HP = unit_data[1]
 			unit_level = unit_data[2]
@@ -720,6 +726,10 @@ def build_chapter_page(platform,
 				 "Silence" : "Silence (staff)", 
 				 
 				 "Noba Scroll" : "Crusader Scrolls", 
+				 "Counter Scroll" : "Skill items", 
+				 "Vantage Scroll" : "Skill items",
+				 "Guard Scroll" : "Skill items",
+				 
 				 "Wind" : "Wind (tome)", 
 				 "Torch" : "Torch (item)", 
 				 "Eclipse" : "Eclipse (tome)",
@@ -1086,7 +1096,8 @@ def build_chapter_page(platform,
 	
 	chapter_page = ""
 	
-	for section in (stub_mark, 
+	for section in (hatnote,
+					stub_mark, 
 					chapter_infobox, 
 					chapter_quote,
 					chapter_desciption, 
@@ -1115,26 +1126,27 @@ def build_chapter_page(platform,
 	
 #=======================================================================
 
+hatnote = None
+
 # Insert whether or not the page is a stub.
 # If true, a stub mark will be placed at the top of the page.
 
 isStub = True
 
-
 # Insert platform name
 
-platform = "gba"
+platform = "gcn"
 
 
 # Insert basic chapter info
 # Note: New units will accept a list, a string, or "None"
 
-chapter_title = "Beyond the Darkness"
-image_num = "F"
-game = "fe06"
-location = "[[Dragon Sanctuary]]"
-new_units = None
-bosses = ["Idenn"]
+chapter_title = "The Feral Frontier"
+image_num = "15"
+game = "fe09"
+location = "[[Grann Desert]]" 
+new_units = ["Stefan", "Muarim"]
+bosses = ["Muarim"]
 weather = None
 
 # Insert beginning quote and the quote's speaker 
@@ -1142,14 +1154,14 @@ weather = None
 
 # if "None" is inputted for either, a quote will not appear
 
-quote = "I must lead this world… No matter how many days or nights pass, I must. I must…"
-quote_speaker = "[[Idenn]] to [[Roy]]"
+quote = "What? We're facing laguz? I don't like the look of this!"
+quote_speaker = "[[Ike]]"
 
 
 # Insert chapter description. 
 
 chapter_desciption = \
-"""'''Beyond the Darkness''' (Japanese: {{hover|暗闇の向こう|Kurayami no mukō}}, ''Beyond the Darkness'') is the final chapter of {{FE6}}. """
+"""'''The Feral Frontier''' (Japanese: {{hover|辺境の獣|Henkyō no kemono}}, ''Frontier of beasts'') is chapter 15 of {{FE9}}."""
 
 
 # Insert chapter plot
@@ -1165,26 +1177,40 @@ None
 
 # Insert chapter infobox data
 
-victory_condition = "Defeat [[Idenn]]"
-defeat_condition = "[[Roy]] dies"
-ally = "{{hover|10|every unit that survived chapter 24; maximum 10}}"
-other = "0"
-enemy = "3{{hover|+reinforcements|number may vary}}"
+chapter_data_infobox = \
+"""{{ChapDataMap
+|victory=Defeat [[Muarim]]
+|defeat=[[Ike]] dies 
+|ally=14{{hover|+1|Stefan}}
+|partner=0
+|other=0
+|enemy=20
+|map=<br>{{Tab
+|tab1=Map
+|tab2=Hidden Items
+|content1=[[File:Cm fe09 15.png]]
+|content2=[[File:Cm fe09 15 hidden items.png]]
+}}
+}}
+:''For more information on hidden items, see [[hidden items|here]].''"""
 
-map_text = "[[File:Cm fe06 F.png]]"
-
+"""{{ChapDataMap
+|victory=
+|defeat=
+|ally=
+|partner=
+|other=
+|enemy=
+|map=
+}}"""
 
 # Insert returning characters and new units data
 
 return_characters = \
-["Roy", "Marcus", "Alen", "Lance", "Wolt", "Bors", "Merlinus", 
-"Elen", "Deke", "Wade", "Lot", "Shanna", "Chad", "Lugh", "Clarine", 
-"Rutoga", "Saul", "Dorothy", "Sue", "Zelots", "Trec", "Noah", "Astore",
-"Lilina", "Gwendolyn", "Bath", "Ogier", "Fir", "Sin", 
-"Gonzalez", "Klein", "Thea", "Lalum", "Ekhidna", "Elphin", "Bartre", 
-"Geese", "Raigh", "Cath", "Milady", "Perceval", "Sophia", "Cecilia", 
-"Igrene", "Garret", "Fae", "Zeiss", "Hugh", "Douglas", "Niime", 
-"Juno", "Dayan", "Jodel", "Karel"]
+["Ike", "Titania", "Oscar", "Boyd", "Rhys", "Soren", "Mia", "Ilyana", 
+"Mist", "Rolf", "Marcia", "Lethe", "Mordecai", "Volke", "Brom",
+"Kieran", "Nephenee", "Zihark", "Sothe", "Jill", "Astrid", "Gatrie", 
+"Makalov"]
 
   
 # New units data is organized:
@@ -1195,7 +1221,8 @@ return_characters = \
 # If there are no new units, input "None"
 
 new_units_data = \
-None
+[["Stefan", ["Swordmaster", "38", "8", "Have [[Lethe]] or [[Mordecai]] step on one specific space on the map before any other unit does"]], 
+["Muarim", ["Tiger", "45", "9", "Automatically at end of chapter"]], ]
 
 # Insert note under character data 
 # 	if no note is needed, insert "None"
@@ -1210,14 +1237,45 @@ character_data_note = None
 # ["", ""], 
 
 item_data = \
-[["Elixir", "Steal from [[manakete]]"], 
-["Elixir", "Steal from [[manakete]]"], ]
+[["Gold", "Automatically at preparations (10,000G)"], 
+["Vulnerary", "Steal from [[laguz]]"], 
+["Vulnerary", "Steal from [[laguz]]"], 
+["Vulnerary", "Steal from [[laguz]]"], 
+["Vulnerary", "Steal from [[laguz]]"], 
+["Coin", "Find in sand"], 
+["Coin", "Find in sand"], 
+["Physic", "Find in sand"], 
+["Shine", "Find in sand"], 
+["Guard Scroll", "Find in sand"], 
+["Silver Blade", "Find in sand"], 
+["Boots", "Find in sand"], 
+["Statue Frag", "Find in sand"], 
+["White Gem", "Find in sand"], ]
 
 
 # Insert note after under item data 
 # 	if no note is needed, insert "None"
 
-item_data_note = """<small>*Note: All reinforcements will carry [[elixir]]s.</small>"""
+item_data_note = \
+"""{{ChapBEXP
+|req1=Clear in 7 turns or fewer
+|easy1=450
+|normal1=300
+|hard1=150
+|req2=For each enemy [[laguz]] alive (maximum 19)
+|easy2=60
+|normal2=40
+|hard2=20
+|req3=All enemy [[laguz]] survive
+|easy3=450
+|normal3=300
+|hard3=150
+|req4=Clear Bonus
+|easy4=150
+|normal4=100
+|hard4=--
+}}
+"""
 
 shop_data_header = "Shop Data"
 
@@ -1238,23 +1296,33 @@ None
 # ["", "", "", "", [""]], 
 
 enemy_data = \
-[["War Dragon", "Manakete", "18", "1", ["Firestone", "Elixir"]], 
-["War Dragon", "Manakete", "19", "1", ["Firestone", "Elixir"]], 
-["[[Idenn]]", "Demon Dragon", "20", "1", ["Dark Breath"]], ]
+[ ["Rebel", "Beast Tribe", "1", "1", ["Claw (cat)", "Vulnerary"]], 
+["Rebel", "Beast Tribe", "2", "3", ["Claw (cat)"]], 
+["Rebel", "Beast Tribe", "3", "1", ["Claw (cat)"]], 
+["Rebel", "Beast Tribe", "4", "3", ["Claw (cat)"]], 
+["Rebel", "Beast Tribe", "4", "1", ["Claw (cat)", "Vulnerary"]], 
+["Rebel", "Beast Tribe", "5", "1", ["Claw (cat)"]], 
+["Rebel", "Beast Tribe", "2", "1", ["Claw (tiger)"]], 
+["Rebel", "Beast Tribe", "3", "1", ["Claw (tiger)", "Vulnerary"]], 
+["Rebel", "Beast Tribe", "4", "1", ["Claw (tiger)"]], 
+["Rebel", "Beast Tribe", "4", "1", ["Claw (tiger)", "Vulnerary"]],
+["Rebel", "Bird Tribe", "2", "2", ["Beak (hawk)"]], 
+["Rebel", "Bird Tribe", "1", "1", ["Beak (raven)"]], 
+["Rebel", "Bird Tribe", "2", "2", ["Beak (raven)"]], 
+["[[Muarim]]", "Tiger", "9", "1", ["Claw (tiger)", "Demi Band"]], ]
 
 reinforcement_data = \
-[["War Dragon", "Manakete", "varies", "varies", ["Firestone", "Elixir"]], ]
+None
 
 # Insert note under enemy data 
 # 	if no note is needed, insert "None"
 
-enemy_data_note = "<small>*Note: Starting from turn 2 or 3, [[manakete]]s will appear randomly and indefinitely from the four statues on the map. </small>"
+enemy_data_note = None
 
 # A variable that will print the units total
 # if true, the unit and reinforcements total will print before the chapter page. 
 
 print_units_total = False
-
 
 # Insert NPC data
 # 	if there are no NPCs, input "None"
@@ -1273,63 +1341,49 @@ None
 npc_data_note = None
 
 
-boss_name = "Idenn"
+boss_name = "Muarim"
 
 # Insert boss data
 
-detailed_boss_data = """
-{{Tab
-|tab1=Normal Mode
-|tab2=Hard Mode
-|content1={{BossStats GBA
-|portrait= [[File:Portrait idenn 03 fe06.png|Idenn]]
-|class=Mage Dragon
-|classname=Demon Dragon
-|lv=20
-|HP=78
-|mag=29
-|skill=23
-|spd=16
-|luck=18
-|def=30
-|res=21
-|move=2
-|con=25
-|inventory=[[File:Is gba dark breath.png]] [[Dark Breath]]}}
-|content2={{BossStats GBA
-|portrait=[[File:Portrait idenn 03 fe06.png|Idenn]]
-|class=Mage Dragon
-|classname=Demon Dragon
-|lv=20
-|HP=80
-|mag=29
-|skill=23
-|spd=16
-|luck=18
-|def=30
-|res=21
-|move=2
-|con=25
-|inventory=[[File:Is gba dark breath.png]] [[Dark Breath]]
-}}
-}}
-<center><small>Note: Hard Mode stats can vary in one or two points.</small></center>
-"""
-
+detailed_boss_data = """{{BossStats GCN
+|portrait=[[File:Small portrait muarim fe09.png|Muarim]]
+|class=Tiger
+|affin=thunder
+|lv=9
+|HP=45
+|str=23-3
+|magic=4
+|skill=17-2
+|spd=18-1
+|luck=11
+|def=15-1
+|res=8-1
+|con=
+|wght=44
+|move=9
+|inventory=[[File:Is gcn claw (tiger).png]] [[Claw]]<br>[[File:Is gcn demi band.png]] [[Demi Band]]
+}}"""
 
 strategy = None
 trivia = None
 
-chapter_etymology = """{{Names 
-|eng-fan-name=Beyond the Darkness
-|eng-fan-mean=--
-|jap-name={{hover|暗闇の向こう|Kurayami no mukō}}
-|jap-mean=Beyond the Darkness
+chapter_etymology = """{{Names
+|eng-name=The Feral Frontier
+|eng-mean=--
+|jap-name={{hover|辺境の獣|Henkyō no kemono}}
+|jap-mean=Frontier of beasts
+|span-name=Frontera salvaje
+|span-mean=Savage frontier
+|fren-name=Frontière sauvage
+|fren-mean=Savage frontier
+|ger-name=Wilde Tiere
+|ger-mean=Wild Animals
+|ital-name=Fronte remoto
+|ital-mean=Remote front
 }}
 """
 
-"""
-{{Names 
+"""{{Names 
 |eng-fan-name=
 |eng-fan-mean=
 |jap-name=
@@ -1337,11 +1391,10 @@ chapter_etymology = """{{Names
 }}
 """
 
-"""
-{{Names 
+"""{{Names 
 |eng-name=
-|eng-mean=
-|jap-name=
+|eng-mean=--
+|jap-name={{hover||}}
 |jap-mean=
 |span-name=
 |span-mean=
@@ -1349,7 +1402,9 @@ chapter_etymology = """{{Names
 |fren-mean=
 |ger-name=
 |ger-mean=
-}} 
+|ital-name=
+|ital-mean=
+}}
 """
 
 #~ # Insert gallery text
@@ -1359,14 +1414,16 @@ gallery_text = None
 
 chapter_navigator_section = \
 """{{ChapterNav
-|prechapter=Legends and Lies
-|name=Beyond the Darkness
+|prechapter=Training
+|name=The Feral Frontier
+|nextchapter=The Atonement
 }}
 """
 
 # Takes every varaiable and constructs a chapter page.
 
-chapter_page = build_chapter_page(platform, 
+chapter_page = build_chapter_page(hatnote, 
+								  platform, 
 								  chapter_title, 
 								  image_num,
 								  game,
@@ -1379,12 +1436,7 @@ chapter_page = build_chapter_page(platform,
 								  chapter_desciption,
 								  chapter_plot,
 								  beginning_log,
-								  victory_condition,
-								  defeat_condition,
-								  ally,
-								  other,
-								  enemy,
-								  map_text, 
+								  chapter_data_infobox,  
 								  return_characters,
 								  new_units_data,
 								  character_data_note,
