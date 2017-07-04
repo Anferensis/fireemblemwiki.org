@@ -283,18 +283,12 @@ def build_unit_inventory(platform,
 		# The name of the item is put entirely in lower case		
 		lowered_item_name = item_name.lower()
 		
-		if item_name.endswith(" (drop)"):
-			item_name = item_name[:-7]
-			lowered_item_name = lowered_item_name[:-7]
-			item_link = "{{drop|" + item_name + "}}"
-			
-		else:
-			
-			disimbaguation_cases = \
+		special_link_cases = \
 				{"Fire" : "Fire (tome)", 
 				 "Thunder" : "Thunder (tome)", 
-				 "Luna" : "Luna (tome)", 
+				 "Luna" : "Luna (skill)", 
 				 "Wind" : "Wind (tome)",
+				 "Light": "Lightning",
 				 "Eclipse" : "Eclipse (tome)",
 				 "Ballista" : "Ballista (weapon)",
 				 
@@ -308,25 +302,47 @@ def build_unit_inventory(platform,
 				 "Torch" : "Torch (item)",
 				 "Poison" : "Poison (tome)", 
 				 
-				 "Adept Manual" : "Skill items"}
+				 "Adept Manual" : "Skill items",
+				 "Adept Scroll" : "Skill items", 
+				 "Occult Scroll" : "Skill items",
+				 "Provoke Scroll" : "Skill items",  
+				 "Guard Scroll" : "Skill items",
+				 "Gamble Scroll" : "Skill items", 
 				 
-			special_cases = \
-				{"Beak (raven)" : "Beak", 
-				 "Beak (hawk)" : "Beak", 
-				 "Claw (cat)" : "Claw", 
-				 "Claw (tiger)" : "Claw", }
-							 
-			if item_name in disimbaguation_cases:
-				
-				link = disimbaguation_cases[item_name]			
-				item_link = hyperlink(link, item_name)
+				 "Renewal" : "Renewal (skill)",
+				 "Guard" : "Cancel", 
+				 "Cancel" : "Pavise"}
+				 
+		special_image_cases = \
+			{"Beak (raven)" : "Beak", 
+			 "Beak (hawk)" : "Beak", 
+			 "Claw (cat)" : "Claw", 
+			 "Claw (tiger)" : "Claw", 
+			 
+			 "Breath (red)" : "Breath (laguz)", 
+			 "Breath (white)": "Breath (laguz)"}
+		
+		if item_name.endswith(" (drop)"):
+			item_name = item_name[:-7]
+			lowered_item_name = lowered_item_name[:-7]
 			
-			elif item_name in special_cases:
-				link = special_cases[item_name]
-				item_link = hyperlink(link)
-				
+			if item_name in special_link_cases:
+				link = special_link_cases[item_name]
+				item_link = "{{drop|" + link + "|" + item_name + "}}"
 			else:
-				item_link = hyperlink(item_name)
+				item_link = "{{drop|" + item_name + "}}"		
+							 
+		elif item_name in special_link_cases:
+			
+			link = special_link_cases[item_name]			
+			item_link = hyperlink(link, item_name)
+		
+		elif item_name in special_image_cases:
+			link = special_image_cases[item_name]
+			item_link = hyperlink(link)
+			
+		else:
+			item_link = hyperlink(item_name)
 		
 		if item_name == "Beak":
 			item_image = "[[File:Is " + platform + " " + lowered_item_name + " (raven).png]]"
@@ -527,13 +543,16 @@ def build_chapter_page(hatnote,
 		
 	bosses_line = "|boss="	
 	
-	for boss_num, boss_title in enumerate(bosses, 1):
-		formatted_boss_name = "[[" + boss_title + "]]"
-		
-		if boss_num != len(bosses):
-			formatted_boss_name += ", "
+	if bosses != None:
+		for boss_num, boss_title in enumerate(bosses, 1):
+			formatted_boss_name = "[[" + boss_title + "]]"
 			
-		bosses_line += formatted_boss_name
+			if boss_num != len(bosses):
+				formatted_boss_name += ", "
+				
+			bosses_line += formatted_boss_name
+	else:
+		bosses_line += "none"
 	
 	
 	if weather == None:
@@ -609,7 +628,7 @@ def build_chapter_page(hatnote,
 		
 		number_of_new_units = str(len(new_units_data))
 		
-		formatted_new_units = "|newunits = " + number_of_new_units + "\n"
+		formatted_new_units = "|newunits=" + number_of_new_units + "\n"
 		
 		for unit_num, new_unit in enumerate(new_units_data, 1):
 			
@@ -676,7 +695,8 @@ def build_chapter_page(hatnote,
 							  "robert" : "Robert (Thracia 776)",
 							  "ced" : "Ced (character)", 
 							  "marth 02" : "Marth", 
-							  "lance" : "Lance (character)"}
+							  "lance" : "Lance (character)", 
+							  "largo" : "Largo (Path of Radiance)"}
 							  
 		if char_name in special_exceptions:
 			
@@ -725,11 +745,24 @@ def build_chapter_page(hatnote,
 				 "Rescue" : "Rescue (staff)",
 				 "Silence" : "Silence (staff)", 
 				 
-				 "Noba Scroll" : "Crusader Scrolls", 
+				 "Nihil Scroll" : "Skill items", 
+				 "Noba Scroll" : "Crusader Scrolls",
+				 "Corrosion Scroll" : "Skill items",  
 				 "Counter Scroll" : "Skill items", 
 				 "Vantage Scroll" : "Skill items",
 				 "Guard Scroll" : "Skill items",
+				 "Gamble Scroll" : "Skill items",
+				 "Parity Scroll" : "Skill items", 
+				 "Provoke Scroll" : "Skill items", 
+				 "Savior Scroll" : "Skill items",  
+				 "Shade Scroll" : "Skill items", 
+				 "Smite Scroll" : "Skill items", 
+				 "Renewal Scroll" : "Skill items",
+				 "Resolve Scroll" : "Skill items",
+				 "Wrath Scroll" : "Skill items", 			  
 				 
+				 "Fire" : "Fire (tome)",
+				 "Thunder" : "Thunder (tome)",
 				 "Wind" : "Wind (tome)", 
 				 "Torch" : "Torch (item)", 
 				 "Eclipse" : "Eclipse (tome)",
@@ -992,6 +1025,9 @@ def build_chapter_page(hatnote,
 					 
 		if line != None:
 			boss_data_section += line + "\n"
+			
+		else:
+			boss_data_section = None
 											    
 	#==============================================================
 	
@@ -1139,14 +1175,14 @@ platform = "gcn"
 
 
 # Insert basic chapter info
-# Note: New units will accept a list, a string, or "None"
+# Note: New units will accept a list, a string, or None
 
-chapter_title = "The Feral Frontier"
-image_num = "15"
+chapter_title = "Repatriation"
+image_num = "F"
 game = "fe09"
-location = "[[Grann Desert]]" 
-new_units = ["Stefan", "Muarim"]
-bosses = ["Muarim"]
+location = "[[Crimea]] Castle" 
+new_units = "[[Tibarn]], [[Naesala]], or [[Giffca]]"
+bosses = ["Ashnard", "Bryce"]
 weather = None
 
 # Insert beginning quote and the quote's speaker 
@@ -1154,14 +1190,14 @@ weather = None
 
 # if "None" is inputted for either, a quote will not appear
 
-quote = "What? We're facing laguz? I don't like the look of this!"
+quote = "Our road has been long, but it ends today! Let's liberate Crimea and free our friends...and our families...from Daein's tyranny! Men of Crimea...Laguz of Tellius...Greil Mercenaries...MOVE OUT!!"
 quote_speaker = "[[Ike]]"
 
 
 # Insert chapter description. 
 
 chapter_desciption = \
-"""'''The Feral Frontier''' (Japanese: {{hover|辺境の獣|Henkyō no kemono}}, ''Frontier of beasts'') is chapter 15 of {{FE9}}."""
+"""'''Repatriation''' (Japanese: {{hover|帰還|Kikan}}, ''Repatriation'') is the final chapter of {{FE9}}."""
 
 
 # Insert chapter plot
@@ -1173,26 +1209,22 @@ chapter_plot = None
 # if there is no beginning log, input "None"
 
 beginning_log = \
-None
+"""The [[Crimea]]n royal palac, located in the center of Melior, is famed for its beautiful  gardens where the world seems at peace. But times have changed. Countless battles have raged in these idyllic confines, and a new dark lord now sits upon the throne. The palace itself has not suffered--it remains a study in dignity and elegance. Yet there is no peace on this day. A grim tension fills the air, engulfing all it touches in deafening silence. Within the heart of the palace sits the author of this war: [[Ashnard]], king of [[Daein]]. <br>
+[[Ike]], supreme commander of the [[Crimea]]n army, and [[Elincia]], princess of [[Crimea]], have completed their battle preparations. Now, they spend a tense morning waiting for the decisive battle that will conclude their yearlong odyssey. They wait for the beginning of the end."""
 
 # Insert chapter infobox data
 
 chapter_data_infobox = \
 """{{ChapDataMap
-|victory=Defeat [[Muarim]]
-|defeat=[[Ike]] dies 
-|ally=14{{hover|+1|Stefan}}
+|victory=Defeat [[Ashnard]]
+|defeat=[[Ike]] or [[Elincia]] dies 
+|ally=14{{hover|+1|Tibarn, Naesala, or Giffca}}
 |partner=0
 |other=0
-|enemy=20
-|map=<br>{{Tab
-|tab1=Map
-|tab2=Hidden Items
-|content1=[[File:Cm fe09 15.png]]
-|content2=[[File:Cm fe09 15 hidden items.png]]
+|enemy=50
+|map=[[File:Cm fe09 F.png]]
 }}
-}}
-:''For more information on hidden items, see [[hidden items|here]].''"""
+"""
 
 """{{ChapDataMap
 |victory=
@@ -1210,7 +1242,9 @@ return_characters = \
 ["Ike", "Titania", "Oscar", "Boyd", "Rhys", "Soren", "Mia", "Ilyana", 
 "Mist", "Rolf", "Marcia", "Lethe", "Mordecai", "Volke", "Brom",
 "Kieran", "Nephenee", "Zihark", "Sothe", "Jill", "Astrid", "Gatrie", 
-"Makalov"]
+"Makalov", "Stefan", "Muarim", "Tormod", "Devdan", "Reyson", "Ulki", "Janaff", 
+"Tanith", "Shinon", "Calill", "Tauroneo", "Ranulf", "Haar", "Bastian", 
+"Lucia", "Geoffrey", "Largo", "Elincia", "Ena", "Nasir"]
 
   
 # New units data is organized:
@@ -1221,13 +1255,14 @@ return_characters = \
 # If there are no new units, input "None"
 
 new_units_data = \
-[["Stefan", ["Swordmaster", "38", "8", "Have [[Lethe]] or [[Mordecai]] step on one specific space on the map before any other unit does"]], 
-["Muarim", ["Tiger", "45", "9", "Automatically at end of chapter"]], ]
+[["Tibarn", ["Hawk (class) {{!}} Hawk", "63", "18", "Select [[Tibarn]] when prompted"]], 
+["Naesala", ["Raven (class) {{!}} Raven", "57", "17", "Select [[Naesala]] when prompted"]], 
+["Giffca", ["Lion", "68", "20", "Select [[Giffca]] when prompted"]], ]
 
 # Insert note under character data 
 # 	if no note is needed, insert "None"
 
-character_data_note = None
+character_data_note = "<small>*Note: [[Tibarn]], [[Naesala]], or [[Giffca]] will join either at the beginning of the chapter on easy and medium mode or at the start of the second part of the chapter on hard and maniac mode. </small>"
 
 # Insert item data
 
@@ -1237,45 +1272,43 @@ character_data_note = None
 # ["", ""], 
 
 item_data = \
-[["Gold", "Automatically at preparations (10,000G)"], 
-["Vulnerary", "Steal from [[laguz]]"], 
-["Vulnerary", "Steal from [[laguz]]"], 
-["Vulnerary", "Steal from [[laguz]]"], 
-["Vulnerary", "Steal from [[laguz]]"], 
-["Coin", "Find in sand"], 
-["Coin", "Find in sand"], 
-["Physic", "Find in sand"], 
-["Shine", "Find in sand"], 
-["Guard Scroll", "Find in sand"], 
-["Silver Blade", "Find in sand"], 
-["Boots", "Find in sand"], 
-["Statue Frag", "Find in sand"], 
-["White Gem", "Find in sand"], ]
-
+[["Physic", "Dropped by [[bishop]]"],
+["Speedwing", "Dropped by [[Bryce]]"], 
+["Silence", "Steal from [[bishop]]"], 
+["Elixir", "Steal from [[bishop]]"], 
+["Sleep", "Steal from [[bishop]]"], 
+["Fortify", "Steal from [[bishop]]"], 
+["Elixir", "Steal from [[bishop]]"], 
+["Rexaura", "Steal from [[bishop]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Vulnerary", "Steal from [[paladin]]"], 
+["Thoron", "Steal from [[sage]]"], 
+["Meteor", "Steal from [[sage]]"], 
+["Vulnerary", "Steal from [[sage]]"], 
+["Vulnerary", "Steal from [[swordmaster]]"], 
+["Steel Sword", "Steal from [[paladin]]"], 
+["Steel Lance", "Steal from [[paladin]]"], 
+["Killing Edge", "Steal from [[paladin]]"], 
+["Silver Lance", "Steal from [[paladin]]"], 
+["Silver Sword", "Steal from [[paladin]]"], 
+["Iron Axe", "Steal from [[paladin]]"], 
+["Iron Axe", "Steal from [[paladin]]"], 
+["Iron Axe", "Steal from [[paladin]]"],]
 
 # Insert note after under item data 
 # 	if no note is needed, insert "None"
 
 item_data_note = \
-"""{{ChapBEXP
-|req1=Clear in 7 turns or fewer
-|easy1=450
-|normal1=300
-|hard1=150
-|req2=For each enemy [[laguz]] alive (maximum 19)
-|easy2=60
-|normal2=40
-|hard2=20
-|req3=All enemy [[laguz]] survive
-|easy3=450
-|normal3=300
-|hard3=150
-|req4=Clear Bonus
-|easy4=150
-|normal4=100
-|hard4=--
-}}
-"""
+None
 
 shop_data_header = "Shop Data"
 
@@ -1296,20 +1329,40 @@ None
 # ["", "", "", "", [""]], 
 
 enemy_data = \
-[ ["Rebel", "Beast Tribe", "1", "1", ["Claw (cat)", "Vulnerary"]], 
-["Rebel", "Beast Tribe", "2", "3", ["Claw (cat)"]], 
-["Rebel", "Beast Tribe", "3", "1", ["Claw (cat)"]], 
-["Rebel", "Beast Tribe", "4", "3", ["Claw (cat)"]], 
-["Rebel", "Beast Tribe", "4", "1", ["Claw (cat)", "Vulnerary"]], 
-["Rebel", "Beast Tribe", "5", "1", ["Claw (cat)"]], 
-["Rebel", "Beast Tribe", "2", "1", ["Claw (tiger)"]], 
-["Rebel", "Beast Tribe", "3", "1", ["Claw (tiger)", "Vulnerary"]], 
-["Rebel", "Beast Tribe", "4", "1", ["Claw (tiger)"]], 
-["Rebel", "Beast Tribe", "4", "1", ["Claw (tiger)", "Vulnerary"]],
-["Rebel", "Bird Tribe", "2", "2", ["Beak (hawk)"]], 
-["Rebel", "Bird Tribe", "1", "1", ["Beak (raven)"]], 
-["Rebel", "Bird Tribe", "2", "2", ["Beak (raven)"]], 
-["[[Muarim]]", "Tiger", "9", "1", ["Claw (tiger)", "Demi Band"]], ]
+[["Soldier", "Bishop", "15", "1", ["Shine", "Silence", "Physic (drop)", "Elixir"]], 
+["Soldier", "Bishop", "15", "1", ["Rexaura", "Sleep", "Fortify", "Elixir"]], 
+["Feral One", "Cat", "16", "2", ["Claw (cat)"]],
+["Soldier", "General", "15", "1", ["Silver Lance"]], 
+["Soldier", "General", "15", "1", ["Silver Lance", "Vulnerary"]],
+["Soldier", "Halberdier", "14", "1", ["Brave Lance"]], 
+["Soldier", "Halberdier", "15", "3", ["Silver Lance"]], 
+["Soldier", "Halberdier", "15", "1", ["Killer Lance"]], 
+["Soldier", "Paladin", "14", "4", ["Steel Axe"]], 
+["Soldier", "Paladin", "14", "3", ["Steel Bow"]], 
+["Soldier", "Paladin", "14", "1", ["Killer Axe"]],
+["Soldier", "Paladin", "14", "1", ["Silver Bow"]], 
+["Soldier", "Paladin", "14", "1", ["Brave Bow"]], 
+["Soldier", "Paladin", "14", "3", ["Steel Sword", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Silver Lance", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Silver Sword", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Brave Lance", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Brave Sword", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Silver Lance", "Iron Axe", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Killing Edge", "Iron Axe", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Steel Sword", "Steel Lance", "Vulnerary"]], 
+["Soldier", "Paladin", "14", "1", ["Silver Sword", "Iron Axe", "Vulnerary"]], 
+["Feral One", "Red Dragon", "17", "3", ["Breath (red)"]], 
+["Soldier", "Sage", "13", "1", ["Bolganone"]], 
+["Soldier", "Sage", "13", "1", ["Tornado"]], 
+["Soldier", "Sage", "13", "1", ["Thoron", "Meteor", "Vulnerary"]],
+["Merenary", "Swordmaster", "13", "1", ["Iron Blade"]], 
+["Merenary", "Swordmaster", "13", "1", ["Venin Edge", "Vulnerary"]], 
+["Merenary", "Swordmaster", "15", "1", ["Silver Sword"]], 
+["Merenary", "Swordmaster", "15", "3", ["Silver Blade"]],
+["Feral One", "Tiger", "17", "2", ["Claw (tiger)"]], 
+["Mercenary", "Warrior", "13", "2", ["Silver Axe"]], 
+["[[Bryce]]", "General", "20", "1", ["Wishblade", "Speedwing (drop)", "Guard", "Daunt"]], 
+["[[Ashnard]]", "King Daein", "20", "1", ["Gurgurant", "Renewal", "Daunt"]], ]
 
 reinforcement_data = \
 None
@@ -1340,46 +1393,127 @@ None
 
 npc_data_note = None
 
+# Insert boss name
+# 	if no boss is present, input "None"
 
-boss_name = "Muarim"
+boss_name = "Ashnard"
 
 # Insert boss data
+# 	if no boss is present, input "None"
 
-detailed_boss_data = """{{BossStats GCN
-|portrait=[[File:Small portrait muarim fe09.png|Muarim]]
-|class=Tiger
-|affin=thunder
-|lv=9
-|HP=45
-|str=23-3
-|magic=4
-|skill=17-2
-|spd=18-1
-|luck=11
-|def=15-1
-|res=8-1
-|con=
-|wght=44
-|move=9
-|inventory=[[File:Is gcn claw (tiger).png]] [[Claw]]<br>[[File:Is gcn demi band.png]] [[Demi Band]]
-}}"""
+detailed_boss_data = """{{Tab
+|tab1=Easy/Normal/Hard Mode 1st round
+|content1={{BossStats GCN
+|portrait=[[File:Small portrait ashnard 01 fe09.png|Ashnard]]
+|class=King Daein
+|affin=fire
+|lv=20
+|HP=60
+|str=35
+|magic=16
+|skill=27
+|spd=27
+|luck=0
+|def=35
+|res=26
+|move=10
+|con=14
+|wght=49
+|inventory=[[File:Is gcn gurgurant.png]] [[Gurgurant]]
+|skills=[[File:Is gcn renewal.png]] [[Renewal (skill)|Renewal]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
+|sw=S
+|ax=A
+}}
+|tab2=Hard Mode 2nd round
+|content2={{BossStats GCN
+|portrait=[[File:Small portrait ashnard 02 fe09.png|Ashnard]]
+|class=King Daein
+|affin=fire
+|lv=20
+|HP=80
+|str=40
+|magic=25
+|skill=30
+|spd=28
+|luck=10
+|def=35
+|res=30
+|move=10
+|wght=49
+|con=14
+|inventory=[[File:Is gcn gurgurant.png]] [[Gurgurant]]
+|skills=[[File:Is gcn renewal.png]] [[Renewal (skill)|Renewal]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
+|sw=S
+|ax=A
+}}
+}}
+
+
+{{Main|Bryce}}
+{{Tab
+|tab1=Easy/Normal Mode
+|tab2=Hard/Maniac Mode
+|content1={{BossStats GCN
+|portrait=[[File:Small portrait bryce fe09.png]]
+|class=General
+|affin=earth
+|lv=20
+|HP=50
+|str=23
+|magic=12
+|skill=21
+|spd=18
+|luck=17
+|def=25
+|res=16
+|move=6
+|con=13
+|wght=18
+|sw=A
+|la=S
+|inventory=[[File:Is gcn wishblade.png]] [[Wishblade]]<br>[[File:Is gcn speedwing.png]] {{drop|Speedwing}}
+|skills=[[File:Is gcn guard.png]] [[Cancel|Guard]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
+}}
+|content2={{BossStats GCN
+|portrait=[[File:Small portrait bryce fe09.png]]
+|class=General
+|affin=earth
+|lv=20
+|HP=54
+|str=28
+|magic=13
+|skill=26
+|spd=18
+|luck=17
+|def=27
+|res=18
+|move=6
+|con=13
+|wght=18
+|sw=A
+|la=S
+|inventory=[[File:Is gcn wishblade.png]] [[Wishblade]]<br>[[File:Is gcn elixir.png]] [[Elixir]]<br>[[File:Is gcn speedwing.png]] {{drop|Speedwing}}
+|skills=[[File:Is gcn guard.png]] [[Cancel|Guard]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
+}}
+}}
+"""
 
 strategy = None
 trivia = None
 
 chapter_etymology = """{{Names
-|eng-name=The Feral Frontier
+|eng-name=Repatriation
 |eng-mean=--
-|jap-name={{hover|辺境の獣|Henkyō no kemono}}
-|jap-mean=Frontier of beasts
-|span-name=Frontera salvaje
-|span-mean=Savage frontier
-|fren-name=Frontière sauvage
-|fren-mean=Savage frontier
-|ger-name=Wilde Tiere
-|ger-mean=Wild Animals
-|ital-name=Fronte remoto
-|ital-mean=Remote front
+|jap-name={{hover|帰還|Kikan}}
+|jap-mean=Repatriation
+|span-name=El retorno
+|span-mean=The return
+|fren-name=Rapatriement
+|fren-mean=Repatriation
+|ger-name=Heimkehr
+|ger-mean=Return
+|ital-name=Il ritorno
+|ital-mean=The return
 }}
 """
 
@@ -1407,16 +1541,15 @@ chapter_etymology = """{{Names
 }}
 """
 
-#~ # Insert gallery text
-#~ # 	if "None" is inputted, this section will be marked a stub. 
+# Insert gallery text
+# 	if "None" is inputted, this section will be marked a stub. 
 
 gallery_text = None
 
 chapter_navigator_section = \
 """{{ChapterNav
-|prechapter=Training
-|name=The Feral Frontier
-|nextchapter=The Atonement
+|prechapter=Twisted Tower
+|name=Repatriation
 }}
 """
 
