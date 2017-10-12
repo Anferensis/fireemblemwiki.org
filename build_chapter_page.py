@@ -6,14 +6,16 @@ Written by Albert"Anferensis"Ong
 
 A program designed to build a chapter page for fireemblemwiki.org.
 
-Note: This program has only been tested for Fire Emblem 5, 6, 7, and 8.
+Note: This program has only been tested for Fire Emblem 5, 6, 7, 8, and 9.
 It may not function properly for other titles. 
 """
 
-# A list of items and their prices in various Fire Emblem titles.
+# Several lists of items and their prices in various Fire Emblem titles.
 # This is used for building shop data.
+
 # Note: these lists are not comprehensive
 
+# The price list for Fire Emblem: Mystery of the Emblem.
 
 price_list_fe03 = {"Iron Sword" : "420", 
 				   "Steel Sword" : "760",
@@ -75,7 +77,8 @@ price_list_fe05 = {"Iron Sword" : "2,200",
 				   "Shield Ring" : "8,000", }
 
 
-# Price list for the gba titles. 
+# Price list for the gba titles or Fire Emblem 6, 7, and 8. 
+# (The Binding Blade, Blazing Sword, and The Sacred Stones)
 
 price_list_gba = {"Slim Sword" : "480", 
 			  "Iron Sword" : "460",
@@ -176,6 +179,14 @@ price_list_gba = {"Slim Sword" : "480",
 
 
 def hyperlink(link, display_text = None):
+	"""A funtion that converts text, represented as a string, into
+	a hyperlink. This is based off of mediawiki, where adding square
+	brackets around text, as in [[text]], will create a hyperlink. 
+	
+	Functions such that:
+		hyperlink("Lyn") ---> [[Lyn]]
+		hyperlink("Lyn", "A girl") ---> [[Lyn|A girl]]
+	"""
 	
 	if display_text != None:
 		formatted_link = "[[" + link + "|" + display_text +"]]"
