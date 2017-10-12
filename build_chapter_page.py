@@ -3,198 +3,17 @@
 
 """
 Written by Albert"Anferensis"Ong
-
 A program designed to build a chapter page for fireemblemwiki.org.
 
 Note: This program has only been tested for Fire Emblem 5, 6, 7, 8, and 9.
-It may not function properly for other titles. 
+	  It may not function properly for other titles. 
 """
 
-# Several lists of items and their prices in various Fire Emblem titles.
-# This is used for building shop data.
-
-# Note: these lists are not comprehensive
-
-# The price list for Fire Emblem: Mystery of the Emblem.
-
-price_list_fe03 = {"Iron Sword" : "420", 
-				   "Steel Sword" : "760",
-				    
-				   "Iron Lance" : "380", 
-				   "Steel Lance" : "560", 
-				   "Javelin" : "600",
-				    
-				   "Iron Bow" : "330", }
-
-
-# The price list for Fire Emblem: Thracia 776
-			  
-price_list_fe05 = {"Iron Sword" : "2,200", 
-				   "Slim Sword" : "2,600", 
-				   "Steel Sword" : "2,900", 
-				   "Iron Blade" : "2,000", 
-				   "Silver Sword" : "4,200",
-				   "Killing Edge" : "3,800", 
-
-				   "Iron Lance" : "1,100", 
-				   "Steel Lance" : "3,200",
-				   "Slim Lance" : "2,000",
-				   "Silver Lance" : "4,000",
-				   "Killer Lance" : "3,000", 
-				   
-				   "Iron Axe" : "2,200", 
-				   "Steel Axe" : "1,700",
-				   "Silver Axe" : "4,200", 
-				   "Hand Axe" : "1,000", 
-				   "Hammer" : "1,200", 
-				   "Killer Axe" : "2,000", 
-				   
-				   "Iron Bow" : "2,200", 
-				   "Steel Bow" : "3,200",
-				   "Silver Bow" : "4,000",
-				   "Killer Bow" : "3,200", 
-				   				   
-				   "Fire" : "2,250", 
-				   "Thunder" : "3,200",
-				   "Wind" : "2,200", 
-				   "Elfire" : "3,200", 
-				   "Lightning" : "3,200", 
-				   
-				   "Heal" : "2,200",
-				   "Mend" : "2,300", 
-				   
-				   "Vulnerary" : "600",
-				   "Antitoxin" : "1,500",
-				   "Torch" : "500",   
-				   "Door Key" : "500", 
-				   "Stamina Drink" : "5,000",
-				   "Knight Proof" : "8,000", 
-				   
-				   "Life Ring" : "8,000", 
-				   "Speed Ring" : "8,000", 
-				   "Skill Ring" : "8,000", 
-				   "Energy Ring" : "8,000", 
-				   "Shield Ring" : "8,000", }
-
-
-# Price list for the gba titles or Fire Emblem 6, 7, and 8. 
-# (The Binding Blade, Blazing Sword, and The Sacred Stones)
-
-price_list_gba = {"Slim Sword" : "480", 
-			  "Iron Sword" : "460",
-			  "Steel Sword" : "600",
-			  "Silver Sword" : "1,500",
-			  "Iron Blade" : "980",
-			  "Steel Blade" : "1,250",
-			  "Silver Blade" : "1,800",
-			  "Lancereaver" : "1,800",
-			  "Armorslayer" : "1,260",
-			  "Longsword" : "1,260",
-			  "Killing Edge" : "1,300",
-			  "Light Brand" : "1,250",
-			  
-			  "Slim Lance" : "450", 
-			  "Iron Lance" : "360", 
-			  "Steel Lance" : "480", 
-			  "Silver Lance" : "1,200",
-			  "Javelin" : "400", 
-			  "Axereaver" : "1,950",
-			  "Heavy Spear" : "1,200",
-			  "Horseslayer" : "1,040",
-			  "Killer Lance" : "1,200",
-			  
-			  "Iron Axe" : "270", 
-			  "Steel Axe" : "270",
-			  "Silver Axe" : "1,000", 
-			  "Hand Axe" : "300",
-			  "Swordreaver" : "2,100",
-			  "Hammer" : "800",
-			  "Halberd" : "810",
-			  "Killer Axe" : "1,000",
-			  "Battle Axe" : "1,000",
-				  
-			  "Iron Bow" : "540", 
-			  "Steel Bow" : "720", 
-			  "Silver Bow" : "1,600",
-			  "Killer Bow" : "1,400",
-			  "Short Bow" : "1,760",
-			  "Longbow" : "2,000",
-			  
-			  "Fire" : "420", 
-			  "Thunder" : "500",
-			  "Elfire" : "800", 
-			  "Aircalibur" : "1,100", 
-			  "Bolting" : "3,000", 
-			  
-			  "Lightning" : "540", 
-			  "Shine" : "900", 
-			  "Divine" : "1,250",
-			  "Purge" : "3,500", 
-			   
-			  "Flux" : "780", 
-			  "Nosferatu" : "3,000", 
-			  "Eclipse" : "4,000", 
-			  
-			  "Heal" : "600", 
-			  "Mend" : "1,000",
-			  "Recover" : "2,250",
-			  "Physic" : "3,750",
-			  "Torch Staff" : "1,000",
-			  "Unlock": "1,500",
-			  "Barrier" : "2,250",
-			  "Restore" : "2,000",
-				  
-			  "Vulnerary" : "300", 
-			  "Antitoxin" : "450",
-			  "Pure Water" : "900", 
-			  "Door Key" : "50",
-			  "Elixir": "3,000", 
-			  "Chest Key": "1,500",
-			  "Lockpick" : "2,400", 
-			  "Torch" : "500", 
-			  
-			  "Knight Crest" : "10,000", 
-			  "Hero Crest" : "10,000", 
-			  "Elysian Whip" : "10,000", 
-			  "Orion's Bolt" : "10,000", 
-			  "Guiding Ring" : "10,000", 
-			  "Ocean Seal" : "50,000",
-			  "Fell Contract" : "50,000",
-			  "Earth Seal" : "20,000",
-			  
-			  
-			  "Angelic Robe" : "8,000", 
-			  "Energy Ring" : "8,000",
-			  "Secret Book" : "8,000", 
-			  "Speedwings" : "8,000", 
-			  "Goddess Icon" : "8,000", 
-			  "Dragonshield" : "8,000", 
-			  "Talisman" : "8,000", 
-			  "Body Ring" : "8,000", 
-			  "Boots" : "8,000", 
-			  }
-
-
-
-
-
-def hyperlink(link, display_text = None):
-	"""A funtion that converts text, represented as a string, into
-	a hyperlink. This is based off of mediawiki, where adding square
-	brackets around text, as in [[text]], will create a hyperlink. 
-	
-	Functions such that:
-		hyperlink("Lyn") ---> [[Lyn]]
-		hyperlink("Lyn", "A girl") ---> [[Lyn|A girl]]
-	"""
-	
-	if display_text != None:
-		formatted_link = "[[" + link + "|" + display_text +"]]"
-		
-	else:
-		formatted_link = "[[" + link + "]]"
-	
-	return formatted_link
+from price_list import price_list_fe03, \
+					   price_list_fe05, \
+					   price_list_gba
+					   
+from fireemblemwiki_script_utilities import hyperlink
 
 
 
@@ -504,12 +323,10 @@ def build_chapter_page(hatnote,
 	A function designed to build a chapter page for fireemblemwiki.org.
 	"""					   
 	
-		
-	if not isStub:
-		stub_mark = ""
-		
-	else:
+	if isStub:
 		stub_mark = "{{stub}}"
+	else:
+		stub_mark = None
 	
 	#==========================================================
 	
@@ -592,7 +409,7 @@ def build_chapter_page(hatnote,
 		chapter_quote = ""
 		
 	else:
-		chapter_quote = "{{Quote|" + quote + "|" + quote_speaker + "}}"
+		chapter_quote = "{{Quote|" + quote + "|" + quote_speaker + "}} \n"
 	
 	#=========================================================
 
@@ -623,7 +440,8 @@ def build_chapter_page(hatnote,
 	
 	# Building chapter data
 	
-	chapter_data = "==Chapter Data== \n" + chapter_data_infobox
+	chapter_data = "==Chapter Data== \n" + \
+					chapter_data_infobox
 		
 	#==================================================
 	
@@ -1048,7 +866,8 @@ def build_chapter_page(hatnote,
 		strategy_body = "{{sectstub}}"
 		
 	else:
-		strategy_body = "{{strategy}} \n" + strategy
+		strategy_body = "{{strategy}} \n" + \
+						   strategy
 		
 	strategy_section = ""
 	
@@ -1070,6 +889,7 @@ def build_chapter_page(hatnote,
 		
 	for line in ("==Trivia==", 
 				 trivia_body):
+					 
 		trivia_section += line + "\n"
 		
 	#==============================================================
@@ -1169,16 +989,30 @@ def build_chapter_page(hatnote,
 											 
 	return chapter_page
 	
-	
-	
+
+
 #=======================================================================
+
+# User input for creating a chapter page. 	
+
+#=======================================================================
+
+
+# Insert a hatnote, if it is necessary
+# This is for cases where a page needs disambiguation. 
+
+# Hatnote template:
+
+#	:''Insert hatnote here. ''
+#	----
 
 hatnote = None
 
+
 # Insert whether or not the page is a stub.
-# If true, a stub mark will be placed at the top of the page.
 
 isStub = True
+
 
 # Insert platform name
 
@@ -1196,10 +1030,11 @@ new_units = "[[Tibarn]], [[Naesala]], or [[Giffca]]"
 bosses = ["Ashnard", "Bryce"]
 weather = None
 
-# Insert beginning quote and the quote's speaker 
-#	(this is primarily for aesthetics)
 
-# if "None" is inputted for either, a quote will not appear
+# Insert a quote and the quote's speaker. 
+# This is primarily for aesthetic purposes. 
+
+# If "None" is inputted for either, a quote will not appear
 
 quote = "Our road has been long, but it ends today! Let's liberate Crimea and free our friends...and our families...from Daein's tyranny! Men of Crimea...Laguz of Tellius...Greil Mercenaries...MOVE OUT!!"
 quote_speaker = "[[Ike]]"
@@ -1223,7 +1058,8 @@ beginning_log = \
 """The [[Crimea]]n royal palac, located in the center of Melior, is famed for its beautiful  gardens where the world seems at peace. But times have changed. Countless battles have raged in these idyllic confines, and a new dark lord now sits upon the throne. The palace itself has not suffered--it remains a study in dignity and elegance. Yet there is no peace on this day. A grim tension fills the air, engulfing all it touches in deafening silence. Within the heart of the palace sits the author of this war: [[Ashnard]], king of [[Daein]]. <br>
 [[Ike]], supreme commander of the [[Crimea]]n army, and [[Elincia]], princess of [[Crimea]], have completed their battle preparations. Now, they spend a tense morning waiting for the decisive battle that will conclude their yearlong odyssey. They wait for the beginning of the end."""
 
-# Insert chapter infobox data
+
+# Insert chapter infobox data.
 
 chapter_data_infobox = \
 """{{ChapDataMap
@@ -1237,6 +1073,8 @@ chapter_data_infobox = \
 }}
 """
 
+# Chapter infobox template. 
+
 """{{ChapDataMap
 |victory=
 |defeat=
@@ -1246,6 +1084,7 @@ chapter_data_infobox = \
 |enemy=
 |map=
 }}"""
+
 
 # Insert returning characters and new units data
 
@@ -1270,10 +1109,12 @@ new_units_data = \
 ["Naesala", ["Raven (class) {{!}} Raven", "57", "17", "Select [[Naesala]] when prompted"]], 
 ["Giffca", ["Lion", "68", "20", "Select [[Giffca]] when prompted"]], ]
 
-# Insert note under character data 
-# 	if no note is needed, insert "None"
+
+# Insert a text note under character data 
+# If no note is needed, insert "None"
 
 character_data_note = "<small>*Note: [[Tibarn]], [[Naesala]], or [[Giffca]] will join either at the beginning of the chapter on easy and medium mode or at the start of the second part of the chapter on hard and maniac mode. </small>"
+
 
 # Insert item data
 
@@ -1315,11 +1156,13 @@ item_data = \
 ["Iron Axe", "Steal from [[paladin]]"], 
 ["Iron Axe", "Steal from [[paladin]]"],]
 
-# Insert note after under item data 
-# 	if no note is needed, insert "None"
+
+# Insert note after under item data.
+# If no note is needed, insert "None".
 
 item_data_note = \
 None
+
 
 shop_data_header = "Shop Data"
 
@@ -1333,6 +1176,7 @@ shop_data_header = "Shop Data"
 
 shops_info = \
 None
+
 
 # Unit data is formatted:
 # 	[name, class, level, quantity, inventory]
@@ -1378,8 +1222,8 @@ enemy_data = \
 reinforcement_data = \
 None
 
-# Insert note under enemy data 
-# 	if no note is needed, insert "None"
+# Insert note under enemy data.
+# If no note is needed, insert "None".
 
 enemy_data_note = None
 
@@ -1387,6 +1231,7 @@ enemy_data_note = None
 # if true, the unit and reinforcements total will print before the chapter page. 
 
 print_units_total = False
+
 
 # Insert NPC data
 # 	if there are no NPCs, input "None"
@@ -1458,8 +1303,6 @@ detailed_boss_data = """{{Tab
 |ax=A
 }}
 }}
-
-
 {{Main|Bryce}}
 {{Tab
 |tab1=Easy/Normal Mode
@@ -1603,6 +1446,6 @@ chapter_page = build_chapter_page(hatnote,
 								  gallery_text, 
 								  isStub)
 
-print(chapter_page)
-
+if __name__ == "__main__":
+	print(chapter_page)
 
