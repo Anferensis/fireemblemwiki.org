@@ -89,12 +89,13 @@ def build_character_page(isStub,
 	
 	# Building analysis section
 	
+	analysis_section = "====Analysis==== \n"
+	
 	if character_analysis != None:
-		analysis_section = "===Analysis=== \n" + \
-						   character_analysis
-						   
+		analysis_section += character_analysis
+		
 	else:
-		analysis_section = None
+		analysis_section += "{{sectstub}}"
 	
 	#=============================================================
 	
@@ -112,7 +113,7 @@ def build_character_page(isStub,
 	
 	# Building supports section
 	
-	if support_data != None:
+	if game in ("fe06", "fe07", "fe08") and support_data != None:
 	
 		supports_section = "==Supports== \n" + \
 						   "{{main|" + character_name + "/Supports}} \n"
@@ -176,6 +177,9 @@ def build_character_page(isStub,
 		
 		supports_section += support_template
 	
+	elif game == "fe05" and support_data != None:
+		pass
+	
 		
 	else:
 		supports_section = None
@@ -186,7 +190,7 @@ def build_character_page(isStub,
 	# Building endings section
 	
 	if character_endings != None:
-		endings_section = "===Endings=== \n" + \
+		endings_section = "==Endings== \n" + \
 						   character_endings
 						   
 	else:
@@ -216,6 +220,15 @@ def build_character_page(isStub,
 	
 	#=============================================================
 	
+	# Building trivia section
+	
+	trivia_section = "==Trivia== \n"
+	
+	if trivia != None:
+		trivia_section += trivia
+		
+	#=============================================================
+	
 	# Building etymology section
 	
 	etymology_section = "==Etymology and other languages== \n" + \
@@ -223,31 +236,19 @@ def build_character_page(isStub,
 	
 	#=============================================================
 	
-	# Building trivia section
-	
-	trivia_section = "==Trivia== \n"
-	
-	if trivia != None:
-		trivia_section += trivia
-	
-	#=============================================================
-	
 	# Building gallery section
 	
 	gallery_section = "==Gallery== \n"
+
+	sprite_gallery = build_sprite_gallery(character_name, character_type, game, sprite_data)
 	
+	gallery_section += sprite_gallery	
 	
 	if gallery == None:
 		gallery_section += "{{sectstub}} \n"
 		
 	else: 
 		gallery_section += gallery
-		
-	sprite_gallery = build_sprite_gallery(character_name, character_type, game, sprite_data)
-	
-	gallery_section += sprite_gallery
-		
-
 	
 	#=============================================================
 	
@@ -306,12 +307,32 @@ def build_character_page(isStub,
 	
 	character_page = ""
 	
+	character_appearance_dict = \
+		{"fe01" : "{{FE1}}", 
+		 "fe02" : "{{FE2}}", 
+		 "fe03" : "{{FE3}}",
+		 "fe04" : "{{FE4}}",
+		 "fe05" : "{{FE5}}",
+		 "fe06" : "{{FE6}}", 
+		 "fe07" : "{{FE7}}", 
+		 "fe08" : "{{FE8}}", 
+		 "fe09" : "{{FE9}}", 
+		 "fe10" : "{{FE10}}", 
+		 "fe11" : "{{FE11}}", 
+		 "fe12" : "{{FE12}}", 
+		 "fe13" : "{{FE13}}", 
+		 "fe14" : "{{FE14}}", 
+		 "fe15" : "{{FE15}}", }
+		 
+	character_appearance_title = character_appearance_dict[game]
+	character_appearance_line = "==" + character_appearance_title + "=="
+	
 	for section in (stub_mark, 
 					hatnote_section, 
 					character_infobox,
 					character_quote, 
 					character_description, 
-					"=={{FE7}}==",
+					character_appearance_line,
 					role_section, 
 					stats_section, 
 					analysis_section, 
@@ -320,8 +341,8 @@ def build_character_page(isStub,
 					endings_section,  
 					quotes_section,
 					other_appearances_section,
-					etymology_section, 
 					trivia_section, 
+					etymology_section, 				
 					gallery_section, 
 					"{{ref}}",
 					"{{Project Characters}}", 
@@ -340,75 +361,99 @@ def build_character_page(isStub,
 
 isStub = True
 
-game = "fe07"
-character_name = "Leila"
+game = "fe05"
+character_name = "Robert (Thracia 776)"
 
 # Insert character type
 #	either playable, NPC, or boss
 
-character_type = "NPC"
+character_type = "playable"
 
 hatnote = None
 
 character_infobox = """{{Character Infobox
-|name=Leila
-|image=[[File:FERK Leila.png|200px]]
-|caption=Artwork of Leila from {{FE7}}
+|name=Robert
+|image=[[File:FE776 Robert.png|200px]]
+|caption=Artwork of Robert from {{title|Thracia 776}}. 
 |help_text=
-|gender=Female
+|gender=Male
 |race=Human
-|age=
+|age=17<ref>{{Cite web|retrieved=11 April, 2017|url=https://www.nintendo.co.jp/n02/shvc/bfej/data/chara/index.html|title=Character ～登場人物の紹介～|site=ファイアーエムブレム　トラキア７７６}}</ref>
 |family=
-|nationality=[[Ostia|Ostian]]
+|nationality=[[Leonster]]
 |titles=
-|startingclass=
+|startingclass=[[Arch Knight]]
 |voice=
-|appearances={{FE7}}
+|appearances=*{{title|Thracia 776}}
 }}
 """
 
-quote = "Find quote"
-quote_speaker = "Leila"
+#<ref>{{Cite web|retrieved=11 April, 2017|url=https://www.nintendo.co.jp/n02/shvc/bfej/data/chara/index.html|title=Character ～登場人物の紹介～|site=ファイアーエムブレム　トラキア７７６}}</ref>
+
+quote = None
+quote_speaker = None
 
 character_description = """
-'''Leila''' (Japanese: {{hover|レイラ|Reira}} ''Leila'') is non-playable character in {{FE7}}. She is a spy for [[Ostia]] and the lover of [[Matthew]]. 
+'''Robert''' (Japanese: {{hover|ロベルト|Roberuto}} ''Robert'') is a playable [[arch knight]] in {{FE5}}.
 """
 
 role = None
 
 character_stats = """
-{{CharStats GBA
-|portrait=[[File:Portrait leila fe07.png]]
-|class=Thief
-|affin=wind
-|lv=14
-|HP=24
-|str=14
-|skill=20
-|spd=20
-|luck=8
-|def=12
-|res=15
-|HP1=80
-|str1=70
-|skill1=65
-|spd1=0
-|luck1=55
-|def1=30
-|res1=40
-|con=5
+{{CharStats FE5
+|portrait=[[File:Portrait robert fe05.png]]
+|class=Arch Knight
+|lv=1
+|HP=23
+|movestars=★
+|authority=
+|move=8{{hover|-3|while dismounted}}
+|str=5
+|magic=0
+|skill=4
+|spd=8
+|luck=6
+|def=4
+|PCC=3
+|build=7
 |aid=
-|move=6
-|sw=S
-|inventory=[[File:Is gba silver sword.png]] [[Silver Sword]]
-|recruit=Leila can not be recruited
+|bo=E
+|inventory=[[File:Is snes03 iron bow.png]] [[Iron Bow]]<br>
+|skills=
+|recruit=[[The Emblem of Noba|Chapter 9: The Emblem of Noba]], Automatically at the start
+|HP1=65
+|str1=45
+|magic1=10
+|skill1=50
+|spd1=60
+|luck1=70
+|def1=25
+|build1=20
+|move1=1
 }}
-<small>*Note: These stats are unused. </small>
+
+===Promotion gains===
+{{PromotionGains
+|class=[[Bow Knight]]
+|hp=0
+|str=2
+|mag=1
+|skill=3
+|spd=2
+|def=2
+|con=1
+|move=1
+|weaponlvl={{BowSNES}}+1
+}}
 """
 
+
+# Blank character stats template
+
+# GBA titles
 """
 {{CharStats GBA
-|portrait=[[File:Portrait fe07.png]]
+|portrait=[[File:Portrait fe06.png]]
 |class=
 |affin=
 |lv=
@@ -430,8 +475,80 @@ character_stats = """
 |aid=
 |move=
 
-|inventory=[[File:Is gba .png]] [[]]<br>
+|inventory
 |recruit=
+}}
+"""
+
+# Thracia 776
+# ★★★★★
+
+"""
+{{CharStats FE5
+|portrait=[[File:Portrait fe05.png]]
+|class=
+|lv=
+|HP=
+|movestars=★★★★★
+|authority=★★★★★
+|move=
+|str=
+|magic=
+|skill=
+|spd=
+|luck=
+|def=
+|PCC=
+|build=
+|aid=
+
+|inventory=[[File:Is snes03 .png]] [[]]<br>
+|skills=[[File:Is snes03 .png]] [[]]<br>
+|recruit=
+|HP1=
+|str1=
+|magic1=
+|skill1=
+|spd1=
+|luck1=
+|def1=
+|build1=
+|move1=
+}}
+"""
+
+
+# Blank promotion gains templates
+
+"""
+(GBA titles)
+===Promotion gains===
+{{PromotionGains
+|class= 
+|hp=
+|str=
+|skill=
+|spd=
+|def=
+|res=
+|con=
+|move=
+|weaponlvl=
+}}
+
+(Thracia 776)
+===Promotion gains===
+{{PromotionGains
+|class=[[]]
+|hp=
+|str=
+|mag=
+|skill=
+|spd=
+|def=
+|con=
+|move=
+|weaponlvl=
 }}
 """
 
@@ -444,10 +561,13 @@ character_personality = None
 # Character data is organized:
 # 	[name, class, affinity]
 
-character_data = ["Leila", "Thief", "wind"]
+character_data = ["Xavier", "General", None]
 
-# Unit support data is organized:
+# GBA unit support data is organized:
 #	[name, class, affinity, initial points, additional points]
+
+# Fire Emblem: Thracia 776 unit support data is organized:
+#	[name, class, support bonus]
 
 # ["", "", "", "", ""], 
 
@@ -455,27 +575,28 @@ support_data = \
 None
 				
 
-character_endings = None
+character_endings = """
+'''Robert – Bow Knight of Leonster'''<br>
+After his strong requests, Robert was put in the new Kingdom of Thracia’s royal guard. Robert himself was probably trying his best to be a legendary warrior, but he never could fix his timidity. Apparently, more than a few of the female servants in the castle found his sheepish nature cute.
+"""
 
 # {{Quote||}}
 
 character_quotes = """
+===Death quotes===
+{{Quote|Lady Selphina… I wish…I could be of more…use…|Robert}}
+
+===Escape quotes===
+{{Quote|Next time…we won’t lose.|Robert}}
 """
 
 character_other_appearances = None
 
 character_etymology = """{{Names
-|eng-name=Leila
-|eng-mean=
-|jap-name={{hover|レイラ|Reira}}
-|jap-mean=Leila
-|fren-mean=
-|ger-name=
-|ger-mean=
-|span-name=
-|span-mean=
-|ital-name=
-|ital-mean=
+|eng-fan-name=Robert
+|eng-fan-mean=--
+|jap-name={{hover|ロベルト|Roberuto}}
+|jap-mean=
 }}
 """
 
@@ -495,16 +616,19 @@ character_etymology = """{{Names
 """
 
 trivia = None
+# Sprite data is organized:
+#	[class name, [weapon1, weapon2, weapon3]]
 
-gallery = """<gallery>
-FERK Leila.png|Artwork of Leila from {{FE7}}
-</gallery>
-"""
+# ["", [""]], 
 
 sprite_data = \
-[["Thief", ["Sword"]]]
+[["Arch Knight", ["Bow", "Bow"]], 
+["Bow Knight", ["Bow", "Bow"]],  ]
 
-
+gallery = """<gallery>
+FE776 Robert.png|Artwork of Robert from {{FE5}}.
+</gallery>
+"""
 
 
 

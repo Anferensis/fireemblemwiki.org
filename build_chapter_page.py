@@ -9,289 +9,20 @@ Note: This program has only been tested for Fire Emblem 5, 6, 7, 8, and 9.
 	  It may not function properly for other titles. 
 """
 
-from price_list import price_list_fe03, \
-					   price_list_fe05, \
-					   price_list_gba
-					   
-from fireemblemwiki_script_utilities import hyperlink
-
-
-
-def format_shop_items(platform, game, shop_items):
-	
-	formatted_shop_items = ""
-				  
-	for item_name in shop_items:
-		
-		item_name_lowered = item_name.lower()
-		
-		
-		if game in ("fe06", "fe07", "fe08"):
-			item_price = price_list_gba[item_name]
-			
-		elif game  == "fe05":
-			item_price = price_list_fe05[item_name]
-			
-		elif game == "fe03":
-			item_price = price_list_fe03[item_name]
-		
-		special_cases = {"Fire" : "Fire (tome)", 
-						 "Thunder" : "Thunder (tome)", 
-						 "Luna" : "Luna (tome)", 
-						 "Wind" : "Wind (tome)",
-						 "Eclipse" : "Eclipse (tome)",  
-						 
-						 "Berserk" : "Berserk (staff)",
-						 "Sleep" : "Sleep (staff)", 
-						 "Warp" : "Warp (staff)", 
-						 "Silence" : "Silence (staff)", 
-						 "Stone" : "Stone (tome)", 
-						 
-						 "Torch" : "Torch (item)"}
-						 
-		if item_name in special_cases:
-			
-			link = special_cases[item_name]			
-			item_link = hyperlink(link, item_name)
-			
-		else:
-			item_link = hyperlink(item_name)
-		
-		line1 =  "{{!}} style={{roundl}}; {{!}} [[File:Is " + platform + " " + \
-				 item_name_lowered + ".png|right]]" 		          
-		line2 = "{{!}} " + item_link
-		line3 = "{{!}} style={{roundr}}; text-align: center {{!}} " + item_price
-		line4 =  "{{!-}}"
-		
-		formatted_item_data = ""
-		
-		for line in (line1, line2, line3, line4):
-			formatted_item_data += line + "\n"
-			
-		formatted_shop_items += formatted_item_data
-		
-	return formatted_shop_items
-
-
-
-def build_unit_inventory(platform, 
-						 inventory_data, 
-						 unit_num, 
-						 isReinforcement = False,
-						 isLastReinforcement = False):
-	"""
-	Properly formats a unit's inventory data.
-	
-	Accepts a list of strings, where every string is an item name, 
-	and string, representing the unit's number.
-	
-	Converts such that 
-	build_unit_inventory(["Iron Sword", "Steel Sword (drop)"], "2")
-	returns:
-	
-	|inventory2=[[File:Is gba iron sword.png]][[Iron Sword]]
-				[[File:Is gba steel sword.png]]{{drop|Steel Sword}}
-	"""
-	
-	formatted_inv_start = "|inventory"
-	
-	add_letter = ""
-	
-	if isReinforcement:
-		add_letter = "r"
-	
-		if isLastReinforcement:
-			add_letter += "l"
-			unit_num = ""
-	
-	formatted_inv_start += add_letter	
-	formatted_inv = formatted_inv_start + unit_num + "="
-	
-	# For loops the list of items
-	for item_name in inventory_data:
-		
-		# The name of the item is put entirely in lower case		
-		lowered_item_name = item_name.lower()
-		
-		special_link_cases = \
-				{"Fire" : "Fire (tome)", 
-				 "Thunder" : "Thunder (tome)", 
-				 "Luna" : "Luna (skill)", 
-				 "Wind" : "Wind (tome)",
-				 "Light": "Lightning",
-				 "Eclipse" : "Eclipse (tome)",
-				 "Ballista" : "Ballista (weapon)",
-				 
-				 "Berserk" : "Berserk (staff)",
-				 "Sleep" : "Sleep (staff)", 
-				 "Warp" : "Warp (staff)",
-				 "Rescue" : "Rescue (staff)",
-				 "Silence" : "Silence (staff)", 
-				 "Stone" : "Stone (tome)", 
-				 "Forseti" : "Forseti (tome)",
-				 "Torch" : "Torch (item)",
-				 "Poison" : "Poison (tome)", 
-				 
-				 "Adept Manual" : "Skill items",
-				 "Adept Scroll" : "Skill items", 
-				 "Occult Scroll" : "Skill items",
-				 "Provoke Scroll" : "Skill items",  
-				 "Guard Scroll" : "Skill items",
-				 "Gamble Scroll" : "Skill items", 
-				 
-				 "Renewal" : "Renewal (skill)",
-				 "Guard" : "Cancel", 
-				 "Cancel" : "Pavise"}
-				 
-		special_image_cases = \
-			{"Beak (raven)" : "Beak", 
-			 "Beak (hawk)" : "Beak", 
-			 "Claw (cat)" : "Claw", 
-			 "Claw (tiger)" : "Claw", 
-			 
-			 "Breath (red)" : "Breath (laguz)", 
-			 "Breath (white)": "Breath (laguz)"}
-		
-		if item_name.endswith(" (drop)"):
-			item_name = item_name[:-7]
-			lowered_item_name = lowered_item_name[:-7]
-			
-			if item_name in special_link_cases:
-				link = special_link_cases[item_name]
-				item_link = "{{drop|" + link + "|" + item_name + "}}"
-			else:
-				item_link = "{{drop|" + item_name + "}}"		
-							 
-		elif item_name in special_link_cases:
-			
-			link = special_link_cases[item_name]			
-			item_link = hyperlink(link, item_name)
-		
-		elif item_name in special_image_cases:
-			link = special_image_cases[item_name]
-			item_link = hyperlink(link)
-			
-		else:
-			item_link = hyperlink(item_name)
-		
-		if item_name == "Beak":
-			item_image = "[[File:Is " + platform + " " + lowered_item_name + " (raven).png]]"
-		else:
-			item_image = "[[File:Is " + platform + " " + lowered_item_name + ".png]]"
-		
-		
-		# Creates the formatted item data, which includes a link directed 
-		# towards the item sprite and a hyperlink to the item itself
-		formatted_item = item_image + item_link
-		
-		# Adds the formatted item data to the formatted inventory										
-		formatted_inv += formatted_item
-	
-	# By the end of the for loop, the inventory should be
-	# properly formatted. 	
-	return formatted_inv
-
-
-
-def build_units_data(platform,
-					 units_data,
-					 isReinforcement = False):
-					 
-	formatted_units_data = ""
-	
-	for unit_num, unit_data in enumerate(units_data, 1):
-		
-		if unit_num == len(units_data):
-			unit_num = "b"
-		else:
-			unit_num = str(unit_num)
-		
-		unit_name = unit_data[0]
-		unit_class = unit_data[1]
-		unit_level = unit_data[2]
-		unit_quantity = unit_data[3]
-		unit_inventory = unit_data[4]
-											  
-		name_line_start = "|name"
-		class_line_start = "|class"
-		level_line_start = "|lv"
-		quantity_line_start = "|#"
-		
-		isLastReinforcement = False
-		
-		add_letter = ""
-		
-		if isReinforcement:
-			
-			add_letter = "r"
-			
-			if unit_num == "b":
-				isLastReinforcement = True
-				add_letter = "rl"
-
-			name_line_start += add_letter
-			class_line_start += add_letter
-			level_line_start += add_letter
-			quantity_line_start += add_letter
-			
-						
-					
-		if isLastReinforcement:		
-			unit_num = ""	
-			inventory_line = build_unit_inventory(platform, 
-												  unit_inventory, 
-												  unit_num, 
-												  isReinforcement,
-												  True)											  
-		else:
-			inventory_line = build_unit_inventory(platform, 
-												  unit_inventory, 
-												  unit_num, 
-												  isReinforcement)	
-											  
-		name_line =     name_line_start + unit_num + "=" + unit_name
-		class_line =    class_line_start + unit_num + "=" + unit_class
-		level_line =    level_line_start + unit_num + "=" + unit_level
-		quantity_line = quantity_line_start + unit_num + "=" + unit_quantity
-		
-		
-		
-		if unit_class == "Raven":
-			class_article_line = "|class" + add_letter + unit_num + "article=" + "Raven (laguz)"
-		
-		else:
-			class_article_line = None	
-		
-		if unit_num == "b":
-			quantity_line = None
-											  
-		formatted_unit_data = ""	
-		
-		for line in (name_line, 
-					 class_line, 
-					 class_article_line,
-					 level_line, 
-					 quantity_line, 
-					 inventory_line):
-			
-			if line != None:		 
-				formatted_unit_data += line + "\n"
-		
-		formatted_units_data += formatted_unit_data + "\n"	
-	
-	return formatted_units_data
+from build_character_data import build_character_data
+from build_enemy_data import build_unit_inventory, build_units_data, build_enemy_data
+from build_item_data import build_item_data
+from build_npc_data import build_npc_data
+from build_shop_data import build_shop_data					   
+from utilities import hyperlink
 
 
 
 def build_chapter_page(hatnote, 
 					   platform, 
 					   chapter_title, 
-					   image_num,
-					   game,
-					   location,
-					   new_units,
-					   bosses,
-					   weather,
+					   chapter_infobox,
+					   game, 
 					   quote,
 					   quote_speaker,
 					   chapter_desciption, 
@@ -330,79 +61,6 @@ def build_chapter_page(hatnote,
 	
 	#==========================================================
 	
-	# Building chapter info box.
-		
-	chapter_infobox = "{{Chapter Infobox \n"
-	
-	title_line = "|title=" + chapter_title
-	image_line = "|image=[[File:Cm " + game + " " + image_num +".png|200px]]"
-	
-	if location == None:
-		formatted_location = ""
-	
-	elif location.endswith(" (link)"):
-		location =  location[:-7]
-		formatted_location = hyperlink(location)
-		
-	else:
-		formatted_location = location
-	
-	location_line = "|location=" + formatted_location
-	
-	new_units_line = "|new units="
-	
-	
-	if type(new_units) == list:
-		
-		for unit_num, unit_name in enumerate(new_units, 1):
-			formatted_unit_name = "[[" + unit_name + "]]"
-			
-			if unit_num != len(new_units):
-				formatted_unit_name += ", "
-				
-			new_units_line += formatted_unit_name
-		
-	elif type(new_units) == str:
-		new_units_line += new_units
-		
-	elif new_units == None:
-		new_units_line += "none"
-	
-		
-	bosses_line = "|boss="	
-	
-	if bosses != None:
-		for boss_num, boss_title in enumerate(bosses, 1):
-			formatted_boss_name = "[[" + boss_title + "]]"
-			
-			if boss_num != len(bosses):
-				formatted_boss_name += ", "
-				
-			bosses_line += formatted_boss_name
-	else:
-		bosses_line += "none"
-	
-	
-	if weather == None:
-		weather_line = "|weather="
-		
-	else:
-		weather_line = "|weather=" + weather 
-	
-	
-	for line in (title_line, 
-				 image_line, 
-				 location_line, 
-				 new_units_line, 
-				 bosses_line,
-				 weather_line):
-					 
-		chapter_infobox += line + "\n"
-	
-	chapter_infobox += "}}"
-	
-	#=========================================================
-	
 	# Building chapter quote
 	
 	if quote == None or quote_speaker == None:
@@ -430,8 +88,8 @@ def build_chapter_page(hatnote,
 								beginning_log
 		
 	for part in ("==Plot==",
-				 "{{main|" + chapter_title + "/Script}} \n",
-				 plot_body,
+				 "{{main|" + chapter_title + "/Script}}",
+				 plot_body + "\n",
 				 beginning_log_section):
 		
 		plot_section += part + "\n"
@@ -445,399 +103,48 @@ def build_chapter_page(hatnote,
 		
 	#==================================================
 	
-	# Building character data
-	
-	game_num = game[2:]
-	
-	character_data = "===Character Data=== \n" + \
-					 "{{ChapChars \n" + \
-					 "|game#=" + game_num + " \n"
-					 
-	if new_units_data != None:
-		
-		number_of_new_units = str(len(new_units_data))
-		
-		formatted_new_units = "|newunits=" + number_of_new_units + "\n"
-		
-		for unit_num, new_unit in enumerate(new_units_data, 1):
-			
-			unit_name = new_unit[0]
-			unit_data = new_unit[1]
-			
-			if game != "fe09":
-				unit_portrait = "[[File:portrait " + unit_name.lower() + " " + game + ".png]]" 
-			else:
-				unit_portrait = "[[File:Small portrait " + unit_name.lower() + " " + game + ".png]]" 
-				
-			unit_class = unit_data[0]
-			unit_HP = unit_data[1]
-			unit_level = unit_data[2]
-			unit_recruitment = unit_data[3]
-			
-			new_unit_data = "|newunit" + str(unit_num) +"={{NewUnit \n"
-							
-			name_line = 	   	"|name=" + unit_name
-			portrait_line =     "|portrait=" + unit_portrait
-			class_line =  	   	"|class=" + unit_class
-			HP_line = 		   	"|HP=" + unit_HP
-			level_line = 	   	"|lv=" + unit_level
-			recruitment_line = 	"|recruitment method=" + unit_recruitment
-			
-			
-			name_exceptions = {"Ced" : "Ced (character)"}
-			
-			if unit_name in name_exceptions:
-				name_article = name_exceptions[unit_name]
-				name_article_line = "|namearticle=" + name_article
-				
-			else:
-				name_article_line = None
-			
-			
-			for line in (name_line, 
-						 name_article_line, 
-						 portrait_line, 
-						 class_line, 
-						 HP_line, 
-						 level_line, 
-						 recruitment_line):
-				
-				if line != None:
-					new_unit_data += line + "\n"
-			
-				
-			new_unit_data += "}}" + "\n"
-				
-			formatted_new_units += new_unit_data
-			
-		character_data += formatted_new_units
-			
-					 
-	for num, char_name in enumerate(return_characters, 1):
-		char_num = str(num)
-		char_name = char_name.lower()
-		
-		char_line = "|return" + char_num + "=" + char_name
-		character_data += char_line + "\n"
-		
-		special_exceptions = {"alva" : "Alva (Thracia 776)", 
-							  "robert" : "Robert (Thracia 776)",
-							  "ced" : "Ced (character)", 
-							  "marth 02" : "Marth", 
-							  "lance" : "Lance (character)", 
-							  "largo" : "Largo (Path of Radiance)"}
-							  
-		if char_name in special_exceptions:
-			
-			char_article = special_exceptions[char_name]
-			article_line = "|return" + char_num + "article=" + char_article
-			
-			character_data += article_line + "\n"
-		
-	
-	character_data += "}} \n"
-	
-	if character_data_note == None:
-		pass
-	else:
-		character_data += character_data_note
+	# Building character data section
+	character_data_section = \
+		build_character_data(game, 
+							 new_units_data, 
+							 return_characters, 
+							 character_data_note)
 					   
 	#=============================================================
 	
 	# Building item data
-	
-	if item_data == None:
-		item_data_section = None
-	
-		
-	else:
-		formatted_item_data = ""
-		
-		for item_num, item in enumerate(item_data, start = 1):
-			
-			if item_num == len(item_data):
-				item_num = "last"
-			else:
-				item_num = str(item_num)
-				
-			item_name = item[0]
-			obtain_method = item[1]
-			
-			item_line = "|item" + item_num + "=" + item_name
-			obtain_line = "|obtain" + item_num + "=" + obtain_method
-			
-			
-			item_link_exceptions = \
-				{"Berserk" : "Berserk (staff)",
-				 "Sleep" : "Sleep (staff)", 
-				 "Warp" : "Warp (staff)",
-				 "Rescue" : "Rescue (staff)",
-				 "Silence" : "Silence (staff)", 
-				 
-				 "Nihil Scroll" : "Skill items", 
-				 "Noba Scroll" : "Crusader Scrolls",
-				 "Corrosion Scroll" : "Skill items",  
-				 "Counter Scroll" : "Skill items", 
-				 "Vantage Scroll" : "Skill items",
-				 "Guard Scroll" : "Skill items",
-				 "Gamble Scroll" : "Skill items",
-				 "Parity Scroll" : "Skill items", 
-				 "Provoke Scroll" : "Skill items", 
-				 "Savior Scroll" : "Skill items",  
-				 "Shade Scroll" : "Skill items", 
-				 "Smite Scroll" : "Skill items", 
-				 "Renewal Scroll" : "Skill items",
-				 "Resolve Scroll" : "Skill items",
-				 "Wrath Scroll" : "Skill items", 			  
-				 
-				 "Fire" : "Fire (tome)",
-				 "Thunder" : "Thunder (tome)",
-				 "Wind" : "Wind (tome)", 
-				 "Torch" : "Torch (item)", 
-				 "Eclipse" : "Eclipse (tome)",
-				 
-				 "Binding Blade" : "Binding Blade (weapon)"}
-				 
-			if item_name in item_link_exceptions:
-				item_link = item_link_exceptions[item_name]
-				item_article_line = "|item" + item_num + "article=" + item_link
-				 
-			else:
-				item_article_line = None
-			
-				
-			item_image_exceptions = {"Magic Up" : "m up"}
-			
-			if item_name in item_image_exceptions:
-				item_image = item_image_exceptions[item_name]
-				item_image_line = "|item" + item_num + "image=" + item_image
-				 
-			else:
-				item_image_line = None
-				
-			
-			for line in (item_line, 
-						 item_article_line, 
-						 item_image_line, 
-						 obtain_line):
-														 
-				if line != None:
-					formatted_item_data += line + "\n"
-		
-		
-		if item_data_note == None:
-			add_note = ""
-		else:
-			add_note = item_data_note
-							
-		item_data_section = ""
-		
-		for section in ("===Item Data=== ", 
-						"{{ChapItems ",
-						"|platform=" + platform, 
-						formatted_item_data + "}}", 
-						add_note):
-			
-			item_data_section += section + "\n"
-	
+	item_data_section = build_item_data(platform, 
+										item_data, 
+										item_data_note)
 	
 	#=============================================================
 	
 	# Building shop data
-	
-	shop_data_section = "===Shop Data=== \n"
-	
-	if shops_info == None:
-		shop_data_section = ""
-	
-		
-	elif len(shops_info) == 1:
-		
-		shop_info = shops_info[0]
-		
-		shop_name = shop_info[0]
-		shop_items = shop_info[1]
-
-		shop_data_start = """
-{|style="margin-left:auto; margin-right:auto; width: 500px; border: 2px solid {{Color2}}; {{round}}; background: {{Color3}};"
-{{!}}<div style="{{round}}; border: 2px solid {{Color2}}; background: {{Color1}}; text-align:center; padding:3px;"><big>'''""" + shop_name +"""'''</big></div>
-{{tablebegin}} class=wikitable style="{{round}}; border-collapse:separate; border:none;" align="center"
- !style="{{roundl}}; border: 1px solid {{Color2}}; background: {{Color1}}; width: 5%" {{!}}
- !style="border: 1px solid {{Color2}}; background: {{Color1}}; width: 30%" {{!}} Name
- !style="{{roundr}}; border: 1px solid {{Color2}}; background: {{Color1}}; width: 15%" {{!}} Cost
- {{!-}} """
- 
-		formatted_items = format_shop_items(platform, game, shop_items)
-		
-		for part in (shop_data_start, formatted_items, "{{tableend}}", "|}"):
-			shop_data_section += part + "\n"
-
-			
-	else:
-	
-		header_line = "|header=" + shop_data_header
-		
-		for line in ("{{Tab",
-					 header_line,
-					 "|width=700px",
-					 "|height=",
-					 "|constyle=text-align:center"):
-						 
-			shop_data_section += line + "\n"
-			
-		for shop_num, shop_info in enumerate(shops_info, 1):
-			
-			shop_num = str(shop_num)
-			shop_name = shop_info[0]
-			
-			shop_tab = ""
-			
-			for line in ("|tab" + shop_num + "=" + shop_name + "\n", 
-						 "|content" + shop_num + "={{clear}}"):
-							 
-				shop_tab += line
-		
-			tab_add = """
-{{tablebegin}} class=wikitable style="{{round}}; border-collapse:separate; border:none;" align="center"
- !style="{{roundl}}; border: 1px solid {{Color2}}; background: {{Color1}}; width: 5%" {{!}}
- !style="border: 1px solid {{Color2}}; background: {{Color1}}; width: 30%" {{!}} Name
- !style="{{roundr}}; border: 1px solid {{Color2}}; background: {{Color1}}; width: 15%" {{!}} Cost
- {{!-}}
- """
-			shop_tab += tab_add
-			
-			shop_items = shop_info[1]
-			
-			formatted_items = format_shop_items(platform, game, shop_items)		
-			shop_tab += formatted_items  
-						
-			shop_tab += "{{tableend}} \n"							 
-			shop_data_section += shop_tab + "\n"
-				
-		shop_data_section += "}}"
-	
+	shop_data_section = build_shop_data(platform, 
+										game, 
+										shops_info, 
+										shop_data_header)
 	
 	#==============================================================
 	
 	# Building enemy data
 	
-	formatted_units_data = build_units_data(platform, enemy_data)
-
-	if reinforcement_data != None:
-		formatted_reinforcement_data = build_units_data(platform, 
-														reinforcement_data, 
-														True)
-	else:
-		formatted_reinforcement_data = ""	
-	
-	
-	if print_units_total:
-		
-		enemy_total = 0
-		
-		for unit_data in enemy_data:
-			unit_quantity = int(unit_data[3])
-			enemy_total += unit_quantity
-			
-		reinforcement_total = 0
-		
-		if reinforcement_data != None:
-			
-			for unit_data in reinforcement_data:
-				
-				try:
-					unit_number = int(unit_data[3])
-					
-					reinforcement_quantity = unit_number
-					reinforcement_total += reinforcement_quantity
-					
-				except ValueError:
-					pass
-							
-		print("Enemy total: ", enemy_total)
-		print("Reinforcement total: ", reinforcement_total)
-	
-	
-	enemy_data_section = ""
-	
-	for line in ("===Enemy Data===", 
-				 "{{ChapEnemies", 
-				 "|platform=" + platform, 
-				 formatted_units_data,
-				 formatted_reinforcement_data, 
-				 "}}"):
-					 
-		 enemy_data_section += line + "\n"
-		 
-	if enemy_data_note != None:
-		enemy_data_section += enemy_data_note + "\n"
-	
+	enemy_data_section = build_enemy_data(platform, 
+										  enemy_data, 
+										  reinforcement_data, 
+										  enemy_data_note,
+										  print_units_total)
 	
 	#==============================================================
 	
 	# Building NPC data section
-	
-	if npc_data == None:
-		npc_data_section = ""
-		
-	elif npc_data == "stub":
-		npt_data_section = "===NPC Data=== \n" + \
-						   "{{sectstub}} \n"
-		
-	else:
-		npc_data_section = ""
-		
-		for line in ("===NPC Data===", 
-					 "{{ChapOthers", 
-					 "|platform=" + platform):
-						 
-			npc_data_section += line + "\n"
-			
-			
-		for unit_num, unit_data in enumerate(npc_data, 1):
-			
-			if unit_num == len(npc_data):
-				unit_num = "l"
-			else:
-				unit_num = str(unit_num)
-			
-			
-			unit_name = unit_data[0]
-			unit_class = unit_data[1]
-			unit_level = unit_data[2]
-			unit_quantity = unit_data[3]
-			unit_inventory = unit_data[4]
-			
-			name_line = "|name" + unit_num + "=" + unit_name
-			class_line = "|class" + unit_num + "=" + unit_class
-			level_line = "|lv" + unit_num + "=" + unit_level
-			quantity_line = "|#" + unit_num + "=" + unit_quantity
-			inventory_line = build_unit_inventory(platform, unit_inventory, unit_num)
-			
-			for line in (name_line, 
-						 class_line, 
-						 level_line, 
-						 quantity_line, 
-						 inventory_line):
-							 
-				npc_data_section += line + "\n"
-				
-			npc_data_section += "\n"
-				
-		npc_data_section += "}} \n"
-		
-	
-	if npc_data_note == None:
-		pass
-		
-	else:
-		npc_data_section += npc_data_note + "\n"
+	npc_data_section = build_npc_data(npc_data, 
+									  npc_data_note)
 	
 									  
 	#==============================================================
 	
 	# Building boss data
-	
 	
 	if boss_name != None:
 		boss_redirect_line = "{{Main|" + boss_name + "}}"
@@ -883,14 +190,15 @@ def build_chapter_page(hatnote,
 	trivia_section = ""
 	
 	if trivia == None:
-		trivia_body = ""
+		trivia_body = None
 	else:
 		trivia_body = trivia
 		
 	for line in ("==Trivia==", 
 				 trivia_body):
-					 
-		trivia_section += line + "\n"
+		
+		if line != None:			 
+			trivia_section += line + "\n"
 		
 	#==============================================================
 	
@@ -970,7 +278,7 @@ def build_chapter_page(hatnote,
 					chapter_desciption, 
 					plot_section, 
 				    chapter_data, 
-				    character_data,
+				    character_data_section,
 				    item_data_section, 
 				    shop_data_section, 
 				    enemy_data_section,
@@ -992,14 +300,14 @@ def build_chapter_page(hatnote,
 
 
 #=======================================================================
-
+#
 # User input for creating a chapter page. 	
-
+#
 #=======================================================================
 
 
 # Insert a hatnote, if it is necessary
-# This is for cases where a page needs disambiguation. 
+# 	(This is for cases where a page needs disambiguation)
 
 # Hatnote template:
 
@@ -1010,38 +318,51 @@ hatnote = None
 
 
 # Insert whether or not the page is a stub.
-
 isStub = True
 
 
 # Insert platform name
-
 platform = "gcn"
 
-
-# Insert basic chapter info
-# Note: New units will accept a list, a string, or None
-
-chapter_title = "Repatriation"
-image_num = "F"
+# Insert game
 game = "fe09"
-location = "[[Crimea]] Castle" 
-new_units = "[[Tibarn]], [[Naesala]], or [[Giffca]]"
-bosses = ["Ashnard", "Bryce"]
-weather = None
+
+# Insert chapter title
+chapter_title = "Repatriation"
+
+# Insert chapter infobox
+chapter_infobox = \
+"""{{Chapter Infobox 
+|title=Repatriation
+|image=[[File:Cm fe09 F.png|200px]]
+|location=[[Crimea]] Castle
+|new units=[[Tibarn]], [[Naesala]], or [[Giffca]]
+|boss=[[Ashnard]], [[Bryce]]
+|weather=
+}}"""
+
+# Chapter infobox template
+"""{{Chapter Infobox 
+|title=
+|image=[[File:Cm fe__ __.png|200px]]
+|location
+|new units
+|boss=
+|weather=
+}}"""
 
 
 # Insert a quote and the quote's speaker. 
-# This is primarily for aesthetic purposes. 
+# 	(This is primarily for aesthetic purposes) 
 
-# If "None" is inputted for either, a quote will not appear
+# If "None" is inputted for either the quote or quote speaker,
+# then a quote will not appear
 
 quote = "Our road has been long, but it ends today! Let's liberate Crimea and free our friends...and our families...from Daein's tyranny! Men of Crimea...Laguz of Tellius...Greil Mercenaries...MOVE OUT!!"
 quote_speaker = "[[Ike]]"
 
 
 # Insert chapter description. 
-
 chapter_desciption = \
 """'''Repatriation''' (Japanese: {{hover|帰還|Kikan}}, ''Repatriation'') is the final chapter of {{FE9}}."""
 
@@ -1061,7 +382,7 @@ beginning_log = \
 
 # Insert chapter infobox data.
 
-chapter_data_infobox = \
+chapter_data_box = \
 """{{ChapDataMap
 |victory=Defeat [[Ashnard]]
 |defeat=[[Ike]] or [[Elincia]] dies 
@@ -1073,7 +394,7 @@ chapter_data_infobox = \
 }}
 """
 
-# Chapter infobox template. 
+# Chapter databox template. 
 
 """{{ChapDataMap
 |victory=
@@ -1105,9 +426,9 @@ return_characters = \
 # If there are no new units, input "None"
 
 new_units_data = \
-[["Tibarn", ["Hawk (class) {{!}} Hawk", "63", "18", "Select [[Tibarn]] when prompted"]], 
-["Naesala", ["Raven (class) {{!}} Raven", "57", "17", "Select [[Naesala]] when prompted"]], 
-["Giffca", ["Lion", "68", "20", "Select [[Giffca]] when prompted"]], ]
+[["Tibarn", "Hawk (class) {{!}} Hawk", "63", "18", "Select [[Tibarn]] when prompted"], 
+["Naesala", "Raven (class) {{!}} Raven", "57", "17", "Select [[Naesala]] when prompted"], 
+["Giffca", "Lion", "68", "20", "Select [[Giffca]] when prompted"], ]
 
 
 # Insert a text note under character data 
@@ -1176,7 +497,6 @@ shop_data_header = "Shop Data"
 
 shops_info = \
 None
-
 
 # Unit data is formatted:
 # 	[name, class, level, quantity, inventory]
@@ -1352,9 +672,14 @@ detailed_boss_data = """{{Tab
 }}
 """
 
+# Insert strategy section
+# If "None" is inputted, this section will be marked a stub. 
 strategy = None
+
+# Insert trivia section
 trivia = None
 
+# Insert etymology section
 chapter_etymology = """{{Names
 |eng-name=Repatriation
 |eng-mean=--
@@ -1371,6 +696,7 @@ chapter_etymology = """{{Names
 }}
 """
 
+# Etmology section template for non-localized chapters.
 """{{Names 
 |eng-fan-name=
 |eng-fan-mean=
@@ -1379,6 +705,7 @@ chapter_etymology = """{{Names
 }}
 """
 
+# Etmology section template for localized chapters.
 """{{Names 
 |eng-name=
 |eng-mean=--
@@ -1396,10 +723,10 @@ chapter_etymology = """{{Names
 """
 
 # Insert gallery text
-# 	if "None" is inputted, this section will be marked a stub. 
-
+# If "None" is inputted, this section will be marked a stub. 
 gallery_text = None
 
+# Insert chapter navigator
 chapter_navigator_section = \
 """{{ChapterNav
 |prechapter=Twisted Tower
@@ -1407,23 +734,28 @@ chapter_navigator_section = \
 }}
 """
 
-# Takes every varaiable and constructs a chapter page.
+# Chapter navigator template
+"""{{ChapterNav
+|prechapter=
+|prealternate=
+|name=
+|nextchapter=
+|nextalternate=
+}}
+"""
 
+# Takes every variable above and constructs a chapter page.
 chapter_page = build_chapter_page(hatnote, 
 								  platform, 
 								  chapter_title, 
-								  image_num,
+								  chapter_infobox,
 								  game,
-								  location,
-								  new_units,
-								  bosses,
-								  weather,
 								  quote,
 								  quote_speaker,
 								  chapter_desciption,
 								  chapter_plot,
 								  beginning_log,
-								  chapter_data_infobox,  
+								  chapter_data_box,  
 								  return_characters,
 								  new_units_data,
 								  character_data_note,
@@ -1447,5 +779,12 @@ chapter_page = build_chapter_page(hatnote,
 								  isStub)
 
 if __name__ == "__main__":
+	
 	print(chapter_page)
+	
+	file_writer = open("chapter_page.txt", "w")
+	file_writer.write(chapter_page)
+	file_writer.close()
+	
+	print("Text saved to file: chapter_page.txt")
 

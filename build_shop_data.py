@@ -3,24 +3,61 @@
 Written by Albert"Anferensis"Ong
 
 Builds shop data for fireemblemwiki.org
-
-This program currently only supports the gameboy advance titles:
-Fire Emblem: The Binding Blade, Fire Emblem: The Blazing Sword, and
-Fire Emblem: The Sacred Stones.  
 """
 
-def format_shop_items(shop_items):
+from price_list import price_list_fe03, \
+					   price_list_fe05, \
+					   price_list_gba	
+					      
+from utilities import hyperlink, writeTextFile
+
+
+def format_shop_items(platform, game, shop_items):
 	
 	formatted_shop_items = ""
 				  
 	for item_name in shop_items:
 		
 		item_name_lowered = item_name.lower()
-		item_price = price_list[item_name]
 		
-		line1 =  "{{!}} style={{roundl}}; {{!}} [[File:Is gba " + \
+		if game in ("fe06", "fe07", "fe08"):
+			item_price = price_list_gba[item_name]
+			
+		elif game  == "fe05":
+			item_price = price_list_fe05[item_name]
+			
+		elif game == "fe03":
+			item_price = price_list_fe03[item_name]
+		
+		
+		# A dictionary for cases where the item name 
+		# is not the same as the page name.
+		special_cases = \
+			{"Fire" : "Fire (tome)", 
+			 "Thunder" : "Thunder (tome)", 
+			 "Luna" : "Luna (tome)", 
+			 "Wind" : "Wind (tome)",
+			 "Eclipse" : "Eclipse (tome)",  
+			 
+			 "Berserk" : "Berserk (staff)",
+			 "Sleep" : "Sleep (staff)", 
+			 "Warp" : "Warp (staff)", 
+			 "Silence" : "Silence (staff)", 
+			 "Stone" : "Stone (tome)", 
+			 
+			 "Torch" : "Torch (item)"}
+						 
+		if item_name in special_cases:
+			
+			link = special_cases[item_name]			
+			item_link = hyperlink(link, item_name)
+			
+		else:
+			item_link = hyperlink(item_name)
+		
+		line1 =  "{{!}} style={{roundl}}; {{!}} [[File:Is " + platform + " " + \
 				 item_name_lowered + ".png|right]]" 		          
-		line2 = "{{!}} [[" + item_name + "]]"
+		line2 = "{{!}} " + item_link
 		line3 = "{{!}} style={{roundr}}; text-align: center {{!}} " + item_price
 		line4 =  "{{!-}}"
 		
@@ -35,13 +72,15 @@ def format_shop_items(shop_items):
 
 
 
-def build_shop_data(shops_info, header = None):
+def build_shop_data(platform, 
+					game, 
+					shops_info, 
+					header = None):
 
 	shop_data_section = "===Shop Data=== \n"
 	
 	if shops_info == None:
-		shop_data_section = ""
-		return shop_data_section
+		shop_data_section = None
 	
 		
 	elif len(shops_info) == 1:
@@ -60,7 +99,7 @@ def build_shop_data(shops_info, header = None):
  !style="{{roundr}}; border: 1px solid {{Color2}}; background: {{Color1}}; width: 15%" {{!}} Cost
  {{!-}} """
  
-		formatted_items = format_shop_items(shop_items)
+		formatted_items = format_shop_items(platform, shop_items)
 		
 		for part in (shop_data_start, formatted_items, "{{tableend}}", "|}"):
 			shop_data_section += part + "\n"
@@ -70,13 +109,13 @@ def build_shop_data(shops_info, header = None):
 			
 	else:
 	
-		header_line = "|header = " + header
+		header_line = "|header=" + header
 		
 		for line in ("{{Tab",
 					 header_line,
-					 "|width = 700px",
-					 "|height = ",
-					 "|constyle = text-align:center"):
+					 "|width=700px",
+					 "|height=",
+					 "|constyle=text-align:center"):
 						 
 			shop_data_section += line + "\n"
 			
@@ -87,8 +126,8 @@ def build_shop_data(shops_info, header = None):
 			
 			shop_tab = ""
 			
-			for line in ("|tab" + shop_num + " = " + shop_name + "\n", 
-						 "|content" + shop_num + " = {{clear}}"):
+			for line in ("|tab" + shop_num + "=" + shop_name + "\n", 
+						 "|content" + shop_num + "={{clear}}"):
 							 
 				shop_tab += line
 		
@@ -103,7 +142,7 @@ def build_shop_data(shops_info, header = None):
 			
 			shop_items = shop_info[1]
 			
-			formatted_items = format_shop_items(shop_items)		
+			formatted_items = format_shop_items(platform, game, shop_items)		
 			shop_tab += formatted_items  
 						
 			shop_tab += "{{tableend}} \n"							 
@@ -112,92 +151,45 @@ def build_shop_data(shops_info, header = None):
 		shop_data_section += "}}"
 		
 		return shop_data_section
+
+
 	
-#==================================================================
+#======================================================================
 
-# A dictionary of puchaseable items in Fire Emblem and the price
-# of each item.
 
-# Note: the price list is not comprehensive
+def main():
+	
+	# Insert the platform name and the game
+	platform = "gba"
+	game = "fe07"
 
-price_list = {"Slim Sword" : "480", 
-			  "Iron Sword" : "460",
-			  "Steel Sword" : "600",
-			  "Silver Sword" : "1,500",
-			  "Lancereaver" : "1,800",
-			  "Armorslayer" : "1,260",
-			  "Longsword" : "1,260",
-			  "Killing Edge" : "1,300",
-			  
-			  "Slim Lance" : "450", 
-			  "Iron Lance" : "360", 
-			  "Steel Lance" : "480", 
-			  "Silver Lance" : "1,200",
-			  "Javelin" : "400", 
-			  "Axereaver" : "1,950",
-			  "Heavy Spear" : "1,200",
-			  "Horseslayer" : "1,040",
-			  "Killer Lance" : "1,200",
-			  
-			  "Iron Axe" : "270", 
-			  "Steel Axe" : "360",
-			  "Silver Axe" : "1,000", 
-			  "Hand Axe" : "300",
-			  "Swordreaver" : "2,100",
-			  "Hammer" : "800",
-			  "Halberd" : "810",
-			  "Killer Axe" : "1,000",
+	# Insert the header.
+	# (This will be the name of the table)
+	header = "Shop Data"
+
+	# Insert the shop data. 
+	# Shop info is formatted:
+	#	[shop name, [item1, item2, item3]], 
+
+	# ["", ["", "", ""]], 
+			 
+	shop_data = \
+	[["Armory", ["Slim Sword", "Iron Sword", "Steel Sword", "Iron Blade", "Steel Blade", "Iron Axe", "Steel Axe", "Hand Axe", "Hammer"]], 
+	["Vendor", ["Fire", "Heal", "Mend", "Vulnerary", "Antitoxin", "Torch", "Door Key"]], ]
 				  
-			  "Iron Bow" : "540", 
-			  "Steel Bow" : "720", 
-			  "Silver Bow" : "1,600",
-			  "Killer Bow" : "1,400",
-			  "Short Bow" : "1,760",
-			  "Longbow" : "2,000",
-			  
-			  "Fire" : "560", 
-			  "Thunder" : "700",
-			  "Elfire" : "1,200", 
-			  "Lightning" : "630", 
-			  "Shine" : "900", 
-			  "Divine" : "2,000", 
-			  "Flux" : "900", 
-			  
-			  "Heal" : "600", 
-			  "Mend" : "1,000",
-			  "Recover" : "2,250",
-			  "Physic" : "3,750",
-			  "Torch" : "1,000",
-			  "Unlock": "1,500",
-			  "Barrier" : "2,250",
-			  "Restore" : "2,000",
-				  
-			  "Vulnerary" : "300", 
-			  "Antitoxin" : "450",
-			  "Pure Water" : "900", 
-			  "Door Key" : "50",
-			  "Elixir": "3,000", 
-			  "Chest Key": "1,500",
-			  "Lockpick" : "1,200", 
-			  
-			  "Hero Crest" : "10,000", 
-			  "Knight Crest" : "10,000", 
-			  "Elysian Whip" : "10,000", 
-			  "Orion's Bolt" : "10,000", 
-			  "Guiding Ring" : "10,000", 
-			  "Ocean Seal" : "50,000",
-			  "Fell Contract" : "50,000",
-			  "Earth Seal" : "20,000",
-			  }
 
-header = "Shop Data"
+	shop_data_section = build_shop_data(platform, game, shop_data, header)
+	
+	print(shop_data_section)
+	
+	
+	savetoTextFile = False
+	
+	if savetoTextFile:
+		writeTextFile("shop_data_section.txt", shop_data_section)
 
-test_shop_data = [["Armory",
-			     ["Iron Sword", "Iron Lance", "Iron Axe"]],
-			     ["Vendor", 
-			     ["Fire", "Thunder", "Heal"]] ]
-			  
 
-print(build_shop_data(test_shop_data, header))
-
+if __name__ == "__main__":
+	main()
+	
 

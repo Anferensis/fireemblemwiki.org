@@ -73,6 +73,17 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 
 		
 		for num, weapon_name in enumerate(class_weapons, 1):
+			
+			if weapon_name.endswith("(dismounted)"):
+				
+				dismt_section = "dismt"
+				dismount_marker = "{{hover|*|dismounted}}"
+				
+				weapon_name = weapon_name[:-13]
+			
+			else:
+				dismt_section = None
+				dismount_marker = None
 		
 			if num == 1:
 				new_line = '| style="border-left: 1px solid {{Color2}}" align="center" | '
@@ -88,19 +99,18 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 			
 			for section in ("[[File:Bs " + title_num, 
 							lowered_name, 
+							dismt_section,
 							lowered_class, 
 							lowered_weapon + ".png]]"):
-							
-				battle_sprite += section + " "
+				
+				if section != None:			
+					battle_sprite += section + " "
 				
 			
-			link_dict = {"Sword" : "Sword (weapon)", 
-						 "Lance" : "Lance (weapon)", 
-						 "Axe" : "Axe (weapon)", 
+			link_dict = {"Lance" : "Lance (weapon)", 
 						 "Anima" : "Anima (magic)", 
 						 "Light" : "Light (magic)", 
 						 "Dark" : "Dark (magic)", 
-						 "Staff" : "Staff (magic)", 
 						 "Magic" : "Magic (element)"}
 			
 			
@@ -113,10 +123,13 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 			
 			new_line += battle_sprite + "<br>" + weapon_link
 			
+			if dismount_marker != None:
+				new_line += dismount_marker
+			
 			class_columns += new_line + "\n"
 			
 	
-	sprite_gallery += "\n" + class_columns + "|} \n|}"
+	sprite_gallery += "\n" + class_columns + "|}\n|}\n"
 	
 	return sprite_gallery
 
@@ -125,7 +138,7 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 #========================================================================
 
 # Enter character name
-character_name = "Kent"
+character_name = "Dalsin"
 
 # Enter character type, either "playable", "boss", or "NPC"
 character_type = "playable"
@@ -133,7 +146,7 @@ character_type = "playable"
 # Enter title num
 # 	Such as fe01, fe02, fe03 ...
 
-title_num = "fe07"
+title_num = "fe05"
 
 
 # Enter sprite data
@@ -144,10 +157,10 @@ title_num = "fe07"
 # ["", [""]], 
 
 sprite_data = \
-[["Cavalier", ["Sword", "Lance"]],
-["Paladin", ["Sword", "Lance", "Axe"]],]
+[["Armored Axe", ["Axe"]], 
+["General", ["Sword", "Lance", "Axe", "Bow"]]]
 
 if __name__ == "__main__":
 	print(build_sprite_gallery(character_name, character_type, title_num, sprite_data))
-	
+		
 

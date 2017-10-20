@@ -2,16 +2,14 @@
 """
 Written by Albert "Anferensis" Ong
 
-Multiple dictionaries that store the price lists for varying 
-Fire Emblem titles. 
-
-This is used specifically for assembling ship data.
+A group of dictionaries that stores the price lists for varying 
+Fire Emblem titles. This is used exclusively for assembling shop 
+data in build_shop_data.py
 
 Note: These price lists are not comprehensive.
 """
 
 # The price list for Fire Emblem: Mystery of the Emblem.
-
 price_list_fe03 = \
 	  {"Iron Sword" : "420", 
 	   "Steel Sword" : "760",
@@ -23,8 +21,8 @@ price_list_fe03 = \
 	   "Iron Bow" : "330", }
 
 
+
 # The price list for Fire Emblem: Thracia 776
-			  
 price_list_fe05 = \
 	  {"Iron Sword" : "2,200", 
 	   "Slim Sword" : "2,600", 
@@ -75,8 +73,9 @@ price_list_fe05 = \
 	   }
 
 
-# Price list for the GBA titles - Fire Emblem 6, 7, and 8. 
 
+# Price list for the GBA titles - Fire Emblem 6, 7, and 8. 
+# Note: Some prices may vary between titles. 
 price_list_gba = \
 	 {"Slim Sword" : "480", 
 	  "Iron Sword" : "460",

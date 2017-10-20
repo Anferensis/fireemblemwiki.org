@@ -1,19 +1,12 @@
 
 """
 Written by Albert"Anferensis"Ong
+
+Constructs an enemy data table for fireemblemwiki.org
 """
 
-def hyperlink(link, display_text = None):
+from utilities import hyperlink, writeTextFile
 	
-	if display_text != None:
-		formatted_link = "[[" + link + "|" + display_text +"]]"
-		
-	else:
-		formatted_link = "[[" + link + "]]"
-	
-	return formatted_link
-	
-
 
 def build_unit_inventory(platform, 
 						 inventory_data, 
@@ -54,39 +47,76 @@ def build_unit_inventory(platform,
 		# The name of the item is put entirely in lower case		
 		lowered_item_name = item_name.lower()
 		
+		special_link_cases = \
+				{"Fire" : "Fire (tome)", 
+				 "Thunder" : "Thunder (tome)", 
+				 "Luna" : "Luna (skill)", 
+				 "Wind" : "Wind (tome)",
+				 "Light": "Lightning",
+				 "Eclipse" : "Eclipse (tome)",
+				 "Ballista" : "Ballista (weapon)",
+				 
+				 "Berserk" : "Berserk (staff)",
+				 "Sleep" : "Sleep (staff)", 
+				 "Warp" : "Warp (staff)",
+				 "Rescue" : "Rescue (staff)",
+				 "Silence" : "Silence (staff)", 
+				 "Stone" : "Stone (tome)", 
+				 "Forseti" : "Forseti (tome)",
+				 "Torch" : "Torch (item)",
+				 "Poison" : "Poison (tome)", 
+				 
+				 "Adept Manual" : "Skill items",
+				 "Adept Scroll" : "Skill items", 
+				 "Occult Scroll" : "Skill items",
+				 "Provoke Scroll" : "Skill items",  
+				 "Guard Scroll" : "Skill items",
+				 "Gamble Scroll" : "Skill items", 
+				 
+				 "Renewal" : "Renewal (skill)",
+				 "Guard" : "Cancel", 
+				 "Cancel" : "Pavise"}
+				 
+		special_image_cases = \
+			{"Beak (raven)" : "Beak", 
+			 "Beak (hawk)" : "Beak", 
+			 "Claw (cat)" : "Claw", 
+			 "Claw (tiger)" : "Claw", 
+			 
+			 "Breath (red)" : "Breath (laguz)", 
+			 "Breath (white)": "Breath (laguz)"}
+		
 		if item_name.endswith(" (drop)"):
 			item_name = item_name[:-7]
 			lowered_item_name = lowered_item_name[:-7]
-			item_link = "{{drop|" + item_name + "}}"
+			
+			if item_name in special_link_cases:
+				link = special_link_cases[item_name]
+				item_link = "{{drop|" + link + "|" + item_name + "}}"
+			else:
+				item_link = "{{drop|" + item_name + "}}"		
+							 
+		elif item_name in special_link_cases:
+			
+			link = special_link_cases[item_name]			
+			item_link = hyperlink(link, item_name)
+		
+		elif item_name in special_image_cases:
+			link = special_image_cases[item_name]
+			item_link = hyperlink(link)
 			
 		else:
-			
-			special_cases = {"Fire" : "Fire (tome)", 
-							 "Thunder" : "Thunder (tome)", 
-							 "Luna" : "Luna (tome)", 
-							 "Wind" : "Wind (tome)",
-							 "Ballista" : "Ballista (weapon)",
-							 
-							 "Berserk" : "Berserk (staff)",
-							 "Sleep" : "Sleep (staff)", 
-							 "Warp" : "Warp (staff)",
-							 "Silence" : "Silence (staff)", 
-							 "Stone" : "Stone (tome)", 
-							 "Forseti" : "Forseti (tome)",
-							 "Torch" : "Torch (item)"}
-							 
-			if item_name in special_cases:
-				
-				link = special_cases[item_name]			
-				item_link = hyperlink(link, item_name)
-				
-			else:
-				item_link = hyperlink(item_name)
+			item_link = hyperlink(item_name)
+		
+		if item_name == "Beak":
+			item_image = "[[File:Is " + platform + " " + lowered_item_name + " (raven).png]]"
+		else:
+			item_image = "[[File:Is " + platform + " " + lowered_item_name + ".png]]"
+		
 		
 		# Creates the formatted item data, which includes a link directed 
 		# towards the item sprite and a hyperlink to the item itself
-		formatted_item = "[[File:Is " + platform + " " + lowered_item_name + ".png]]" + \
-						 item_link
+		formatted_item = item_image + item_link
 		
 		# Adds the formatted item data to the formatted inventory										
 		formatted_inv += formatted_item
@@ -94,7 +124,6 @@ def build_unit_inventory(platform,
 	# By the end of the for loop, the inventory should be
 	# properly formatted. 	
 	return formatted_inv
-
 
 
 def build_units_data(platform,
@@ -105,27 +134,16 @@ def build_units_data(platform,
 	
 	for unit_num, unit_data in enumerate(units_data, 1):
 		
-		unit_num = str(unit_num)
+		if unit_num == len(units_data):
+			unit_num = "b"
+		else:
+			unit_num = str(unit_num)
 		
 		unit_name = unit_data[0]
 		unit_class = unit_data[1]
 		unit_level = unit_data[2]
 		unit_quantity = unit_data[3]
 		unit_inventory = unit_data[4]
-		
-		# Checks if the inputted unit level is an integer.	
-		try: 
-			int(unit_level)			
-		except ValueError:
-			print(unit_data)
-			raise ValueError("The inputted unit level was not an integer")
-		
-		# Checks if the inputted unit quantity is an integer.		
-		try: 
-			int(unit_quantity)		
-		except ValueError:
-			print(unit_data)
-			raise ValueError("The inputted unit quantity was not an integer")
 											  
 		name_line_start = "|name"
 		class_line_start = "|class"
@@ -134,11 +152,13 @@ def build_units_data(platform,
 		
 		isLastReinforcement = False
 		
+		add_letter = ""
+		
 		if isReinforcement:
 			
 			add_letter = "r"
 			
-			if int(unit_num) == len(units_data):
+			if unit_num == "b":
 				isLastReinforcement = True
 				add_letter = "rl"
 
@@ -146,7 +166,8 @@ def build_units_data(platform,
 			class_line_start += add_letter
 			level_line_start += add_letter
 			quantity_line_start += add_letter
-							
+			
+						
 					
 		if isLastReinforcement:		
 			unit_num = ""	
@@ -165,27 +186,40 @@ def build_units_data(platform,
 		class_line =    class_line_start + unit_num + "=" + unit_class
 		level_line =    level_line_start + unit_num + "=" + unit_level
 		quantity_line = quantity_line_start + unit_num + "=" + unit_quantity
+		
+		
+		
+		if unit_class == "Raven":
+			class_article_line = "|class" + add_letter + unit_num + "article=" + "Raven (laguz)"
+		
+		else:
+			class_article_line = None	
+		
+		if unit_num == "b":
+			quantity_line = None
 											  
 		formatted_unit_data = ""	
 		
 		for line in (name_line, 
 					 class_line, 
+					 class_article_line,
 					 level_line, 
 					 quantity_line, 
 					 inventory_line):
-					 
-			formatted_unit_data += line + "\n"
+			
+			if line != None:		 
+				formatted_unit_data += line + "\n"
 		
 		formatted_units_data += formatted_unit_data + "\n"	
 	
-	
 	return formatted_units_data
-			
+	
 
 
 def build_enemy_data(platform, 
 					 enemy_data, 
-					 reinforcement_data = None, 
+					 reinforcement_data, 
+					 enemy_data_note,
 					 print_units_total = False):
 	
 
@@ -196,7 +230,8 @@ def build_enemy_data(platform,
 														reinforcement_data, 
 														True)
 	else:
-		formatted_reinforcement_data = ""	
+		formatted_reinforcement_data = None	
+	
 	
 	if print_units_total:
 		
@@ -208,9 +243,10 @@ def build_enemy_data(platform,
 			
 		reinforcement_total = 0
 		
-		for unit_data in reinforcement_data:
-			reinforcement_quantity = int(unit_data[3])
-			reinforcement_total += reinforcement_quantity
+		if reinforcement_data != None:
+			for unit_data in reinforcement_data:
+				reinforcement_quantity = int(unit_data[3])
+				reinforcement_total += reinforcement_quantity
 			
 		print("Enemy total: ", enemy_total)
 		print("Reinforcement total: ", reinforcement_total)
@@ -218,14 +254,18 @@ def build_enemy_data(platform,
 	
 	enemy_data_section = ""
 	
-	for line in ("===Enemy Data===", 
+	for section in ("===Enemy Data===", 
 				 "{{ChapEnemies", 
 				 "|platform=" + platform, 
 				 formatted_units_data,
-				 formatted_reinforcement_data, 
-				 "}}"):
-					 
-		 enemy_data_section += line + "\n"
+				 formatted_reinforcement_data,
+				 "}}" ):	
+		
+		if section != None:		
+			enemy_data_section += section + "\n"
+		 
+	if enemy_data_note != None:
+		enemy_data_section += enemy_data_note
 	
 	return enemy_data_section
 	
@@ -233,28 +273,82 @@ def build_enemy_data(platform,
 	
 #======================================================================
 
-platform = "gba"
 
-# Unit data is formatted:
-# 	[name, class, level, quantity, [inventory items]]
 
-# Example: ["Bandit", "Brigand", "1", "1", ["Iron Axe", "Vulnerary"]]
+def main():
+	
+	# Insert platform name
+	# Such as gba, gcn, or wii
+	platform = "gba"
 
-enemy_data = \
-[["Name1", "Myrmidon", "1", "1", ["Iron Sword"]], 
-["Name2", "Soldier", "1", "1", ["Iron Lance"]], 
-["Name3", "Brigand", "1", "1", ["Iron Axe"]],
-["Boss", "Knight", "5", "1", ["Silver Lance", "Javelin"]]]
+	# Unit data is formatted:
+	# 	[name, class, level, quantity, [inventory items]]
 
-reinforcement_data = \
-[["Reinforcement1", "Mercenary", "1", "1", ["Iron Sword"]], 
-["Reinforcement2", "Cavalier", "1", "1", ["Iron Lance"]], 
-["Reinforcement3", "Fighter", "1", "1", ["Iron Axe"]],]
+	# Example: ["Bandit", "Brigand", "1", "1", ["Iron Axe", "Vulnerary"]]
+	# Template: ["", "", "", "", [""]], 
 
-print_units_total = False
+	enemy_data = \
+	[["Seihou", "Archer", "9", "1", ["Steel Bow"]],
+	["Seihou", "Archer", "11", "1", ["Steel Bow", "Antitoxin"]],
+	["Seihou", "Archer", "12", "2", ["Iron Bow"]],
+	["Seihou", "Archer", "12", "2", ["Steel Bow"]],
+	["Seihou", "Fighter", "9", "1", ["Poison Axe"]],
+	["Seihou", "Fighter", "9", "1", ["Steel Axe", "Hand Axe"]],
+	["Seihou", "Fighter", "9", "1", ["Hand Axe"]],
+	["Seihou", "Fighter", "11", "1", ["Poison Axe"]],
+	["Seihou", "Fighter", "12", "1", ["Steel Axe"]],
+	["Seihou", "Fighter", "12", "1", ["Steel Axe", "Hand Axe"]],
+	["Seihou", "Fighter", "12", "1", ["Halberd"]],
+	["Seihou", "Fighter", "12", "1", ["Poison Axe", "Antitoxin"]],
+	["Seihou", "Mage", "9", "2", ["Elfire", "Vulnerary"]],
+	["Seihou", "Mage", "10", "1", ["Thunder"]],
+	["Seihou", "Mercenary", "8", "1", ["Iron Sword", "Antitoxin"]],
+	["Seihou", "Mercenary", "10", "1", ["Steel Sword"]],
+	["Seihou", "Mercenary", "12", "2", ["Steel Sword"]],
+	["Seihou", "Pirate", "8", "1", ["Steel Axe", "Vulnerary"]], 
+	["Seihou", "Pirate", "8", "1", ["Hand Axe"]], 
+	["Seihou", "Pirate", "10", "1", ["Steel Axe"]], 
+	["Seihou", "Pirate", "10", "1", ["Hand Axe"]], 
+	["Seihou", "Pirate", "11", "1", ["Poison Axe"]], 
+	["[[Scott]]", "Berserker", "5", "1", ["Killer Axe", "Hand Axe"]],]
+	
+	
+	# Insert reinforcement data.
+	# Unit data is formatted the same as with the enemy data above. 
+	# 	If there are no reinforcements, insert "None"
+	
+	reinforcement_data = \
+	[["[[Fir]]", "Myrmidon", "1", "1", ["Wo Dao", "Vulnerary"]], 
+	["[[Sin]]", "Nomad", "5", "1", ["Short Bow"]],
+	["Seihou", "Pirate", "10", "5", ["Steel Axe"]],
+	["Seihou", "Pirate", "10", "9", ["Hand Axe"]],
+	["Seihou", "Pirate", "11", "9", ["Poison Axe", "Antitoxin"]],]
 
-print(build_enemy_data(platform, 
-					   enemy_data, 
-					   reinforcement_data, 
-					   print_units_total))
+	# Insert enemy data note
+	# 	if uneccessary, input "None"
+	enemy_data_note = None
+	
+	
+	print_units_total = False
+
+	enemy_data_section = build_enemy_data(platform, 
+										   enemy_data, 
+										   reinforcement_data, 
+										   enemy_data_note, 
+										   print_units_total)
+										   
+	print(enemy_data_section)
+						   
+	savetoTextFile = False
+	
+	if savetoTextFile:
+		writeTextFile("enemy_data_section.txt", enemy_data_section)
+						   
+
+if __name__ == "__main__":
+	main()
+
+
+
+
 

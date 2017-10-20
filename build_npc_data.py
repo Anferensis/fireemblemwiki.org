@@ -3,16 +3,7 @@
 Written by Albert"Anferensis"Ong
 """
 
-def hyperlink(link, display_text = None):
-	
-	if display_text != None:
-		formatted_link = "[[" + link + "|" + display_text +"]]"
-		
-	else:
-		formatted_link = "[[" + link + "]]"
-	
-	return formatted_link
-
+from utilities import hyperlink, writeTextFile
 
 	
 def build_unit_inventory(inventory_data, unit_num, 
@@ -118,7 +109,7 @@ def build_npc_data(npc_data, npc_data_note):
 			unit_quantity = unit_data[3]
 			unit_inventory = unit_data[4]
 			
-			name_line = "|name" + unit_num + "=" + hyperlink(unit_name)
+			name_line = "|name" + unit_num + "=" + unit_name
 			class_line = "|class" + unit_num + "=" + unit_class
 			level_line = "|lv" + unit_num + "=" + unit_level
 			quantity_line = "|#" + unit_num + "=" + unit_quantity
@@ -143,16 +134,36 @@ def build_npc_data(npc_data, npc_data_note):
 	
 #=======================================================================
 
-# NPC unit data is organized:
-#	[name, class, level, quantity, [inventory]]
 
-# ["", "", "", "", [""]]
+def main():
+	
+	# Insert NPC data
+	# NPC unit data is organized:
+	#	[name, class, level, quantity, [inventory]]
 
-npc_data_test = \
-[["Ekhidna", "Hero", "1", "1", ["Steel Axe"]]]
+	# ["", "", "", "", [""]]
 
-npc_data_note = """<small>*Note: [[Ekhidna]] will appear on turn 8. [[Klein]] and [[Thea]]'s soldiers will become NPC units when their leader is recruited. </small>"""
+	npc_data = \
+	[["[[Zelots]]", "Paladin", "1", "1", ["Steel Sword", "Steel Lance", "Javelin"]],
+	["[[Trec]]", "Cavalier", "4", "1", ["Iron Lance", "Javelin", "Vulnerary"]],
+	["[[Noah]]", "Cavalier", "7", "1", ["Steel Sword", "Iron Lance", "Vulnerary"]]]
 
-print(build_npc_data(npc_data_test, npc_data_note))
+	# Insert NPC data note
+	# If no note is needed, insert "None"
+	npc_data_note = None
+
+	npc_data_section = build_npc_data(npc_data, npc_data_note)
+	
+	print(npc_data_section)
+	
+	savetoTextFile = False
+	
+	if savetoTextFile:
+		writeTextFile("npc_data_section.txt", npc_data_section)
+
+
+
+if __name__ == "__main__":
+	main()
 
 
