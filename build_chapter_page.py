@@ -9,12 +9,13 @@ Note: This program has only been tested for Fire Emblem 5, 6, 7, 8, and 9.
 	  It may not function properly for other titles. 
 """
 
+# Importing functions from other fireemblemwiki scripts. 
 from build_character_data import build_character_data
-from build_enemy_data import build_unit_inventory, build_units_data, build_enemy_data
+from build_enemy_data import build_enemy_data
 from build_item_data import build_item_data
 from build_npc_data import build_npc_data
-from build_shop_data import build_shop_data					   
-from utilities import hyperlink
+from build_shop_data import build_shop_data		
+from utilities import hyperlink, writeTextFile
 
 
 
@@ -54,22 +55,25 @@ def build_chapter_page(hatnote,
 	A function designed to build a chapter page for fireemblemwiki.org.
 	"""					   
 	
+	# Creates a stub mark if the page is a stub.
 	if isStub:
 		stub_mark = "{{stub}}"
+		
+	# Otherwise, the stub mark is registered as "None"
 	else:
 		stub_mark = None
 	
-	#==========================================================
+	#==============================================================
 	
 	# Building chapter quote
 	
 	if quote == None or quote_speaker == None:
-		chapter_quote = ""
+		chapter_quote = None
 		
 	else:
 		chapter_quote = "{{Quote|" + quote + "|" + quote_speaker + "}} \n"
 	
-	#=========================================================
+	#==============================================================
 
 	# Building plot section
 	
@@ -94,14 +98,14 @@ def build_chapter_page(hatnote,
 		
 		plot_section += part + "\n"
 	
-	#=========================================================
+	#==============================================================
 	
 	# Building chapter data
 	
 	chapter_data = "==Chapter Data== \n" + \
 					chapter_data_infobox
 		
-	#==================================================
+	#==============================================================
 	
 	# Building character data section
 	character_data_section = \
@@ -128,7 +132,6 @@ def build_chapter_page(hatnote,
 	#==============================================================
 	
 	# Building enemy data
-	
 	enemy_data_section = build_enemy_data(platform, 
 										  enemy_data, 
 										  reinforcement_data, 
@@ -140,8 +143,7 @@ def build_chapter_page(hatnote,
 	# Building NPC data section
 	npc_data_section = build_npc_data(npc_data, 
 									  npc_data_note)
-	
-									  
+							  
 	#==============================================================
 	
 	# Building boss data
@@ -240,7 +242,7 @@ def build_chapter_page(hatnote,
 		 "fe12" : "{{Nav12}}", 
 		 "fe13" : "{{Nav13}}", 
 		 "fe14" : "{{Nav14}}", 
-		 "fe15" : "{{Nav15}}", }
+		 "fe15" : "{{Nav15}}",}
 						
 	chapter_nav = chapter_nav_dict[game]
 	
@@ -251,7 +253,7 @@ def build_chapter_page(hatnote,
 	     "fe04" : "Fire Emblem: Genealogy of the Holy War",
 	     "fe05" : "Fire Emblem: Thracia 776",
 	     "fe06" : "Fire Emblem: The Binding Blade",
-	     "fe07" : "Fire Emblem: Blazing Sword",
+	     "fe07" : "Fire Emblem (GBA)",
 	     "fe08" : "Fire Emblem: The Sacred Stones",
 	     "fe09" : "Fire Emblem: Path of Radiance",
 	     "fe10" : "Fire Emblem: Radiant Dawn",
@@ -259,7 +261,7 @@ def build_chapter_page(hatnote,
 	     "fe12" : "Fire Emblem: New Mystery of the Emblem",
 	     "fe13" : "Fire Emblem: Awakening",
 	     "fe14" : "Fire Emblem: Fates",
-	     "fe15" : "Fire Emblem Echos: Shadows of Valentia",}
+	     "fe15" : "Fire Emblem Echos: Shadows of Valentia"}
 	     
 	title_name = title_name_dict[game]
 	
@@ -306,13 +308,15 @@ def build_chapter_page(hatnote,
 #=======================================================================
 
 
-# Insert a hatnote, if it is necessary
-# 	(This is for cases where a page needs disambiguation)
+# Insert a hatnote.
+# This is used for cases where a page needs disambiguation.
+# If no hatnote is needed, insert "None".
 
 # Hatnote template:
-
-#	:''Insert hatnote here. ''
-#	----
+"""
+:''Hatnote text''
+----
+"""
 
 hatnote = None
 
@@ -324,7 +328,8 @@ isStub = True
 # Insert platform name
 platform = "gcn"
 
-# Insert game
+# Insert the game number
+# Such as fe01, fe02, fe03 ...
 game = "fe09"
 
 # Insert chapter title
@@ -353,7 +358,7 @@ chapter_infobox = \
 
 
 # Insert a quote and the quote's speaker. 
-# 	(This is primarily for aesthetic purposes) 
+# This is primarily for aesthetic purposes. 
 
 # If "None" is inputted for either the quote or quote speaker,
 # then a quote will not appear
@@ -367,21 +372,18 @@ chapter_desciption = \
 """'''Repatriation''' (Japanese: {{hover|帰還|Kikan}}, ''Repatriation'') is the final chapter of {{FE9}}."""
 
 
-# Insert chapter plot
-# if "None is inputted", this section will be marked as a stub
-
+# Insert chapter plot.
+# If "None is inputted", this section will be marked as a stub.
 chapter_plot = None
 
 # Insert beginning log
-# if there is no beginning log, input "None"
-
+# If there is no beginning log, insert "None"
 beginning_log = \
 """The [[Crimea]]n royal palac, located in the center of Melior, is famed for its beautiful  gardens where the world seems at peace. But times have changed. Countless battles have raged in these idyllic confines, and a new dark lord now sits upon the throne. The palace itself has not suffered--it remains a study in dignity and elegance. Yet there is no peace on this day. A grim tension fills the air, engulfing all it touches in deafening silence. Within the heart of the palace sits the author of this war: [[Ashnard]], king of [[Daein]]. <br>
 [[Ike]], supreme commander of the [[Crimea]]n army, and [[Elincia]], princess of [[Crimea]], have completed their battle preparations. Now, they spend a tense morning waiting for the decisive battle that will conclude their yearlong odyssey. They wait for the beginning of the end."""
 
 
 # Insert chapter infobox data.
-
 chapter_data_box = \
 """{{ChapDataMap
 |victory=Defeat [[Ashnard]]
@@ -395,7 +397,6 @@ chapter_data_box = \
 """
 
 # Chapter databox template. 
-
 """{{ChapDataMap
 |victory=
 |defeat=
@@ -408,7 +409,6 @@ chapter_data_box = \
 
 
 # Insert returning characters and new units data
-
 return_characters = \
 ["Ike", "Titania", "Oscar", "Boyd", "Rhys", "Soren", "Mia", "Ilyana", 
 "Mist", "Rolf", "Marcia", "Lethe", "Mordecai", "Volke", "Brom",
@@ -431,9 +431,8 @@ new_units_data = \
 ["Giffca", "Lion", "68", "20", "Select [[Giffca]] when prompted"], ]
 
 
-# Insert a text note under character data 
-# If no note is needed, insert "None"
-
+# Insert a text note under the character data .
+# If no note is needed, insert "None".
 character_data_note = "<small>*Note: [[Tibarn]], [[Naesala]], or [[Giffca]] will join either at the beginning of the chapter on easy and medium mode or at the start of the second part of the chapter on hard and maniac mode. </small>"
 
 
@@ -478,9 +477,8 @@ item_data = \
 ["Iron Axe", "Steal from [[paladin]]"],]
 
 
-# Insert note after under item data.
+# Insert note after under item data. 
 # If no note is needed, insert "None".
-
 item_data_note = \
 None
 
@@ -539,22 +537,25 @@ enemy_data = \
 ["[[Bryce]]", "General", "20", "1", ["Wishblade", "Speedwing (drop)", "Guard", "Daunt"]], 
 ["[[Ashnard]]", "King Daein", "20", "1", ["Gurgurant", "Renewal", "Daunt"]], ]
 
+
+
+# Insert reinforcement data. 
+# Unit data for reinforcements is formatted the same as enemy data.
+# If there are no reinforcements, insert "None".
 reinforcement_data = \
 None
 
 # Insert note under enemy data.
 # If no note is needed, insert "None".
-
 enemy_data_note = None
 
-# A variable that will print the units total
-# if true, the unit and reinforcements total will print before the chapter page. 
-
+# Insert whether or not you want to print out the units total. 
+# If true, the unit and reinforcements total will print before the chapter page. 
 print_units_total = False
 
 
 # Insert NPC data
-# 	if there are no NPCs, input "None"
+# If there are no NPCs, input "None"
 
 # NPC unit data is organized:
 #	[name, class, level, quantity, [inventory]]
@@ -565,18 +566,16 @@ npc_data = \
 None
 
 # Insert note under enemy data 
-# 	if no note is needed, insert "None"
-
+# If no note is needed, insert "None".
 npc_data_note = None
 
-# Insert boss name
-# 	if no boss is present, input "None"
+# Insert the boss name
+# If no boss is present, insert "None".
 
 boss_name = "Ashnard"
 
 # Insert boss data
-# 	if no boss is present, input "None"
-
+# If no boss is present, insert "None".
 detailed_boss_data = """{{Tab
 |tab1=Easy/Normal/Hard Mode 1st round
 |content1={{BossStats GCN
@@ -672,14 +671,14 @@ detailed_boss_data = """{{Tab
 }}
 """
 
-# Insert strategy section
+# Insert strategy section.
 # If "None" is inputted, this section will be marked a stub. 
 strategy = None
 
-# Insert trivia section
+# Insert trivia section.
 trivia = None
 
-# Insert etymology section
+# Insert etymology section.
 chapter_etymology = """{{Names
 |eng-name=Repatriation
 |eng-mean=--
@@ -722,11 +721,11 @@ chapter_etymology = """{{Names
 }}
 """
 
-# Insert gallery text
+# Insert gallery text.
 # If "None" is inputted, this section will be marked a stub. 
 gallery_text = None
 
-# Insert chapter navigator
+# Insert chapter navigator.
 chapter_navigator_section = \
 """{{ChapterNav
 |prechapter=Twisted Tower
@@ -734,7 +733,7 @@ chapter_navigator_section = \
 }}
 """
 
-# Chapter navigator template
+# Chapter navigator template.
 """{{ChapterNav
 |prechapter=
 |prealternate=
@@ -782,9 +781,8 @@ if __name__ == "__main__":
 	
 	print(chapter_page)
 	
-	file_writer = open("chapter_page.txt", "w")
-	file_writer.write(chapter_page)
-	file_writer.close()
+	savetoTextFile = False
 	
-	print("Text saved to file: chapter_page.txt")
+	if savetoTextFile:
+		writeTextFile("chapter_page.txt", chapter_page)
 
