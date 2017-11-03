@@ -5,10 +5,7 @@ Written by Albert"Anferensis"Ong
 Builds shop data for fireemblemwiki.org
 """
 
-from price_list import price_list_fe03, \
-					   price_list_fe05, \
-					   price_list_gba	
-					      
+from price_list import gametoPriceList
 from utilities import hyperlink, writeTextFile
 
 
@@ -20,15 +17,12 @@ def format_shop_items(platform, game, shop_items):
 		
 		item_name_lowered = item_name.lower()
 		
-		if game in ("fe06", "fe07", "fe08"):
-			item_price = price_list_gba[item_name]
-			
-		elif game  == "fe05":
-			item_price = price_list_fe05[item_name]
-			
-		elif game == "fe03":
-			item_price = price_list_fe03[item_name]
+		# Retrieves the price list for a given Fire Emblem title	 
+		price_list = gametoPriceList[game]
 		
+		# Retrieves the item price from the price list. 
+		item_price = price_list[item_name]
+
 		
 		# A dictionary for cases where the item name 
 		# is not the same as the page name.
@@ -37,7 +31,8 @@ def format_shop_items(platform, game, shop_items):
 			 "Thunder" : "Thunder (tome)", 
 			 "Luna" : "Luna (tome)", 
 			 "Wind" : "Wind (tome)",
-			 "Eclipse" : "Eclipse (tome)",  
+			 "Eclipse" : "Eclipse (tome)",
+			 "Light" : "Light (tome)",  
 			 
 			 "Berserk" : "Berserk (staff)",
 			 "Sleep" : "Sleep (staff)", 
@@ -160,8 +155,8 @@ def build_shop_data(platform,
 def main():
 	
 	# Insert the platform name and the game
-	platform = "gba"
-	game = "fe07"
+	platform = "wii"
+	game = "fe10"
 
 	# Insert the header.
 	# (This will be the name of the table)
@@ -174,8 +169,12 @@ def main():
 	# ["", ["", "", ""]], 
 			 
 	shop_data = \
-	[["Armory", ["Slim Sword", "Iron Sword", "Steel Sword", "Iron Blade", "Steel Blade", "Iron Axe", "Steel Axe", "Hand Axe", "Hammer"]], 
-	["Vendor", ["Fire", "Heal", "Mend", "Vulnerary", "Antitoxin", "Torch", "Door Key"]], ]
+	[["Normal Wares",
+		["Bronze Sword", "Iron Sword", "Bronze Lance","Iron Lance", 
+		 "Bronze Axe", "Iron Axe", "Bronze Bow", "Iron Bow", "Bronze Knife", 
+		 "Bronze Dagger", "Thunder", "Light", "Heal", "Herb"]], 
+	["Special Wares", 
+		["Javelin", "Hand Axe", "Beast Killer", "Ellight", "Mend"]]]
 				  
 
 	shop_data_section = build_shop_data(platform, game, shop_data, header)

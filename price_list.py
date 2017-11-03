@@ -22,7 +22,7 @@ price_list_fe03 = \
 
 
 
-# The price list for Fire Emblem: Thracia 776
+# The price list for Fire Emblem: Thracia 776.
 price_list_fe05 = \
 	  {"Iron Sword" : "2,200", 
 	   "Slim Sword" : "2,600", 
@@ -170,6 +170,46 @@ price_list_gba = \
 	  "Body Ring" : "8,000", 
 	  "Boots" : "8,000", 
 	  }
+
+
+# Price list for Fire Emblem: Radiant Dawn.
+price_list_fe10 = \
+	{"Bronze Sword" : "350", 
+	 "Iron Sword" : "500",
 	  
+	 "Bronze Lance" : "450",
+	 "Iron Lance" : "600", 
+	 "Javelin" : "600", 
+	 
+	 "Bronze Axe" : "250",
+	 "Iron Axe" : "400", 
+	 "Hand Axe" : "625", 
+	 
+	 "Bronze Bow" : "400",
+	 "Iron Bow" : "750",
 	  
-	  
+	 "Bronze Knife" : "480",
+	 "Bronze Dagger" : "270", 
+	 "Beast Killer" : "1,200", 
+	 
+	 "Thunder" : "880",
+	 "Light" : "960", 
+	 "Ellight" : "2,240", 
+	 
+	 "Heal" : "800",
+	 "Mend" : "1,000",
+	
+	 "Herb" : "600", 
+	 }
+
+
+# A dictionary that assigns a price list to a given Fire Emblem title. 
+gametoPriceList = \
+	{"fe03" : price_list_fe03, 
+	 "fe05" : price_list_fe05,
+	 "fe06" : price_list_gba,
+	 "fe07" : price_list_gba,
+	 "fe08" : price_list_gba,
+	 "fe10" : price_list_fe10,
+	 }
+	 
