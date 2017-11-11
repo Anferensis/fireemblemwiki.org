@@ -4,23 +4,21 @@ Written by Albert"Anferensis"Ong
 
 Constructs a sprite gallery for fireemblemwiki.org
 
-Note: This program has only been tested for Fire Emblem 5, 6, 7, and 8.
+Note: This program has only been tested for Fire Emblem 4, 5, 6, 7, and 8.
 It may not function properly for other titles. 
 """
 
-def hyperlink(link, display_text = None):
-	
-	if display_text != None:
-		formatted_link = "[[" + link + "|" + display_text +"]]"
-		
-	else:
-		formatted_link = "[[" + link + "]]"
-	
-	return formatted_link
+from utilities import hyperlink 
 
 
 
-def build_sprite_gallery(character_name, character_type, title_num, sprite_data):
+def build_sprite_gallery(character_name, 
+						 character_type, 
+						 title_num, 
+						 sprite_data):
+	"""
+	A function designed to build a sprite gallery for fireemblemwiki.org. 
+	"""
 	
 	sprite_gallery = \
 """{| class="mw-collapsible mw-collapsed" style="margin-left: auto; margin-right: auto; width: 75%; border: 2px solid {{Color2}}; background: {{Color1}}; {{round}}"
@@ -29,11 +27,11 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 	
 	lowered_name = character_name.lower()
 	
-	small_character_portrait = \
-		"[[File:Small portrait " + lowered_name + " " + title_num + ".png]]"
-	
+
 	
 	if title_num in ("fe06", "fe07", "fe08") and character_type in ("playable", "boss"):
+		small_character_portrait = \
+			"[[File:Small portrait " + lowered_name + " " + title_num + ".png]]"
 		first_line = small_character_portrait + "Sprite Gallery"
 		
 	else:
@@ -77,21 +75,19 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 			if weapon_name.endswith("(dismounted)"):
 				
 				dismt_section = "dismt"
-				dismount_marker = "{{hover|*|dismounted}}"
 				
 				weapon_name = weapon_name[:-13]
 			
 			else:
 				dismt_section = None
-				dismount_marker = None
 		
 			if num == 1:
 				new_line = '| style="border-left: 1px solid {{Color2}}" align="center" | '
 			
 			else:
 				new_line = '| align="center" | '
-				
-			lowered_name = character_name.lower()
+			
+			
 			lowered_class = class_name.lower()				
 			lowered_weapon = weapon_name.lower()
 			
@@ -107,29 +103,39 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 					battle_sprite += section + " "
 				
 			
-			link_dict = {"Lance" : "Lance (weapon)", 
-						 "Anima" : "Anima (magic)", 
-						 "Light" : "Light (magic)", 
-						 "Dark" : "Dark (magic)", 
-						 "Magic" : "Magic (element)"}
+			# A dictionary for cases where a weapon name is not the 
+			# same as the link name. 
+			link_exceptions = \
+				{"Lance" : "Lance (weapon)", 
+				 "Anima" : "Anima (magic)", 
+				 "Light" : "Light (magic)", 
+				 "Dark" : "Dark (magic)", 
+				 "Magic" : "Magic (element)"}
 			
-			
-			if weapon_name in link_dict:
-				link = link_dict[weapon_name]
-				weapon_link = hyperlink(link, weapon_name)
+			# If the weapon name is a link exception...
+			if weapon_name in link_exceptions:
 				
+				# Properly formats the link. 
+				link = link_exceptions[weapon_name]
+				weapon_link = hyperlink(link, weapon_name)
+			
+			
+			# Otherwise simply hyperlinks the weapon. 	
 			else:
 				weapon_link = hyperlink(weapon_name)
 			
+			
 			new_line += battle_sprite + "<br>" + weapon_link
 			
-			if dismount_marker != None:
-				new_line += dismount_marker
+			
+			if dismt_section != None:
+				new_line += "{{hover|*|dismounted}}"
 			
 			class_columns += new_line + "\n"
 			
 	
 	sprite_gallery += "\n" + class_columns + "|}\n|}\n"
+	
 	
 	return sprite_gallery
 
@@ -137,30 +143,43 @@ def build_sprite_gallery(character_name, character_type, title_num, sprite_data)
 
 #========================================================================
 
-# Enter character name
-character_name = "Dalsin"
 
-# Enter character type, either "playable", "boss", or "NPC"
-character_type = "playable"
+def main():
 
-# Enter title num
-# 	Such as fe01, fe02, fe03 ...
+	# Enter character name
+	character_name = "Fred"
 
-title_num = "fe05"
+	# Enter character type, either "playable", "boss", or "NPC"
+	character_type = "playable"
+
+	# Enter title num
+	# 	Such as fe01, fe02, fe03 ...
+
+	title_num = "fe05"
 
 
-# Enter sprite data
+	# Enter sprite data
 
-# Sprite data is organized
-#	[class, [weapon1, weapon2, weapon3]]
+	# Sprite data is organized
+	#	[class, [weapon1, weapon2, weapon3]]
 
-# ["", [""]], 
+	# ["", [""]], 
 
-sprite_data = \
-[["Armored Axe", ["Axe"]], 
-["General", ["Sword", "Lance", "Axe", "Bow"]]]
+	sprite_data = \
+	[["Paladin", ["Sword", "Lance", "Sword (dismounted)"]], ]
+	
+	
+	# Builds the sprite gallery. 
+	sprite_gallery = build_sprite_gallery(character_name, 
+										  character_type, 
+										  title_num, 
+										  sprite_data)								  
+	# Prints out the sprite gallery. 
+	print(sprite_gallery)
+
+
 
 if __name__ == "__main__":
-	print(build_sprite_gallery(character_name, character_type, title_num, sprite_data))
+	main()
 		
 
