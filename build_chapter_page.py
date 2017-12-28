@@ -7,6 +7,8 @@ A program designed to build a chapter page for fireemblemwiki.org.
 
 Note: This program has only been tested for Fire Emblem 5, 6, 7, 8, and 9.
 	  It may not function properly for other titles. 
+	  
+Revision: 12-27-2017
 """
 
 # Importing functions from other fireemblemwiki scripts. 
@@ -27,16 +29,17 @@ def build_chapter_page(hatnote,
 					   quote,
 					   quote_speaker,
 					   chapter_desciption, 
+					   insert_plot_section,
 					   chapter_plot,
 					   beginning_log,
 					   chapter_data_infobox,  
-					   return_characters,
-					   new_units_data,
+					   character_data, 
 					   character_data_note,
 					   item_data,
 					   item_data_note,
 					   shop_data_header,
 					   shops_info,
+					   include_enemy_data, 
 					   enemy_data,					   
 					   reinforcement_data,
 					   enemy_data_note,
@@ -46,6 +49,7 @@ def build_chapter_page(hatnote,
 					   boss_name,
 					   detailed_boss_data,
 					   chapter_navigator_section, 
+					   include_strategy_section, 
 					   strategy,
 					   trivia,
 					   chapter_etymology,
@@ -77,51 +81,53 @@ def build_chapter_page(hatnote,
 
 	# Building plot section
 	
-	plot_section = ""
-	
-	if chapter_plot == None:
-		plot_body = "{{sectstub}}"
+	if insert_plot_section:
+		plot_section = ""
+		
+		if chapter_plot == None:
+			plot_body = "{{sectstub}}"
+		else:
+			plot_body = chapter_plot
+			
+		if beginning_log == None:
+			beginning_log_section = ""
+			
+		else:
+			beginning_log_section = "===Beginning Log=== \n" + \
+									beginning_log
+			
+		for part in ("==Plot==",
+					 "{{main|" + chapter_title + "/Script}}",
+					 plot_body + "\n",
+					 beginning_log_section):
+			
+			plot_section += part + "\n"
+			
 	else:
-		plot_body = chapter_plot
-		
-	if beginning_log == None:
-		beginning_log_section = ""
-		
-	else:
-		beginning_log_section = "===Beginning Log=== \n" + \
-								beginning_log
-		
-	for part in ("==Plot==",
-				 "{{main|" + chapter_title + "/Script}}",
-				 plot_body + "\n",
-				 beginning_log_section):
-		
-		plot_section += part + "\n"
+		plot_section = None
 	
-	#==============================================================
+	#===================================================================
 	
 	# Building chapter data
 	
-	chapter_data = "==Chapter Data== \n" + \
-					chapter_data_infobox
+	chapter_data = chapter_data_infobox
 		
-	#==============================================================
+	#===================================================================
 	
 	# Building character data section
+	
 	character_data_section = \
-		build_character_data(game, 
-							 new_units_data, 
-							 return_characters, 
+		build_character_data(character_data, 
 							 character_data_note)
 					   
-	#=============================================================
+	#===================================================================
 	
-	# Building item data
-	item_data_section = build_item_data(platform, 
-										item_data, 
+	# Building item data. 
+	
+	item_data_section = build_item_data(item_data, 
 										item_data_note)
 	
-	#=============================================================
+	#===================================================================
 	
 	# Building shop data
 	shop_data_section = build_shop_data(platform, 
@@ -129,22 +135,27 @@ def build_chapter_page(hatnote,
 										shops_info, 
 										shop_data_header)
 	
-	#==============================================================
+	#===================================================================
 	
 	# Building enemy data
-	enemy_data_section = build_enemy_data(platform, 
-										  enemy_data, 
-										  reinforcement_data, 
-										  enemy_data_note,
-										  print_units_total)
 	
-	#==============================================================
+	if include_enemy_data:
+		enemy_data_section = build_enemy_data(platform, 
+											  enemy_data, 
+											  reinforcement_data, 
+											  enemy_data_note,
+											  print_units_total)
+											  
+	else:
+		enemy_data_section = None
+	
+	#===================================================================
 	
 	# Building NPC data section
 	npc_data_section = build_npc_data(npc_data, 
 									  npc_data_note)
 							  
-	#==============================================================
+	#===================================================================
 	
 	# Building boss data
 	
@@ -157,7 +168,7 @@ def build_chapter_page(hatnote,
 	
 	boss_data_section = ""
 						
-	for line in ("===Boss Data===", 
+	for line in ("===Boss data===", 
 				 boss_redirect_line, 
 				 detailed_boss_data):
 					 
@@ -167,25 +178,30 @@ def build_chapter_page(hatnote,
 		else:
 			boss_data_section = None
 											    
-	#==============================================================
+	#===================================================================
 	
 	# Building strategy section
 	
-	if strategy == None:
-		strategy_body = "{{sectstub}}"
+	if include_strategy_section:
 		
+		if strategy != None:
+			strategy_body = "{{strategy}} \n" + \
+							   strategy
+			
+		else:
+			strategy_body = "{{sectstub}}"
+			
+		strategy_section = ""
+		
+		for line in ("==Strategy==", 
+					 strategy_body):
+						 
+			strategy_section += line + "\n"
+			
 	else:
-		strategy_body = "{{strategy}} \n" + \
-						   strategy
+		strategy_section = None
 		
-	strategy_section = ""
-	
-	for line in ("==Strategy==", 
-				 strategy_body):
-					 
-		strategy_section += line + "\n"
-		
-	#==============================================================
+	#===================================================================
 	
 	# Building trivia section
 	
@@ -202,14 +218,14 @@ def build_chapter_page(hatnote,
 		if line != None:			 
 			trivia_section += line + "\n"
 		
-	#==============================================================
+	#===================================================================
 	
 	# Building etymology section
 	
 	etymology_section = "==Etymology and other languages== \n" + \
 						chapter_etymology
 		
-	#==============================================================
+	#===================================================================
 	
 	# Building gallery section
 	
@@ -223,7 +239,7 @@ def build_chapter_page(hatnote,
 		
 	gallery_section += gallery_section_text + "\n"
 	
-	#==============================================================
+	#===================================================================
 	
 	# Building chapter navigator and chapter category
 	
@@ -243,12 +259,20 @@ def build_chapter_page(hatnote,
 		 "fe13" : "{{Nav13}}", 
 		 "fe14" : "{{Nav14}}", 
 		 "fe15" : "{{Nav15}}",}
-						
-	chapter_nav = chapter_nav_dict[game]
+	
+	if chapter_navigator_section != None:
+	
+		if game in ("fe02", "fe15"):
+			chapter_nav = "{{Nav2}} \n{{Nav15}}"
+		else:
+			chapter_nav = chapter_nav_dict[game]
+			
+	else:
+		chapter_nav = None
 	
 	title_name_dict = \
 		{"fe01" : "Fire Emblem: Shadow Dragon and the Blade of Light",
-		 "fe02" : "Fire Emblem: Gaiden",
+		 "fe02" : "Fire Emblem Gaiden",
 	     "fe03" : "Fire Emblem: Mystery of the Emblem",
 	     "fe04" : "Fire Emblem: Genealogy of the Holy War",
 	     "fe05" : "Fire Emblem: Thracia 776",
@@ -261,13 +285,17 @@ def build_chapter_page(hatnote,
 	     "fe12" : "Fire Emblem: New Mystery of the Emblem",
 	     "fe13" : "Fire Emblem: Awakening",
 	     "fe14" : "Fire Emblem: Fates",
-	     "fe15" : "Fire Emblem Echos: Shadows of Valentia"}
+	     "fe15" : "Fire Emblem Echoes: Shadows of Valentia"}
 	     
 	title_name = title_name_dict[game]
 	
-	chapter_category = "[[Category:Chapters of " + title_name + "]]"
+	if game in ("fe02", "fe15"):
+		chapter_category = "[[Category:Acts of Fire Emblem Gaiden]] \n" + \
+						   "[[Category:Acts of Fire Emblem Echoes: Shadows of Valentia]]"
+	else:
+		chapter_category = "[[Category:Chapters of " + title_name + "]]"
 
-	#==============================================================
+	#===================================================================
 	
 	# Builds the complete chapter page
 	
@@ -320,38 +348,38 @@ def build_chapter_page(hatnote,
 
 hatnote = None
 
+#=======================================================================
 
 # Insert whether or not the page is a stub.
 isStub = True
 
 
 # Insert platform name
-platform = "gcn"
+platform = "nes02"
 
 # Insert the game number
 # Such as fe01, fe02, fe03 ...
-game = "fe09"
+game = "fe02"
 
 # Insert chapter title
-chapter_title = "Repatriation"
+chapter_title = "Seabound Shrine"
 
 # Insert chapter infobox
 chapter_infobox = \
 """{{Chapter Infobox 
-|title=Repatriation
-|image=[[File:Cm fe09 F.png|200px]]
-|location=[[Crimea]] Castle
-|new units=[[Tibarn]], [[Naesala]], or [[Giffca]]
-|boss=[[Ashnard]], [[Bryce]]
-|weather=
+|title=Seabound Shrine
+|image=[[File:Cm fe02 C2 M07.png|200px]]
+|location=Seabound Shrine
+|new units=None
+|boss=None
 }}"""
 
 # Chapter infobox template
 """{{Chapter Infobox 
 |title=
-|image=[[File:Cm fe__ __.png|200px]]
-|location
-|new units
+|image=[[File:Cm fe __ __.png|200px]]
+|location=
+|new units=
 |boss=
 |weather=
 }}"""
@@ -363,14 +391,19 @@ chapter_infobox = \
 # If "None" is inputted for either the quote or quote speaker,
 # then a quote will not appear
 
-quote = "Our road has been long, but it ends today! Let's liberate Crimea and free our friends...and our families...from Daein's tyranny! Men of Crimea...Laguz of Tellius...Greil Mercenaries...MOVE OUT!!"
-quote_speaker = "[[Ike]]"
+quote = None
+quote_speaker = None
 
 
 # Insert chapter description. 
 chapter_desciption = \
-"""'''Repatriation''' (Japanese: {{hover|帰還|Kikan}}, ''Repatriation'') is the final chapter of {{FE9}}."""
+"""'''Seabound Shrine''' (Japanese: {{hover|海のほこら|Umi no hokora}} ''Sea Shrine'') is the seventh map of the second act of {{FE2}} and {{FE15}}.
+"""
 
+#=======================================================================
+
+# Insert if this page needs a plot section. 
+insert_plot_section = False
 
 # Insert chapter plot.
 # If "None is inputted", this section will be marked as a stub.
@@ -379,20 +412,20 @@ chapter_plot = None
 # Insert beginning log
 # If there is no beginning log, insert "None"
 beginning_log = \
-"""The [[Crimea]]n royal palac, located in the center of Melior, is famed for its beautiful  gardens where the world seems at peace. But times have changed. Countless battles have raged in these idyllic confines, and a new dark lord now sits upon the throne. The palace itself has not suffered--it remains a study in dignity and elegance. Yet there is no peace on this day. A grim tension fills the air, engulfing all it touches in deafening silence. Within the heart of the palace sits the author of this war: [[Ashnard]], king of [[Daein]]. <br>
-[[Ike]], supreme commander of the [[Crimea]]n army, and [[Elincia]], princess of [[Crimea]], have completed their battle preparations. Now, they spend a tense morning waiting for the decisive battle that will conclude their yearlong odyssey. They wait for the beginning of the end."""
+None
 
+#=======================================================================
 
 # Insert chapter infobox data.
 chapter_data_box = \
-"""{{ChapDataMap
-|victory=Defeat [[Ashnard]]
-|defeat=[[Ike]] or [[Elincia]] dies 
-|ally=14{{hover|+1|Tibarn, Naesala, or Giffca}}
-|partner=0
+"""==Map data==
+{{ChapDataMap
+|victory=Rout enemy
+|defeat=[[Celica]] dies
+|ally=8
 |other=0
-|enemy=50
-|map=[[File:Cm fe09 F.png]]
+|enemy={{hover|10|Gaiden}}/{{hover|7|Echoes: Shadoes of Valentia}}
+|map=[[File:Cm fe02 C2 M06.png]]
 }}
 """
 
@@ -401,80 +434,46 @@ chapter_data_box = \
 |victory=
 |defeat=
 |ally=
-|partner=
 |other=
 |enemy=
 |map=
-}}"""
+}}
+"""
 
+#=======================================================================
 
-# Insert returning characters and new units data
-return_characters = \
-["Ike", "Titania", "Oscar", "Boyd", "Rhys", "Soren", "Mia", "Ilyana", 
-"Mist", "Rolf", "Marcia", "Lethe", "Mordecai", "Volke", "Brom",
-"Kieran", "Nephenee", "Zihark", "Sothe", "Jill", "Astrid", "Gatrie", 
-"Makalov", "Stefan", "Muarim", "Tormod", "Devdan", "Reyson", "Ulki", "Janaff", 
-"Tanith", "Shinon", "Calill", "Tauroneo", "Ranulf", "Haar", "Bastian", 
-"Lucia", "Geoffrey", "Largo", "Elincia", "Ena", "Nasir"]
+# Insert character data.
 
-  
-# New units data is organized:
-#  ["unit name", ["class", "HP", "level", "recruit method"]]
+# For full instructions on how to format character_data,  
+# see build_character_data.py. 
 
-# ["", ["", "", "", ""]], 
-
-# If there are no new units, input "None"
-
-new_units_data = \
-[["Tibarn", "Hawk (class) {{!}} Hawk", "63", "18", "Select [[Tibarn]] when prompted"], 
-["Naesala", "Raven (class) {{!}} Raven", "57", "17", "Select [[Naesala]] when prompted"], 
-["Giffca", "Lion", "68", "20", "Select [[Giffca]] when prompted"], ]
+character_data = \
+[["''Gaiden''", 
+ "fe02", 
+ None,
+ ["Celica", "Mae", "Boey", "Genny", "Saber", "Valbar", "Kamui", "Leon"]], 
+ 
+ ["''Echoes: Shadows of Valentia''", 
+  "fe15", 
+  None,
+  ["Celica", "Mae", "Boey", "Genny", "Saber", "Valbar", "Kamui", "Leon"]]
+  ]
 
 
 # Insert a text note under the character data .
 # If no note is needed, insert "None".
-character_data_note = "<small>*Note: [[Tibarn]], [[Naesala]], or [[Giffca]] will join either at the beginning of the chapter on easy and medium mode or at the start of the second part of the chapter on hard and maniac mode. </small>"
+character_data_note = \
+None
 
+#=======================================================================
 
 # Insert item data
 
-# Item data is formatted:
-#	[item name, obtain method]
-
-# ["", ""], 
+# For full instructions on how to format item_data,  
+# see build_item_data.py. 
 
 item_data = \
-[["Physic", "Dropped by [[bishop]]"],
-["Speedwing", "Dropped by [[Bryce]]"], 
-["Silence", "Steal from [[bishop]]"], 
-["Elixir", "Steal from [[bishop]]"], 
-["Sleep", "Steal from [[bishop]]"], 
-["Fortify", "Steal from [[bishop]]"], 
-["Elixir", "Steal from [[bishop]]"], 
-["Rexaura", "Steal from [[bishop]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Vulnerary", "Steal from [[paladin]]"], 
-["Thoron", "Steal from [[sage]]"], 
-["Meteor", "Steal from [[sage]]"], 
-["Vulnerary", "Steal from [[sage]]"], 
-["Vulnerary", "Steal from [[swordmaster]]"], 
-["Steel Sword", "Steal from [[paladin]]"], 
-["Steel Lance", "Steal from [[paladin]]"], 
-["Killing Edge", "Steal from [[paladin]]"], 
-["Silver Lance", "Steal from [[paladin]]"], 
-["Silver Sword", "Steal from [[paladin]]"], 
-["Iron Axe", "Steal from [[paladin]]"], 
-["Iron Axe", "Steal from [[paladin]]"], 
-["Iron Axe", "Steal from [[paladin]]"],]
+"stub"
 
 
 # Insert note after under item data. 
@@ -482,10 +481,11 @@ item_data = \
 item_data_note = \
 None
 
+#=======================================================================
 
 shop_data_header = "Shop Data"
 
-# Insert shop data
+# Insert shop data. 
 # If there are no shops, input "None"
 
 # Shop info is formatted:
@@ -496,48 +496,21 @@ shop_data_header = "Shop Data"
 shops_info = \
 None
 
+#=======================================================================
+
+# Insert if this page needs enemy data. 
+include_enemy_data = True
+
+# Insert enemy data. 
+
 # Unit data is formatted:
 # 	[name, class, level, quantity, inventory]
 
-# ["", "", "", "", [""]], 
+# ["", "", "", "", None], 
 
 enemy_data = \
-[["Soldier", "Bishop", "15", "1", ["Shine", "Silence", "Physic (drop)", "Elixir"]], 
-["Soldier", "Bishop", "15", "1", ["Rexaura", "Sleep", "Fortify", "Elixir"]], 
-["Feral One", "Cat", "16", "2", ["Claw (cat)"]],
-["Soldier", "General", "15", "1", ["Silver Lance"]], 
-["Soldier", "General", "15", "1", ["Silver Lance", "Vulnerary"]],
-["Soldier", "Halberdier", "14", "1", ["Brave Lance"]], 
-["Soldier", "Halberdier", "15", "3", ["Silver Lance"]], 
-["Soldier", "Halberdier", "15", "1", ["Killer Lance"]], 
-["Soldier", "Paladin", "14", "4", ["Steel Axe"]], 
-["Soldier", "Paladin", "14", "3", ["Steel Bow"]], 
-["Soldier", "Paladin", "14", "1", ["Killer Axe"]],
-["Soldier", "Paladin", "14", "1", ["Silver Bow"]], 
-["Soldier", "Paladin", "14", "1", ["Brave Bow"]], 
-["Soldier", "Paladin", "14", "3", ["Steel Sword", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Silver Lance", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Silver Sword", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Brave Lance", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Brave Sword", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Silver Lance", "Iron Axe", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Killing Edge", "Iron Axe", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Steel Sword", "Steel Lance", "Vulnerary"]], 
-["Soldier", "Paladin", "14", "1", ["Silver Sword", "Iron Axe", "Vulnerary"]], 
-["Feral One", "Red Dragon", "17", "3", ["Breath (red)"]], 
-["Soldier", "Sage", "13", "1", ["Bolganone"]], 
-["Soldier", "Sage", "13", "1", ["Tornado"]], 
-["Soldier", "Sage", "13", "1", ["Thoron", "Meteor", "Vulnerary"]],
-["Merenary", "Swordmaster", "13", "1", ["Iron Blade"]], 
-["Merenary", "Swordmaster", "13", "1", ["Venin Edge", "Vulnerary"]], 
-["Merenary", "Swordmaster", "15", "1", ["Silver Sword"]], 
-["Merenary", "Swordmaster", "15", "3", ["Silver Blade"]],
-["Feral One", "Tiger", "17", "2", ["Claw (tiger)"]], 
-["Mercenary", "Warrior", "13", "2", ["Silver Axe"]], 
-["[[Bryce]]", "General", "20", "1", ["Wishblade", "Speedwing (drop)", "Guard", "Daunt"]], 
-["[[Ashnard]]", "King Daein", "20", "1", ["Gurgurant", "Renewal", "Daunt"]], ]
-
-
+[["Bonewalker", "Bonewalker", "1", "2", None], 
+["Revenant", "Revenant", "1", "8", None], ]
 
 # Insert reinforcement data. 
 # Unit data for reinforcements is formatted the same as enemy data.
@@ -547,151 +520,75 @@ None
 
 # Insert note under enemy data.
 # If no note is needed, insert "None".
-enemy_data_note = None
+enemy_data_note = \
+"""====''Echoes: Shadows of Valentia''====
+{{sectstub}}
+"""
 
 # Insert whether or not you want to print out the units total. 
 # If true, the unit and reinforcements total will print before the chapter page. 
 print_units_total = False
 
+#=======================================================================
 
 # Insert NPC data
-# If there are no NPCs, input "None"
 
-# NPC unit data is organized:
-#	[name, class, level, quantity, [inventory]]
-
-# ["", "", "", "", [""]], 
+# For full instructions on how to format npc_data,  
+# see build_npc_data.py. 
 
 npc_data = \
 None
 
-# Insert note under enemy data 
+# Insert a text note under enemy data. 
 # If no note is needed, insert "None".
 npc_data_note = None
+
+#=======================================================================
 
 # Insert the boss name
 # If no boss is present, insert "None".
 
-boss_name = "Ashnard"
+boss_name = None
 
 # Insert boss data
 # If no boss is present, insert "None".
-detailed_boss_data = """{{Tab
-|tab1=Easy/Normal/Hard Mode 1st round
-|content1={{BossStats GCN
-|portrait=[[File:Small portrait ashnard 01 fe09.png|Ashnard]]
-|class=King Daein
-|affin=fire
-|lv=20
-|HP=60
-|str=35
-|magic=16
-|skill=27
-|spd=27
-|luck=0
-|def=35
-|res=26
-|move=10
-|con=14
-|wght=49
-|inventory=[[File:Is gcn gurgurant.png]] [[Gurgurant]]
-|skills=[[File:Is gcn renewal.png]] [[Renewal (skill)|Renewal]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
-|sw=S
-|ax=A
-}}
-|tab2=Hard Mode 2nd round
-|content2={{BossStats GCN
-|portrait=[[File:Small portrait ashnard 02 fe09.png|Ashnard]]
-|class=King Daein
-|affin=fire
-|lv=20
-|HP=80
-|str=40
-|magic=25
-|skill=30
-|spd=28
-|luck=10
-|def=35
-|res=30
-|move=10
-|wght=49
-|con=14
-|inventory=[[File:Is gcn gurgurant.png]] [[Gurgurant]]
-|skills=[[File:Is gcn renewal.png]] [[Renewal (skill)|Renewal]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
-|sw=S
-|ax=A
-}}
-}}
-{{Main|Bryce}}
-{{Tab
-|tab1=Easy/Normal Mode
-|tab2=Hard/Maniac Mode
-|content1={{BossStats GCN
-|portrait=[[File:Small portrait bryce fe09.png]]
-|class=General
-|affin=earth
-|lv=20
-|HP=50
-|str=23
-|magic=12
-|skill=21
-|spd=18
-|luck=17
-|def=25
-|res=16
-|move=6
-|con=13
-|wght=18
-|sw=A
-|la=S
-|inventory=[[File:Is gcn wishblade.png]] [[Wishblade]]<br>[[File:Is gcn speedwing.png]] {{drop|Speedwing}}
-|skills=[[File:Is gcn guard.png]] [[Cancel|Guard]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
-}}
-|content2={{BossStats GCN
-|portrait=[[File:Small portrait bryce fe09.png]]
-|class=General
-|affin=earth
-|lv=20
-|HP=54
-|str=28
-|magic=13
-|skill=26
-|spd=18
-|luck=17
-|def=27
-|res=18
-|move=6
-|con=13
-|wght=18
-|sw=A
-|la=S
-|inventory=[[File:Is gcn wishblade.png]] [[Wishblade]]<br>[[File:Is gcn elixir.png]] [[Elixir]]<br>[[File:Is gcn speedwing.png]] {{drop|Speedwing}}
-|skills=[[File:Is gcn guard.png]] [[Cancel|Guard]]<br>[[File:Is gcn daunt.png]] [[Daunt]]
-}}
-}}
-"""
+detailed_boss_data = None
+
+#=======================================================================
+
+# Insert if the page needs a strategy section. 
+include_strategy_section = True
 
 # Insert strategy section.
 # If "None" is inputted, this section will be marked a stub. 
 strategy = None
 
+#=======================================================================
+
 # Insert trivia section.
+# If "None" is inputted, this section will be left blank. 
 trivia = None
 
+#=======================================================================
+
 # Insert etymology section.
-chapter_etymology = """{{Names
-|eng-name=Repatriation
+chapter_etymology = """{{Names 
+|eng-name=Seabound Shrine
 |eng-mean=--
-|jap-name={{hover|帰還|Kikan}}
-|jap-mean=Repatriation
-|span-name=El retorno
-|span-mean=The return
-|fren-name=Rapatriement
-|fren-mean=Repatriation
-|ger-name=Heimkehr
-|ger-mean=Return
-|ital-name=Il ritorno
-|ital-mean=The return
+|jap-name={{hover|海のほこら|Umi no hokora}}
+|jap-mean=Sea Shrine
+|span-name=Santuario marino
+|span-mean=Marine sanctuary
+|fren-name=Sanctuaire marin
+|fren-mean=Marine sanctuary
+|ger-name=Tempel am Meer
+|ger-mean=Temple by the Sea
+|ital-name=Tempio del Mare
+|ital-mean=Temple of the Sea
+|dut-name=Zeekapel
+|dut-mean=Sea shrine
+|ch-name={{hover|海的祠堂|Mandarin: Hǎi de cítáng; Cantonese: Hoi dik chitong}}
+|ch-mean=Sea temple
 }}
 """
 
@@ -718,20 +615,26 @@ chapter_etymology = """{{Names
 |ger-mean=
 |ital-name=
 |ital-mean=
+|dut-name=
+|dut-mean=
+|ch-simp-name={{hover||Mandarin: ; Cantonese: }}
+|ch-simp-mean=
+|ch-trad-name={{hover||Mandarin: ; Cantonese: }}
+|ch-trad-mean=
 }}
 """
+
+#=======================================================================
 
 # Insert gallery text.
 # If "None" is inputted, this section will be marked a stub. 
 gallery_text = None
 
+#=======================================================================
+
 # Insert chapter navigator.
 chapter_navigator_section = \
-"""{{ChapterNav
-|prechapter=Twisted Tower
-|name=Repatriation
-}}
-"""
+None
 
 # Chapter navigator template.
 """{{ChapterNav
@@ -743,6 +646,8 @@ chapter_navigator_section = \
 }}
 """
 
+#=======================================================================
+
 # Takes every variable above and constructs a chapter page.
 chapter_page = build_chapter_page(hatnote, 
 								  platform, 
@@ -752,16 +657,17 @@ chapter_page = build_chapter_page(hatnote,
 								  quote,
 								  quote_speaker,
 								  chapter_desciption,
+								  insert_plot_section,
 								  chapter_plot,
 								  beginning_log,
 								  chapter_data_box,  
-								  return_characters,
-								  new_units_data,
+								  character_data, 
 								  character_data_note,
 								  item_data,
 								  item_data_note, 
 								  shop_data_header,
 								  shops_info,
+								  include_enemy_data, 
 								  enemy_data,					   
 								  reinforcement_data,
 								  enemy_data_note,
@@ -771,6 +677,7 @@ chapter_page = build_chapter_page(hatnote,
 								  boss_name,
 								  detailed_boss_data,
 								  chapter_navigator_section, 
+								  include_strategy_section, 
 								  strategy,
 								  trivia, 
 								  chapter_etymology,

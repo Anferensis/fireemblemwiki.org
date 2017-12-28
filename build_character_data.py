@@ -3,26 +3,40 @@
 Written by Albert"Anferensis"Ong
 
 Builds a character data template for fireemblemwiki.org
+
+Revision: 12-27-2017
 """
 
 from utilities import writeTextFile
 
 
-def build_character_data(game, 
-						 new_units_data, 
-						 return_characters, 
-						 character_data_note):
+# A dictionary for cases where a character's name is not the 
+# same as a character's page name. 
+link_exceptions = \
+	{"Alva" : "Alva (Thracia 776)", 
+	 "Ced" : "Ced (character)", 
+	 "Marth 02" : "Marth", 
+	 "Lance" : "Lance (character)", 
+	 "Largo" : "Largo (Path of Radiance)", 
+	 "Robert" : "Robert (Thracia 776)"}
+
+
+def build_character_template(game, 
+							 new_units_data, 
+							 return_characters):
+	""" A function designed to build an individual character data
+	template for fireemblemwiki.org. 
+	"""
 	
-	game_num = game[2:]
+	character_template = \
+		"{{ChapChars \n" + \
+		"|game#=" + game[2:] + " \n"
 	
-	character_data = "===Character Data=== \n" + \
-					 "{{ChapChars \n" + \
-					 "|game#=" + game_num + " \n"
-					 
+	
+	# Formatting the new units, if there are any. 				 
 	if new_units_data != None:
 		
 		number_of_new_units = str(len(new_units_data))
-		
 		formatted_new_units = "|newunits=" + number_of_new_units + "\n"
 		
 		for unit_num, new_unit in enumerate(new_units_data, 1):
@@ -33,10 +47,19 @@ def build_character_data(game,
 			unit_level = new_unit[3]
 			unit_recruitment = new_unit[4]
 			
-			if game != "fe09":
-				unit_portrait = "[[File:portrait " + unit_name.lower() + " " + game + ".png]]" 
+			lowered_name = unit_name.lower()
+			
+			if game == "fe02":
+				unit_portrait = "[[File:Portrait " + lowered_name + " " + game + ".png]]"
+			
+			elif game == "fe09":
+				unit_portrait = "[[File:Small portrait " + lowered_name + " " + game + ".png]]" 	
+				
+			elif game == "fe15":
+				unit_portrait = "[[File:Portrait " + lowered_name + " status " + game + ".png|128px]]" 	
+				
 			else:
-				unit_portrait = "[[File:Small portrait " + unit_name.lower() + " " + game + ".png]]" 
+				unit_portrait = "[[File:Small portrait " + lowered_name + " " + game + ".png]]" 
 				
 			
 			
@@ -50,12 +73,15 @@ def build_character_data(game,
 			recruitment_line = 	"|recruitment method=" + unit_recruitment
 			
 			
-			name_exceptions = {"Ced" : "Ced (character)"}
-			
-			if unit_name in name_exceptions:
+			# If the name of the character is different from the name 
+			# of the aritcle...
+			if unit_name in link_exceptions:
+				
+				# Adds an additional line to link the correct acticle. 
 				name_article = name_exceptions[unit_name]
 				name_article_line = "|namearticle=" + name_article
-				
+			
+			# Otherwise, assigns the line to "None"
 			else:
 				name_article_line = None
 			
@@ -76,42 +102,106 @@ def build_character_data(game,
 				
 			formatted_new_units += new_unit_data
 			
-		character_data += formatted_new_units
+		character_template += formatted_new_units
 			
-					 
-	for num, char_name in enumerate(return_characters, 1):
-		char_num = str(num)
-		char_name = char_name.lower()
+	
+	# Formatting the return characters, if there are any. 
+	if return_characters != None:	
 		
-		char_line = "|return" + char_num + "=" + char_name
-		character_data += char_line + "\n"
-		
-		# A dictionary for cases where the character name
-		# is not the same as the link name
-		special_cases = {"alva" : "Alva (Thracia 776)", 
-						 "robert" : "Robert (Thracia 776)",
-						 "ced" : "Ced (character)", 
-						 "marth 02" : "Marth", 
-						 "lance" : "Lance (character)", 
-						 "largo" : "Largo (Path of Radiance)"}
-							  
-		if char_name in special_cases:
+		# Uses a for loop to add all returning characters. 			 
+		for num, char_name in enumerate(return_characters, 1):
 			
-			char_article = special_cases[char_name]
-			article_line = "|return" + char_num + "article=" + char_article
+			char_num = str(num)
 			
-			character_data += article_line + "\n"
-		
+			if char_name == "Celica" and game == "fe02":
+				char_portrait = "celica 01"
+			else:
+				char_portrait = char_name.lower()
+			
+			char_line = "|return" + char_num + "=" + char_portrait
+			character_template += char_line + "\n"
+			
+								  
+			if char_name in link_exceptions:
+				
+				char_article = link_exceptions[char_name]
+				article_line = "|return" + char_num + "article=" + char_article
+				
+				character_template += article_line + "\n"
+				
+			elif char_name == "Celica" and game == "fe02":
+				article_line = "|return" + char_num + "article=Celica"
+				
+				character_template += article_line + "\n"
 	
-	character_data += "}} \n"
+	character_template += "}} \n"
 	
-	if character_data_note == None:
-		pass
-	else:
-		character_data += character_data_note
-	
-	return character_data
+	return character_template
 
+
+
+
+def build_character_data(character_data, 
+						 character_data_note):
+	
+	character_data_section = "===Character data=== \n"
+	
+	number_of_tabs = len(character_data)
+	
+	if number_of_tabs == 1:
+		
+		game = character_data[0][1]
+		new_units_data = character_data[0][2]
+		return_characters = character_data[0][3]
+		
+		character_template = build_character_template(game, 
+													  new_units_data, 
+													  return_characters)
+	
+		character_data_section += character_template 
+	
+	elif number_of_tabs > 1:
+		
+		tabs = "{{Tab \n" + \
+			   "|width=1000px \n"
+		
+		for tab_num, tab_data in enumerate(character_data, 1):
+			
+			tab_num = str(tab_num)
+			tab_name = tab_data[0]
+			tab_name_line = "|tab" + tab_num + "=" + tab_name + "\n"
+			
+			tabs += tab_name_line
+			
+		
+		for tab_num, tab_data in enumerate(character_data, 1):
+			
+			tab_num = str(tab_num)
+			tab_content = "|content" + tab_num + "="
+			
+			game = tab_data[1]
+			character_data = tab_data[2]
+			return_characters = tab_data[3]
+			
+			character_template = build_character_template(game, 
+														  character_data, 
+														  return_characters)
+														  
+			tab_content += character_template
+			tabs += tab_content
+			
+		character_data_section += tabs + "}} \n"
+	
+	
+	# If the character data note does not equal "None".
+	if character_data_note != None:
+		
+		# Add the character note to the character data section. 
+		character_data_section += character_data_note
+	
+	
+	return character_data_section
+	
 
 
 #========================================================================
@@ -119,34 +209,56 @@ def build_character_data(game,
 
 def main():
 	
-	# Insert game
-	# 	Such as fe06, fe07, fe08 ....
-	game = "fe05"
-
-	# Insert new units data
-	# New units data is organized:
-	#   ["unit name", "class", "HP", "level", "recruit method"]
-	# New unit template: 
-	#	["", "", "", "", ""], 
-
-	new_units_data = \
-	[["Ronan", "Bow Fighter", "20", "1", "Visit north western [[village]]"], ]
-
-	# Insert returning characters
-	return_characters = \
-	["Leif", "Finn", "Eyvel", "Orsin", "Halvan", "Marty", "Dagdar", "Tanya"]  
-
-	# Insert character data note
-	# If no note is neede, insert "None"
+	"""
+	Insert character data. 
+	
+	Character data is formatted: 
+	[tab_name, 
+	 game, 
+	 new units data, 
+	 returning characters]
+	 
+	Tab name is for cases where you want more than one tab. 
+	If one one tab is needed, input "None". 
+	
+	Game refers to a tab's game number. 
+	Such as fe01, fe02, fe03...
+	
+	New units data is the data for all new units in a chapter. 
+	Such as [unit_data1, unit_data2, unit_data3 ...]
+	
+	Individual new unit data is formatted:
+	   ["unit name", "class", "HP", "level", "recruit method"]
+	New unit template: 
+		["", "", "", "", ""], 
+		
+	Returning characters is a list of names of returning characters. 
+	Such as [character1, character2, character3,....]
+	"""
+	
+	character_data = \
+		[["''Gaiden''",
+		  "fe02", 
+		  None, 
+		  
+		  ["Celica"]], 
+		 ]
+	
+	"""
+	Insert a character data note. 
+	If no note is needed, insert "None". 
+	
+	This is for cases where you want a text note below the
+	character data section. 
+	"""
 	character_data_note = None
-
-
-	character_data_section = \
-		build_character_data(game, 
-						     new_units_data,
-							 return_characters, 
-						     character_data_note)
-						     
+	
+	
+	
+	character_data_section = build_character_data(character_data, 
+												  character_data_note)
+	
+	# Prints out the character data section. 
 	print(character_data_section)
 	
 	savetoTextFile = False

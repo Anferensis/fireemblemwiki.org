@@ -1,133 +1,132 @@
 
 """
 Written by Albert"Anferensis"Ong
+
+Builds an NPC data section for fireemblemwiki.org
+
+Revision: 12-27-2017
 """
 
 from utilities import hyperlink, writeTextFile
+from build_unit_inventory import build_unit_inventory
+	
 
+def build_npc_template(platform, npc_data):
 	
-def build_unit_inventory(inventory_data, unit_num, 
-						 isReinforcement = False,
-						 isLastReinforcement = False):
-	"""
-	Properly formats a unit's inventory data.
+	npc_template = "{{ChapOthers \n" + \
+				   "|platform=" + platform + "\n"
 	
-	Accepts a list of strings, where every string is an item name, 
-	and string, representing the unit's number.
-	
-	Converts such that 
-	build_unit_inventory(["Iron Sword", "Steel Sword (drop)"], "2")
-	returns:
-	
-	|inventory2=[[File:Is gba iron sword.png]][[Iron Sword]]
-				[[File:Is gba steel sword.png]]{{drop|Steel Sword}}
-	"""
-	
-	formatted_inv_start = "|inventory"
-	
-	add_letter = ""
-	
-	if isReinforcement:
-		add_letter = "r"
-	
-		if isLastReinforcement:
-			add_letter += "l"
-			unit_num = ""
-	
-	formatted_inv_start += add_letter	
-	formatted_inv = formatted_inv_start + unit_num + "="
-	
-	# For loops the list of items
-	for item_name in inventory_data:
+	for unit_num, unit_data in enumerate(npc_data, 1):
 		
-		# The name of the item is put entirely in lower case		
-		lowered_item_name = item_name.lower()
+		isLastUnit = unit_num == len(npc_data)
 		
-		if item_name.endswith(" (drop)"):
-			item_name = item_name[:-7]
-			lowered_item_name = lowered_item_name[:-7]
-			item_link = "{{drop|" + item_name + "}}"
-			
+		if isLastUnit:
+			unit_num = "l"
 		else:
-			special_cases = {"Fire" : "Fire (tome)", 
-							 "Thunder" : "Thunder (tome)", 
-							 "Luna" : "Luna (tome)", 
-							 "Berserk" : "Berserk (staff)",
-							 "Sleep" : "Sleep (staff)", 
-							 "Warp" : "Warp (staff)",
-							 "Silence" : "Silence (staff)", 
-							 "Stone" : "Stone (tome)"}
-							 
-			if item_name in special_cases:
-				
-				link = special_cases[item_name]			
-				item_link = hyperlink(link, item_name)
-				
-			else:
-				item_link = hyperlink(item_name)
+			unit_num = str(unit_num)
+			
+		unit_name = unit_data[0]
+		unit_class = unit_data[1]
+		unit_level = unit_data[2]
+		unit_quantity = unit_data[3]
+		unit_inventory = unit_data[4]
 		
-		# Creates the formatted item data, which includes a link directed 
-		# towards the item sprite and a hyperlink to the item itself
-		formatted_item = "[[File:Is gba "+ lowered_item_name + ".png]]" + \
-						 item_link
+		name_line = 	 "|name" + unit_num + "=" + unit_name
+		class_line = 	 "|class" + unit_num + "=" + unit_class
+		level_line = 	 "|lv" + unit_num + "=" + unit_level
+		quantity_line =  "|#" + unit_num + "=" + unit_quantity
+		inventory_line = build_unit_inventory(platform, unit_inventory, unit_num)
 		
-		# Adds the formatted item data to the formatted inventory										
-		formatted_inv += formatted_item
+		for line in (name_line, 
+					 class_line, 
+					 level_line, 
+					 quantity_line, 
+					 inventory_line):
+						 
+			npc_template += line + "\n"
+			
+		if not isLastUnit:
+			npc_template += "\n"
+			
+		elif isLastUnit and line != inventory_line:
+			npc_template += "\n"
 	
-	# By the end of the for loop, the inventory should be
-	# properly formatted. 	
-	return formatted_inv
-	
-	
+	npc_template += "}} \n"
+		   
+	return npc_template
+
+
 
 def build_npc_data(npc_data, npc_data_note):
 	
+	# If npc_data is equal to "None".
 	if npc_data == None:
-		npc_data_section = ""
 		
-	else:
-		npc_data_section = ""
-		
-		for line in ("===NPC Data===", 
-					 "{{ChapOthers", 
-					 "|platform=gba"):
-						 
-			npc_data_section += line + "\n"
-			
-			
-		for unit_num, unit_data in enumerate(npc_data, 1):
-			
-			if unit_num == len(npc_data):
-				unit_num = "l"
-			else:
-				unit_num = str(unit_num)
-			
-			
-			unit_name = unit_data[0]
-			unit_class = unit_data[1]
-			unit_level = unit_data[2]
-			unit_quantity = unit_data[3]
-			unit_inventory = unit_data[4]
-			
-			name_line = "|name" + unit_num + "=" + unit_name
-			class_line = "|class" + unit_num + "=" + unit_class
-			level_line = "|lv" + unit_num + "=" + unit_level
-			quantity_line = "|#" + unit_num + "=" + unit_quantity
-			inventory_line = build_unit_inventory(unit_inventory, unit_num)
-			
-			for line in (name_line, 
-						 class_line, 
-						 level_line, 
-						 quantity_line, 
-						 inventory_line):
-							 
-				npc_data_section += line + "\n"
-				
-		npc_data_section += "}} \n"
+		# Assigns npc_data_section equal to "None".
+		npc_data_section = None
 	
+	# If npc_data is equal to "stub"
+	elif npc_data == "stub":
+		
+		# Creates a NPC data section marked as a stub. 
+		npc_data_section = "===NPC data=== \n" + \
+						   "{{sectstub}} \n"
+	
+	
+	# If there is only one tab for the NPC data.	
+	elif len(npc_data) == 1:
+		
+		npc_data_section = "===NPC data=== \n"
+		
+		tab_data = npc_data[0]
+		
+		platform = tab_data[0]
+		npc_data = tab_data[2]
+		
+		npc_template = build_npc_template(platform, npc_data)
+		npc_data_section += npc_template
+	
+	
+	# If there is more than one tab for the npc_data.
+	elif len(npc_data) > 1:
+		
+		npc_data_section = "===NPC data=== \n" + \
+						   "{{Tab \n" + \
+						   "|width=1000px \n"
+						   
+		for tab_num, tab_data in enumerate(npc_data, 1):
+			
+			tab_title = tab_data[1]
+			tab_num = str(tab_num)
+			
+			tab_line = "|tab" + tab_num + "=" + tab_title
+			
+			npc_data_section += tab_line + "\n"
+		
+		
+		for tab_num, tab_data in enumerate(npc_data, 1):
+			
+			tab_num = str(tab_num)
+			platform = tab_data[0]
+			npc_data = tab_data[2]
+			
+			npc_template = build_npc_template(platform, npc_data)
+			
+			tab_content = "|content" + tab_num + "=" + npc_template
+			
+			npc_data_section += tab_content
+			
+		npc_data_section += "}} \n"
+		
+	
+	
+	# Adds the NPC data note to the NPC data section, if the note
+	# is not equal no "None".
 	if npc_data_note != None:
 		npc_data_section += npc_data_note
-		
+	
+	
+	
 	return npc_data_section
 	
 	
@@ -137,27 +136,67 @@ def build_npc_data(npc_data, npc_data_note):
 
 def main():
 	
-	# Insert NPC data
-	# NPC unit data is organized:
-	#	[name, class, level, quantity, [inventory]]
-
-	# ["", "", "", "", [""]]
+	"""
+	Insert NPC data. 
+	
+	NPC data is formatted:
+	
+		[[platform1, 
+		  tab_name1,
+		  npc_list1],
+		  
+		  [platform2, 
+		  tab_name2,
+		  npc_list2],
+		  
+		  (insert as many tabs as needed)
+		 ]
+	
+	NPC data template:
+	["", 
+	 "", 
+	 [["", "", "", "", None]], ]
+	
+	
+	NPC list is formatted:
+		[[name1, class1, level1, quantity1, inventory1], 
+		 [name2, class2, level2, quantity2, inventory2], 
+		 [name3, class3, level3, quantity3, inventory3], ]
+		
+	NPC list template:
+		[["", "", "", "", None], 
+		 ["", "", "", "", None], 
+		 ["", "", "", "", None], ]
+	"""
 
 	npc_data = \
-	[["[[Zelots]]", "Paladin", "1", "1", ["Steel Sword", "Steel Lance", "Javelin"]],
-	["[[Trec]]", "Cavalier", "4", "1", ["Iron Lance", "Javelin", "Vulnerary"]],
-	["[[Noah]]", "Cavalier", "7", "1", ["Steel Sword", "Iron Lance", "Vulnerary"]]]
+	[["snes02", 
+	 "''Gaiden''", 
+	[["[[Valbar]]", "Knight", "1", "1", None], 
+	["[[Kamui]]", "Mercenary", "3", "1", None], 
+	["[[Leon]]", "Archer", "4", "1", None], ]], 
+	
+	["3ds03", 
+	 "''Echoes: Shadows of Valentia''", 
+	 [["[[Valbar]]", "Knight", "1", "1", None], 
+	 ["[[Kamui]]", "Mercenary", "3", "1", None], 
+	 ["[[Leon]]", "Archer", "4", "1", None], ]]]
+	
 
-	# Insert NPC data note
-	# If no note is needed, insert "None"
+	# Insert NPC data note. If no note is needed, insert "None"
 	npc_data_note = None
-
+	
+	
+	# Build the NPC data section using the input above. 
 	npc_data_section = build_npc_data(npc_data, npc_data_note)
 	
+	# Prints out the NPC data section. 
 	print(npc_data_section)
 	
+	# Choose if you want to save the text to a text file. 
 	savetoTextFile = False
 	
+	# If true, saves the text to a text file. 
 	if savetoTextFile:
 		writeTextFile("npc_data_section.txt", npc_data_section)
 
