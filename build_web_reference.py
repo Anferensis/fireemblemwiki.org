@@ -5,51 +5,40 @@
 Written by Albert"Anferensis"Ong
 Formats a web citation for fireemblemwiki.org
 
-Revision: 08.01.2018
+Revision: 08.04.2018
 """
 
+import re
 from calendar import month_name
 from datetime import datetime
+from urllib.parse import urlparse
+from urllib.request import urlopen
 
 
 def build_web_reference(url,
-						title, 
-						site, 
-						# date_retrieved, 
 						name = None):
 	"""
 	A function that creates a web reference for fireemblemwiki.org
 	
-	Accepts four string values as inputs:
+	Accepts two values as inputs:
 		1. The url of the citation
 			Example: https://www.google.com/
 			
-		2. The title of the web page
-			Example: Google 
-			
-		3. The name of the site
-			Example: www.google.com
-			
-		4. The name of the reference. 
+		2. The name of the reference. 
 		   This is only crucial if the reference will be used multiple
-		   times. Otherwise, input 'None' in this criteria.
+		   times. Otherwise, input 'None' in this field.
 			
 	Input is formatted:
 		[url, 
-		 page title, 
-		 site, 
 		 name]
 	
 	Example:
-	
 		build_web_reference("https://www.google.com/", 
-							"Google", 
-							"www.google.com", 
 							None)
 							
-		Returns:
-			<ref>{{cite web |url=https://www.google.com/ |title=Google 
-			|site=www.google.com |retrieved=current UTC date}}</ref>		
+	Returns:
+		<ref>{{cite web |url=https://www.google.com/ |title=Google 
+		|site=www.google.com |retrieved=current UTC date}}</ref>		
 	"""
 	
 	# The beginning of the formatted references. 
@@ -59,10 +48,68 @@ def build_web_reference(url,
 	else:
 		reference = "<ref>{{cite web"
 	
-	# Assembles the formatted url, title, and site lines. 
+	
+	# Assembles the formatted url line.  
 	url_line =   " |url=" + url
+
+
+	#-------------------------------------------------------------------
+	# Automatically retrieves and formats the page title. 
+	#-------------------------------------------------------------------
+	
+	# Formats the title if the url is not blank.
+	if url != "":
+	
+		# Reads the html as a byte object. 
+		html_bytes = urlopen(url).read()
+
+		# Converts the html byte object to a text object. 
+		html_text = str(html_bytes, "utf-8", errors = "ignore")
+		
+		# Retrieves the title of the html text. 
+		pattern = re.compile("<title>(.+?)</title>")
+		title = re.findall(pattern, html_text)[0]
+		
+		# Adds the nowiki tag around the title if the title has a vertical
+		# bar. This is because the vertical bar can be rendered by MediaWiki.
+		if "|" in title:
+			title = "<nowiki>" + title + "</nowiki>"
+	
+	# Otherwise, the title is blank.
+	else: 
+		title = ""
+	
+	# Assembles the title line.
 	title_line = " |title=" + title
-	site_line =  " |site=" + site
+	
+	
+	#-------------------------------------------------------------------
+	# Automatically retrieves and formats the page site.  
+	#-------------------------------------------------------------------
+	
+	# Formats the site if the url is no blank.
+	if url != "":
+		
+		# Parses the url and retrieves the site name. 
+		parsed_url = urlparse(url)
+		site = parsed_url.netloc
+		
+		# Adds 'www.' at the beginning of the site if it does not
+		# already include it. 
+		if not site.startswith("www."):
+			site = "www." + site
+		
+	# Otherwise the site is blank.
+	else:
+		site = ""
+	
+	# Assembles the site line. 
+	site_line = " |site=" + site
+	
+	
+	#-------------------------------------------------------------------
+	# Automatically retrieves and formats the current UTC time.  
+	#-------------------------------------------------------------------
 	
 	# Retrieves the current UTC time. This is used to assemble the
 	# date retrieved line.
@@ -78,6 +125,11 @@ def build_web_reference(url,
 	
 	# Assembles the date retrieved line. 
 	retrieved_line = " |retrieved=" + formatted_utc_time
+	
+	
+	#-------------------------------------------------------------------
+	# Formats the complete reference.
+	#-------------------------------------------------------------------
 	
 	# Uses a for loop to add each line to the final output.
 	for line in (url_line, 
@@ -102,13 +154,9 @@ def build_multiple_web_references(reference_data):
 	
 	Input is formatted:
 		[[url1, 
-		  title1, 
-		  site1, 
 		  name1], 
 		  
 		  [url2, 
-		  title2, 
-		  site2, 
 		  name2], 
 		  
 		  ...	(as many references as needed)
@@ -124,15 +172,11 @@ def build_multiple_web_references(reference_data):
 		
 		# Retrieves each piece of data from the reference data.
 		ref_url = ref_data[0]
-		ref_title = ref_data[1]
-		ref_site = ref_data[2]
-		ref_name = ref_data[3]
+		ref_name = ref_data[1]
 		
 		# Uses the build_web_reference function to format the reference.
 		formatted_reference = \
 			build_web_reference(ref_url, 
-								ref_title, 
-								ref_site, 
 								ref_name)
 		
 		# Adds the formatted reference to the final output.					
@@ -156,51 +200,14 @@ def main():
 	
 	Reference data is formatted:
 		[url, 
-		 title, 
-		 site, 
 		 name = None]
-	
-	Reference data template:
-		[["", 
-		  "", 
-		  "", 
-		  ""], 
-		  
-		 ["", 
-		  "", 
-		  "", 
-		  ""], 
-		  
-		 ["", 
-		  "", 
-		  "", 
-		  ""], ]
 	"""
 	
 	reference_data = \
 [ 	
 	["", 
-	 "<nowiki></nowiki>", 
-	 "", 
 	 None],
 ]
-
-	"""
-	["", 
-	 "<nowiki></nowiki>", 
-	 "", 
-	 None],
-
-	["", 
-	 "<nowiki></nowiki>", 
-	 "www.kantopia.wordpress.com", 
-	 None], 
-
-	["", 
-	 "<nowiki></nowiki>", 
-	 "www.behindthevoiceactors.com", 
-	 None], 
-	"""	
 	
 	# Assembles the references using the input above.
 	multiple_references = build_multiple_web_references(reference_data)
