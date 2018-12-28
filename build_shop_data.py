@@ -3,6 +3,8 @@
 Written by Albert"Anferensis"Ong
 
 Builds shop data for fireemblemwiki.org
+
+Revision: 08.19.2018
 """
 
 from price_list import gametoPriceList
@@ -56,12 +58,16 @@ def format_shop_items(platform, game, shop_items):
 		line3 = "{{!}} style={{roundr}}; text-align: center {{!}} " + item_price
 		line4 =  "{{!-}}"
 		
-		formatted_item_data = ""
-		
+		# Adds each line to the formatted shop items. 
 		for line in (line1, line2, line3, line4):
-			formatted_item_data += line + "\n"
+			formatted_shop_items += line + "\n"
+		
+		# ~ formatted_item_data = ""
+		
+		# ~ for line in (line1, line2, line3, line4):
+			# ~ formatted_item_data += line + "\n"
 			
-		formatted_shop_items += formatted_item_data
+		# ~ formatted_shop_items += formatted_item_data
 		
 	return formatted_shop_items
 
@@ -72,7 +78,7 @@ def build_shop_data(platform,
 					shops_info, 
 					header = None):
 
-	shop_data_section = "===Shop Data=== \n"
+	shop_data_section = "===Shop data=== \n"
 	
 	if shops_info == None:
 		shop_data_section = None
@@ -84,7 +90,7 @@ def build_shop_data(platform,
 		
 		shop_name = shop_info[0]
 		shop_items = shop_info[1]
-
+		
 		shop_data_start = """
 {|style="margin-left:auto; margin-right:auto; width: 500px; border: 2px solid {{Color2}}; {{round}}; background: {{Color3}};"
 {{!}}<div style="{{round}}; border: 2px solid {{Color2}}; background: {{Color1}}; text-align:center; padding:3px;"><big>'''""" + shop_name +"""'''</big></div>
@@ -93,8 +99,8 @@ def build_shop_data(platform,
  !style="border: 1px solid {{Color2}}; background: {{Color1}}; width: 30%" {{!}} Name
  !style="{{roundr}}; border: 1px solid {{Color2}}; background: {{Color1}}; width: 15%" {{!}} Cost
  {{!-}} """
- 
-		formatted_items = format_shop_items(platform, shop_items)
+
+		formatted_items = format_shop_items(platform, game, shop_items)
 		
 		for part in (shop_data_start, formatted_items, "{{tableend}}", "|}"):
 			shop_data_section += part + "\n"
@@ -155,30 +161,32 @@ def build_shop_data(platform,
 def main():
 	
 	# Insert the platform name and the game
-	platform = "wii"
-	game = "fe10"
+	platform = "snes01"
+	game = "fe03"
 
 	# Insert the header.
 	# (This will be the name of the table)
-	header = "Shop Data"
+	header = "Shop data"
 
-	# Insert the shop data. 
-	# Shop info is formatted:
-	#	[shop name, [item1, item2, item3]], 
-
-	# ["", ["", "", ""]], 
+	"""
+	Insert the shop data. 
+	Shop info is formatted:
+		[shop name, 
+		 [item1, item2, item3, ...]], 
+	
+	Template:
+		["", 
+		["", "", ""]], 
+	"""
 			 
 	shop_data = \
-	[["Normal Wares",
-		["Bronze Sword", "Iron Sword", "Bronze Lance","Iron Lance", 
-		 "Bronze Axe", "Iron Axe", "Bronze Bow", "Iron Bow", "Bronze Knife", 
-		 "Bronze Dagger", "Thunder", "Light", "Heal", "Herb"]], 
-	["Special Wares", 
-		["Javelin", "Hand Axe", "Beast Killer", "Ellight", "Mend"]]]
-				  
-
-	shop_data_section = build_shop_data(platform, game, shop_data, header)
+	[["''Mystery of the Emblem''", 
+	 ["Iron Sword", "Iron Lance", "Javelin", "Iron Bow"]], 
 	
+	 ["''New Mystery of the Emblem''", 
+	  ["Iron Sword", "Iron Lance", "Javelin", "Iron Axe", "Hand Axe", "Iron Bow"], ]]
+				  
+	shop_data_section = build_shop_data(platform, game, shop_data, header)
 	print(shop_data_section)
 	
 	

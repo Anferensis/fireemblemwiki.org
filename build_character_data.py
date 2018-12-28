@@ -4,7 +4,7 @@ Written by Albert"Anferensis"Ong
 
 Builds a character data template for fireemblemwiki.org
 
-Revision: 12-27-2017
+Revision: 27.12.2018
 """
 
 from utilities import writeTextFile
@@ -13,13 +13,14 @@ from utilities import writeTextFile
 # A dictionary for cases where a character's name is not the 
 # same as a character's page name. 
 link_exceptions = \
-	{"Alva" : "Alva (Thracia 776)", 
-	 "Ced" : "Ced (character)", 
-	 "Marth 02" : "Marth", 
-	 "Lance" : "Lance (character)", 
-	 "Largo" : "Largo (Path of Radiance)", 
-	 "Robert" : "Robert (Thracia 776)"}
-
+	{"Alva"               : "Alva (Thracia 776)", 
+	 "Ced"                : "Ced (character)", 
+	 "Marth 02"           : "Marth", 
+   "Micaiah_light_mage" : "Micaiah", 
+	 "Lance"              : "Lance (character)", 
+	 "Largo"              : "Largo (Path of Radiance)", 
+	 "Robert"             : "Robert (Thracia 776)", 
+   "Sothe_rogue"        : "Sothe"}
 
 def build_character_template(game, 
 							 new_units_data, 
@@ -140,7 +141,6 @@ def build_character_template(game,
 
 
 
-
 def build_character_data(character_data, 
 						 character_data_note):
 	
@@ -237,12 +237,17 @@ def main():
 	"""
 	
 	character_data = \
-		[["''Gaiden''",
-		  "fe02", 
-		  None, 
-		  
-		  ["Celica"]], 
-		 ]
+		[
+      # Tab data. 
+      [None, 
+       "fe10", 
+       
+       # New character data. 
+       [["Meg", "Armored Sword", "21", "3", "View base conversation 'In Town'"], ], 
+       
+      # Returning characters. 
+      ["Micaiah_light_mage", "Sothe_rogue", "Edward", "Leonardo", "Nolan", "Laura", "Ilyana", "Aran"]], 
+    ]
 	
 	"""
 	Insert a character data note. 
@@ -270,4 +275,3 @@ def main():
 if __name__ == "__main__":
 	main()
 	
-

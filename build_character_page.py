@@ -205,7 +205,8 @@ def build_character_page(isStub,
      "fe12" : "{{Nav12}}", 
      "fe13" : "{{Nav13}}", 
      "fe14" : "{{Nav14}}", 
-     "fe15" : "{{Nav15}}", }
+     "fe15" : "{{Nav15}}", 
+     "ps1" : "{{NavTRS1}}"}
             
   chapter_nav = chapter_nav_dict[game]
   
@@ -224,7 +225,8 @@ def build_character_page(isStub,
        "fe12" : "Fire Emblem: New Mystery of the Emblem",
        "fe13" : "Fire Emblem: Awakening",
        "fe14" : "Fire Emblem: Fates",
-       "fe15" : "Fire Emblem Echos: Shadows of Valentia",}
+       "fe15" : "Fire Emblem Echos: Shadows of Valentia",
+       "ps1" : "TearRingSaga: Yutona Heroes War Chronicles"}
        
   title_name = title_name_dict[game]
   
@@ -258,7 +260,8 @@ def build_character_page(isStub,
      "fe12" : "{{FE12}}", 
      "fe13" : "{{FE13}}", 
      "fe14" : "{{FE14}}", 
-     "fe15" : "{{FE15}}", }
+     "fe15" : "{{FE15}}", 
+     "ps1" : "{{TRS1}}"}
      
   character_appearance_title = character_appearance_dict[game]
   character_appearance_line = "==" + character_appearance_title + "=="
@@ -303,8 +306,8 @@ isStub = True
 
 hatnote = None
 
-game = "fe05"
-character_name = "Robert (Thracia 776)"
+game = "ps1"
+character_name = "Afred"
 
 # Insert character type
 #  either playable, NPC, or boss
@@ -313,75 +316,71 @@ character_type = "playable"
 
 # Insert the character infobox. 
 character_infobox = """{{Character Infobox
-|name=Robert
-|image=[[File:FE776 Robert.png|200px]]
-|caption=Artwork of Robert from {{title|Thracia 776}}. 
+|name=Alfred
+|image=[[File:YHWC Alfred.png|200px]]
+|caption=Artwork of Alfred from {{TRS1}}. 
 |help_text=
 |gender=Male
 |race=Human
-|age=17<ref>{{Cite web|retrieved=11 April, 2017|url=https://www.nintendo.co.jp/n02/shvc/bfej/data/chara/index.html|title=Character ～登場人物の紹介～|site=ファイアーエムブレム　トラキア７７６}}</ref>
+|age=
 |family=
-|nationality=[[Leonster]]
+|nationality=
 |titles=
-|startingclass=[[Arch Knight]]
+|startingclass=
 |voice=
-|appearances=*{{title|Thracia 776}}
+|appearances=* {{TRS1}}
 }}"""
 
 quote = None
 quote_speaker = None
 
 character_description = """
-'''Robert''' (Japanese: {{hover|ロベルト|Roberuto}} ''Robert'') is a playable [[arch knight]] in {{FE5}}.
+(Japanese: {{hover|	アフリード|Afurīdo}} ''Alfred'') is a playable [[TearRingSaga:Sage|Sage]] in {{TRS1}}.
 """
 
 role = None
 
 character_stats = """
-{{CharStats FE5
-|portrait=[[File:Portrait robert fe05.png]]
-|class=Arch Knight
-|lv=1
-|HP=23
-|movestars=★
-|authority=
-|move=8
-|str=5
-|magic=0
-|skill=4
-|spd=8
-|luck=6
-|def=4
-|PCC=3
-|build=7
-|aid=
-|bo=E
-|inventory=[[File:Is snes03 iron bow.png]] [[Iron Bow]]<br>
+{{CharStats TRS1
+|portrait=
+|class=
+|classname=
+|lv=
+|HP=
+|str=
+|mag=
+|skill=
+|spd=
+|luck=
+|def=
+|wlv=
+|move=
+
+|inventory=
 |skills=
-|recruit=[[The Emblem of Noba|Chapter 9: The Emblem of Noba]], Automatically at the start
-|HP1=65
-|str1=45
-|magic1=10
-|skill1=50
-|spd1=60
-|luck1=70
-|def1=25
-|build1=20
-|move1=1
+|HP1=
+|str1=
+|magic1=
+|skill1=
+|spd1=
+|luck1=
+|def1=
+|wlv1=
+|move1=
+|recruit=
 }}
 
-===Promotion gains===
+===Promotion stat gains===
 {{PromotionGains
-|class=[[Bow Knight]]
-|hp=0
-|str=2
-|mag=1
-|skill=3
-|spd=2
-|def=2
-|con=1
-|move=1
-|weaponlvl={{BowSNES}}+1
+|class=
+|hp=
+|str=
+|mag=
+|skill=
+|spd=
+|def=
+|move=
+|weaponlvl=
 }}
 """
 
@@ -513,16 +512,10 @@ None
         
 
 character_endings = """
-'''Robert – Bow Knight of Leonster'''<br>
-After his strong requests, Robert was put in the new Kingdom of Thracia’s royal guard. Robert himself was probably trying his best to be a legendary warrior, but he never could fix his timidity. Apparently, more than a few of the female servants in the castle found his sheepish nature cute.
 """
 
 # Insert quotes section. 
 character_quotes = """===Death quotes===
-{{Quote|Lady Selphina… I wish…I could be of more…use…|Robert}}
-
-===Escape quotes===
-{{Quote|Next time…we won’t lose.|Robert}}
 """
 
 # Insert other appearances section. 
@@ -530,9 +523,9 @@ character_other_appearances = None
 
 # Insert etymology section. 
 character_etymology = """{{Names
-|eng-fan-name=Robert
-|eng-fan-mean=--
-|jap-name={{hover|ロベルト|Roberuto}}
+|eng-fan-name=Alfred
+|eng-fan-mean=
+|jap-name={{hover|	アフリード|Afurīdo}}
 |jap-mean=
 }}
 """
@@ -551,6 +544,13 @@ character_etymology = """{{Names
 |ital-name=
 |ital-mean=
 }}
+
+{{Names
+|eng-fan-name=
+|eng-fan-mean=
+|jap-name=
+|jap-mean=
+}}
 """
 
 # Insert trivia section. 
@@ -563,12 +563,11 @@ trivia = None
 # ["", [""]], 
 
 sprite_data = \
-[["Arch Knight", ["Bow", "Bow"]], 
-["Bow Knight", ["Bow", "Bow"]],  ]
+[["", [""]], ]
 
 # Insert gallery section. 
 gallery = """<gallery>
-FE776 Robert.png|Artwork of Robert from {{FE5}}.
+YHWC Alfred.png|Artwork of Alfred from {{TRS1}}.
 </gallery>
 """
 

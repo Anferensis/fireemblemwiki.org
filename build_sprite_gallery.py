@@ -1,11 +1,13 @@
 
 """
 Written by Albert"Anferensis"Ong
-
 Constructs a sprite gallery for fireemblemwiki.org
+
+Revision: 23.09.2018
 
 Note: This program has only been tested for Fire Emblem 4, 5, 6, 7, and 8.
 It may not function properly for other titles. 
+
 """
 
 from utilities import hyperlink 
@@ -99,6 +101,9 @@ def build_sprite_gallery(character_name,
 							lowered_class, 
 							lowered_weapon + ".png]]"):
 				
+				if title_num == "fe02":
+					lowered_name = None
+				
 				if section != None:			
 					battle_sprite += section + " "
 				
@@ -147,7 +152,7 @@ def build_sprite_gallery(character_name,
 def main():
 
 	# Enter character name
-	character_name = "Fred"
+	character_name = "Guy"
 
 	# Enter character type, either "playable", "boss", or "NPC"
 	character_type = "playable"
@@ -155,7 +160,7 @@ def main():
 	# Enter title num
 	# 	Such as fe01, fe02, fe03 ...
 
-	title_num = "fe05"
+	title_num = "fe07"
 
 
 	# Enter sprite data
@@ -166,7 +171,8 @@ def main():
 	# ["", [""]], 
 
 	sprite_data = \
-	[["Paladin", ["Sword", "Lance", "Sword (dismounted)"]], ]
+	[["Myrmidon", ["Sword"]], 
+	 ["Swordmaster", ["Sword"]], ]
 	
 	
 	# Builds the sprite gallery. 
@@ -181,5 +187,5 @@ def main():
 
 if __name__ == "__main__":
 	main()
-		
+
 

@@ -2,9 +2,9 @@
 """
 Written by Albert"Anferensis"Ong
 
-A program that builds item data for fireemblemwiki.org
+A program that builds an item data section for fireemblemwiki.org
 
-Revision: 12-27-2017
+Revision: 01-15-2017
 """
 
 from utilities import writeTextFile
@@ -45,7 +45,8 @@ item_link_exceptions = \
 	 
 	 # Other items. 
 	 "Torch" : "Torch (item)", 
-	 "Binding Blade" : "Binding Blade (weapon)"}
+	 "Binding Blade" : "Binding Blade (weapon)", 
+	 "Falchion" : "Falchion (Valentia)", }
 
 
 # A dictionary for cases where an item's name is different from
@@ -57,8 +58,30 @@ item_image_exceptions = \
 # A dictionary for image exceptions specifically for Fire Emblem Gaiden. 
 # This is primarily due to the graphical limitations of the game. 
 item_image_exceptions_fe02 = \
-	{"Leather Shield" : "Shield", 
-	 "Blessed Ring" : "Ring"}
+	{"Leather Shield" : "Shield",
+	 "Steel Shield" : "Shield", 
+	 "Blessed Shield" : "Shield", 
+	 "Silver Shield" : "Shield", 
+	 "Hexlock Shield" : "Shield", 
+	 "Dracoshield" : "Shield", 
+	
+	 "Brave Sword" : "Sword",
+	 "Shadow Sword" : "Sword",
+	 "Silver Sword" : "Sword", 
+	 "Falchion" : "Sword",
+	  
+	  "Silver Lance" : "Lance", 
+	  "Gradivus" : "Lance", 
+	  
+	 "Steel Bow" : "Bow", 
+	 "Silver Bow" : "Bow",
+	 "Blessed Bow" : "Bow", 
+	  
+	 "Blessed Ring" : "Ring", 
+	 "Mage Ring" : "Ring", 
+	 "Speed Ring" : "Ring", 
+	 "Angel Ring" : "Ring", 
+	 "Prayer Ring" : "Ring", }
 
 
 

@@ -203,11 +203,11 @@ def main():
   
   reference_data = \
 [   
-  ["https://www.behindthename.com/name/oscar", 
-   None],
+  ["https://kantopia.wordpress.com/2014/10/21/fire-emblem-7-will-artbook-translation/", 
+   "artbook"],
    
-  ["", 
-   None],
+  ["http://www.thinkbabynames.com/meaning/1/Will", 
+   None]
 ]
   
   # Assembles the references using the input above.

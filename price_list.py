@@ -7,6 +7,8 @@ Fire Emblem titles. This is used exclusively for assembling shop
 data in build_shop_data.py
 
 Note: These price lists are not comprehensive.
+
+Revision: 08.19.2018
 """
 
 # The price list for Fire Emblem: Mystery of the Emblem.
@@ -17,7 +19,10 @@ price_list_fe03 = \
 	   "Iron Lance" : "380", 
 	   "Steel Lance" : "560", 
 	   "Javelin" : "600",
-		
+	   
+	   "Iron Axe" : "320", 
+	   "Hand Axe" : "540", 
+	   
 	   "Iron Bow" : "330", }
 
 
